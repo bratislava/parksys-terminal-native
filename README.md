@@ -16,20 +16,12 @@ Run for all platforms
 yarn start
 ```
 
-This will guide you how to open it locally on iOs simulator (if available) or Android emulator (also if available). Running in web browser is possible but discouraged (react-native-mapview is still experimental in browser).
+This will guide you how to open it locally on iOs simulator (if available), Android emulator (also if available) or web browser.
 
 If you want to develop on your device, from [Expo Go](https://expo.io/client) application (downlaoaded from Play store). ping Martin Pinter to get it.
 
 To get Env keys:
 
-- GOOGLE_PLACES_API_KEY
-  1. Log into google account inovacie.bratislava@gmail.com
-  2. Proceed to console.cloud [dopravna aplikacia](https://console.cloud.google.com/google/maps-apis/credentials?pli=1&project=dopravna-aplikacia&folder=&organizationId=)
-  3. `development-key Google Places`
-- GOOGLE_MAPS_API_KEY
-  1. Log into google account inovacie.bratislava@gmail.com
-  2. Proceed to console.cloud [dopravna aplikacia](https://console.cloud.google.com/google/maps-apis/credentials?pli=1&project=dopravna-aplikacia&folder=&organizationId=)
-  3. `tester release 1 Google Maps key`
 - SENTRY_AUTH_TOKEN
   1. Log in to [Sentry](https://sentry.io/settings/account/api/auth-tokens/) with inovacie.bratislava@gmail.com account
   2. Proceed to Settings -> Account -> API -> Auth Tokens
