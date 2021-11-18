@@ -26,5 +26,7 @@ const fetchJsonFromApi = async (path: string, options?: RequestInit) => {
   }
 }
 
+// kept as example - exported functions should fetch & validate that data looks as expected
+// passing such function into react-query hook either returns correctly typed data or an error
 export const getMhdStops = async () =>
   apiMhdStops.validateSync(await fetchJsonFromApi('/mhd/stops'))
