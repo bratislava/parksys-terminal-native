@@ -2,9 +2,7 @@ import 'react-native-gesture-handler'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import * as Localization from 'expo-localization'
-import i18n from 'i18n-js'
-import * as translations from './translations'
+import './translations'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import * as Location from 'expo-location'
 import Constants from 'expo-constants'
@@ -13,23 +11,8 @@ import Constants from 'expo-constants'
 import useCachedResources from '@hooks/useCachedResources'
 import useColorScheme from '@hooks/useColorScheme'
 import Navigation from '@navigation/index'
-
-i18n.translations = translations
-
-i18n.locale = Localization.locale
-i18n.fallbacks = true
-
-i18n.pluralization['sk'] = function (count) {
-  const key =
-    count === 0
-      ? 'zero'
-      : count === 1
-      ? 'one'
-      : [2, 3, 4].indexOf(count) >= 0
-      ? 'few'
-      : 'many'
-  return [key]
-}
+import { ThemeProvider } from 'styled-components'
+import { defaultTheme } from '@utils/theme'
 
 // TODO create Sentry project & integrate
 // Sentry.init({
@@ -50,12 +33,14 @@ export default function App() {
     return null
   } else {
     return (
-      <QueryClientProvider client={queryClient}>
-        <SafeAreaProvider>
-          <Navigation colorScheme={colorScheme} />
-          <StatusBar />
-        </SafeAreaProvider>
-      </QueryClientProvider>
+      <ThemeProvider theme={defaultTheme}>
+        <QueryClientProvider client={queryClient}>
+          <SafeAreaProvider>
+            <Navigation colorScheme={colorScheme} />
+            <StatusBar />
+          </SafeAreaProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
     )
   }
 }

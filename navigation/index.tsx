@@ -12,18 +12,14 @@ import { createStackNavigator } from '@react-navigation/stack'
 import * as React from 'react'
 import { ColorSchemeName } from 'react-native'
 
-import NotFoundScreen from '../screens/NotFoundScreen'
+import NotFoundScreen from '../screens/NotFoundScreen/NotFoundScreen'
 import { RootStackParamList } from '../types'
-import BottomTabNavigator from './BottomTabNavigator'
 import LinkingConfiguration from './LinkingConfiguration'
 
 import { SafeAreaView } from 'react-native-safe-area-context'
+import BottomTabNavigator from './navigators/BottomTabNavigator'
 
-export default function Navigation({
-  colorScheme,
-}: {
-  colorScheme: ColorSchemeName
-}) {
+function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
@@ -52,3 +48,5 @@ function RootNavigator() {
     </SafeAreaView>
   )
 }
+
+export default React.memo(Navigation)

@@ -16,7 +16,15 @@ export const colors = {
   black: '#000000',
   blackLighter: '#444444',
   transparentBlack: 'rgba(0, 0, 0, 0.5)',
-}
+  info: '#2e78b7',
+  warn: 'orange',
+} as const
+
+export const defaultTheme = {
+  colors,
+} as const
+
+export type TDefaultTheme = typeof defaultTheme
 
 export const mhdDefaultColors = {
   grey: '#9E9E9E',
