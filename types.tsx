@@ -6,4 +6,5 @@
 export type RootStackParamList = {
   Root: undefined
   NotFound: undefined
+  EnterParkingInfo: undefined
 }

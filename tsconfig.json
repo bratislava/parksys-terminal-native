@@ -10,7 +10,12 @@
       "@hooks/*": ["./hooks/*"],
       "@images/*": ["./assets/images/*"],
       "@utils/*": ["./utils/*"],
-      "@fonts/*": ["./assets/fonts/*"]
+      "@fonts/*": ["./assets/fonts/*"],
+      "@lib/*": ["./lib/*"],
+      "@services/*": ["./services/*"],
+      "@mock/*": ["./__mock__/*"],
+      "@custom-types/*": ["./custom-types/*"],
+      "@models/*": ["./models/*"]
     }
   }
 }

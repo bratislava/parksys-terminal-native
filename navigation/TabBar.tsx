@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     height: BOTTOM_TAB_NAVIGATOR_HEIGHT,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    position: 'absolute',
+    // position: 'absolute',
     bottom: 0,
     width: '100%',
     ...s.shadow,

@@ -1,15 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 
-const styles = StyleSheet.create({
-  buttonGroup: {
-    flexDirection: 'row',
-  },
-  buttonGroupVertical: {
-    flexDirection: 'column',
-  },
-})
-
 interface ButtonGroupProps {
   children: (JSX.Element | undefined)[] | JSX.Element
   style?: ViewStyle
@@ -40,5 +31,14 @@ const ButtonGroup = ({
     )}
   </View>
 )
+
+const styles = StyleSheet.create({
+  buttonGroup: {
+    flexDirection: 'row',
+  },
+  buttonGroupVertical: {
+    flexDirection: 'column',
+  },
+})
 
 export default ButtonGroup
