@@ -15,7 +15,7 @@ class PapayaApi extends BaseApi {
     if (Constants.manifest?.extra?.enableMockApi) {
       this.mockInstance = new MockAdapter(this.axios, {
         onNoMatch: 'passthrough',
-        delayResponse: 1000,
+        delayResponse: Constants.manifest?.extra?.mockApiDelay ?? 0,
       })
       registerPapayaMocks(this.mockInstance)
     }

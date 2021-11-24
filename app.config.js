@@ -43,6 +43,7 @@ export default {
     papayaApiUrl: process.env.PAPAYA_API_URL,
     enableMockApi: process.env.ENABLE_MOCK_API,
     apiTimeout: process.env.API_TIMEOUT,
+    mockApiDelay: process.env.MOCK_API_DELAY,
     googlePlacesApiKey: process.env.GOOGLE_PLACES_API_KEY,
   },
   packagerOpts: {

@@ -2,7 +2,6 @@ import secureStorageService from '@services/internal/secureStorage.service'
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios'
 import MockAdapter from 'axios-mock-adapter/types'
 import Constants from 'expo-constants'
-import { Asserts } from 'yup'
 
 interface IBaseApiConfig {
   /**
