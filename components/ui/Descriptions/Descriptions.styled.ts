@@ -1,0 +1,79 @@
+import styled, { css } from 'styled-components/native'
+
+export type TLayout = 'vertical' | 'horizontal'
+
+interface IStyledProps {
+  layout?: TLayout
+}
+
+export const DescriptionsSC = styled.View`
+  flex-shrink: 1;
+`
+
+export const DescriptionsItemSC = styled.View<IStyledProps>`
+  padding: 4px 0;
+
+  ${({ layout }) => {
+    if (layout === 'horizontal') {
+      return css`
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom-width: 0;
+      `
+    }
+
+    return css`
+      flex-direction: column;
+    `
+  }};
+`
+
+interface IItemStyledProps {
+  layout?: TLayout
+  last?: boolean
+}
+
+export const DescriptionContentSC = styled.View<IItemStyledProps>`
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+
+  width: 100%;
+  max-width: 50%;
+
+  ${({ layout }) =>
+    layout === 'vertical'
+      ? css`
+          width: 100%;
+          max-width: 100%;
+        `
+      : ''};
+`
+
+export const DescriptionLabelSC = styled(
+  DescriptionContentSC
+)<IItemStyledProps>`
+  justify-content: flex-start;
+  font-weight: bold;
+
+  ${({ layout }) =>
+    layout === 'vertical'
+      ? css`
+          width: 100%;
+          justify-content: flex-start;
+        `
+      : ''};
+`
+
+export const DescriptionLabelTextSC = styled.Text`
+  font-style: normal;
+  font-weight: bold;
+
+  color: ${({ theme }) => theme.colors.black};
+`
+
+export const DescriptionContentTextSC = styled(DescriptionLabelTextSC)`
+  font-weight: normal;
+  font-size: 16px;
+`

@@ -5,6 +5,7 @@ import i18n from 'i18n-js'
 import OneStackNavigator from './OneStackNavigator'
 import TwoStackNavigator from './TwoStackNavigator'
 import BurgerMenuSvg from '@images/burger-menu.svg'
+import { MaterialIcons } from '@expo/vector-icons'
 
 const BottomTab = createBottomTabNavigator<any>()
 
@@ -25,7 +26,9 @@ function BottomTabNavigator() {
         component={OneStackNavigator}
         options={{
           title: i18n.t('one'),
-          tabBarIcon: BurgerMenuSvg,
+          tabBarIcon: ({ fill }: any) => {
+            return <MaterialIcons name="payment" size={32} color={fill} />
+          },
         }}
       />
       <BottomTab.Screen

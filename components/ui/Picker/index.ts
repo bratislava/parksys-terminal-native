@@ -1,3 +1,3 @@
-import Picker from './Picker'
+import { Picker } from './Picker.ios'
 
 export default Picker

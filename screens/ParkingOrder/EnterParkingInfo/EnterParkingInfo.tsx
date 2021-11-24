@@ -20,46 +20,61 @@ import {
   validationSchema,
   EnterParkingForm,
 } from './EnterParkingInfo.schema'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useQuery } from 'react-query'
 import { getUdrsInfo } from '@services/external/pricing.api'
 import secureStorageService from '@services/internal/secureStorage.service'
 import i18n from 'i18n-js'
 import { ZonedDateTime, convert } from '@js-joda/core'
+import { TOneStackParamList } from 'types'
 
+/**
+ * Screen to enter customer data to purchase parking ticket
+ */
 const EnterParkingInfo: React.FunctionComponent = () => {
-  const { push } = useNavigation<StackNavigationProp<any>>()
+  const { push } = useNavigation<StackNavigationProp<TOneStackParamList>>()
 
   const [initialValues, setInitialValues] = React.useState({
     ...formInitialValues,
   })
 
-  const {
-    data: udrs,
-    error: udrsError,
-    isLoading: udrsLoading,
-    refetch,
-  } = useQuery('getudrsInfo', async () => {
+  /**
+   * Fetch udrs list and get last selected udr from storage
+   */
+  const fetchUdrs = React.useCallback(async () => {
     const initiallySelected = await secureStorageService.getSelectedUdr()
     const data = await getUdrsInfo()
     setInitialValues((o) => ({
       ...o,
       udr: initiallySelected ?? data[0]?.udrid ?? '',
     }))
-    return data
-  })
 
+    return data
+  }, [])
+
+  const {
+    data: udrs,
+    error: udrsError,
+    isLoading: udrsLoading,
+    refetch,
+  } = useQuery('getudrsInfo', fetchUdrs)
+
+  /**
+   * After submit go to next screen
+   */
   const onSubmit = React.useCallback(
     async (values: EnterParkingForm) => {
       await secureStorageService.setSelectedUdr(values.udr)
       const selectedUdr = udrs?.find((udr) => values.udr === udr.udrid)
 
-      push('ParkingOrderSummary', {
-        udr: selectedUdr,
-        ecv: values.ecv,
-        parkingEnd: values.parkingEnd.toISOString(),
-      })
+      if (selectedUdr) {
+        push('ParkingOrderSummary', {
+          udr: selectedUdr,
+          ecv: values.ecv,
+          parkingEnd: values.parkingEnd.toISOString(),
+        })
+      }
     },
     [push, udrs]
   )
@@ -70,12 +85,6 @@ const EnterParkingInfo: React.FunctionComponent = () => {
     onSubmit,
     enableReinitialize: true,
   })
-
-  const onFocus = React.useCallback(() => {
-    refetch()
-  }, [refetch])
-
-  useFocusEffect(onFocus)
 
   if (udrsLoading) {
     return (
@@ -147,7 +156,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
             <Input value={values.udr} editable={false} />
           </FormItem>
           <FormItem
-            label={i18n.t('screens.enterParkingInfo.form.udr')}
+            label={i18n.t('screens.enterParkingInfo.form.parkingEnd')}
             error={
               errors.parkingEnd
                 ? i18n.t(errors.parkingEnd as string)
