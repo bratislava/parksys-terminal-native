@@ -15,7 +15,9 @@ class PricingApi extends BaseApi {
     if (Constants.manifest?.extra?.enableMockApi) {
       this.mockInstance = new MockAdapter(this.axios, {
         onNoMatch: 'passthrough',
-        delayResponse: Constants.manifest?.extra?.mockApiDelay ?? 0,
+        delayResponse: Constants.manifest?.extra?.mockApiDelay
+          ? Number(Constants.manifest?.extra?.mockApiDelay)
+          : 0,
       })
       registerPricingMocks(this.mockInstance)
     }
