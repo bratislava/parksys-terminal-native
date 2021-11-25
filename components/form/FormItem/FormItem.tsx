@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { StyleProp, ViewStyle } from 'react-native'
 import {
   ErrorText,
   FormItemSC,
@@ -7,9 +8,22 @@ import {
 } from './FormItem.styled'
 
 interface FormItemProps {
+  /**
+   * Label of form input
+   */
   label: string
+  /**
+   * Show astrict by name
+   */
   required?: boolean
+  /**
+   * Display error below field
+   */
   error?: React.ReactNode
+  /**
+   * Style of container
+   */
+  style?: StyleProp<ViewStyle>
 }
 
 /**
@@ -20,9 +34,10 @@ const FormItem: React.FunctionComponent<FormItemProps> = ({
   required,
   error,
   children,
+  style,
 }) => {
   return (
-    <FormItemSC>
+    <FormItemSC style={style as any}>
       <FormLabelText>
         {label}
         {/* eslint-disable-next-line react-native/no-raw-text */}

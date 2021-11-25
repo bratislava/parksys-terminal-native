@@ -9,7 +9,7 @@ import {
   DateTimePickerPlaceholder,
 } from './DateTimePicker.styled'
 import { DateTimeFormatter, ZonedDateTime } from '@js-joda/core'
-import { displayFormats } from './formats'
+import { displayFormats, IconMap } from './formats'
 import { View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 
@@ -119,7 +119,7 @@ const _DateTimePicker = ({
               )
             : placeholder}
         </DateTimePickerPlaceholder>
-        <MaterialIcons name="date-range" size={16} color="black" />
+        <MaterialIcons name={IconMap.get(mode)} size={16} color="black" />
       </DatePickerWrapper>
     )
   }, [customFormItemRenderer, mode, placeholder, toggleModal, value, error])

@@ -21,3 +21,8 @@ export const ErrorWrapper = styled.View`
   align-items: center;
   justify-content: center;
 `
+export const DateWrapper = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`
