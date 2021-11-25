@@ -4,6 +4,7 @@ import FormItem from '@components/form/FormItem'
 import Input from '@components/ui/Input'
 import {
   ButtonWrapper,
+  DateWrapper,
   EnterParkingInfoSC,
   FormWrapper,
 } from './EnterParkingInfo.styled'
@@ -155,23 +156,48 @@ const EnterParkingInfo: React.FunctionComponent = () => {
           >
             <Input value={values.udr} editable={false} />
           </FormItem>
-          <FormItem
-            label={i18n.t('screens.enterParkingInfo.form.parkingEnd')}
-            error={
-              errors.parkingEnd
-                ? i18n.t(errors.parkingEnd as string)
-                : undefined
-            }
-            required
-          >
-            <DateTimePicker
-              value={values.parkingEnd}
-              mode="datetime"
-              onChange={(d) => setFieldValue('parkingEnd', d)}
-              minimumDate={new Date()}
-              maximumDate={convert(ZonedDateTime.now().plusHours(48)).toDate()}
-            />
-          </FormItem>
+          <DateWrapper>
+            <FormItem
+              label={i18n.t('screens.enterParkingInfo.form.udr')}
+              error={
+                errors.parkingEnd
+                  ? i18n.t(errors.parkingEnd as string)
+                  : undefined
+              }
+              required
+              style={styles.dateItemLeft}
+            >
+              <DateTimePicker
+                value={values.parkingEnd}
+                mode="date"
+                onChange={(d) => setFieldValue('parkingEnd', d)}
+                minimumDate={new Date()}
+                maximumDate={convert(
+                  ZonedDateTime.now().plusHours(48)
+                ).toDate()}
+              />
+            </FormItem>
+            <FormItem
+              label={i18n.t('screens.enterParkingInfo.form.udr')}
+              error={
+                errors.parkingEnd
+                  ? i18n.t(errors.parkingEnd as string)
+                  : undefined
+              }
+              required
+              style={styles.dateItemRight}
+            >
+              <DateTimePicker
+                value={values.parkingEnd}
+                mode="time"
+                onChange={(d) => setFieldValue('parkingEnd', d)}
+                minimumDate={new Date()}
+                maximumDate={convert(
+                  ZonedDateTime.now().plusHours(48)
+                ).toDate()}
+              />
+            </FormItem>
+          </DateWrapper>
         </FormWrapper>
       </AvoidKeyboard>
       <ButtonWrapper>
@@ -189,6 +215,14 @@ const styles = StyleSheet.create({
   formStyle: {
     paddingVertical: 32,
     paddingHorizontal: 24,
+  },
+  dateItemRight: {
+    flex: 1,
+    marginLeft: 4,
+  },
+  dateItemLeft: {
+    flex: 1,
+    marginRight: 4,
   },
 })
 
