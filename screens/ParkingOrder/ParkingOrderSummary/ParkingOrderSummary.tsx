@@ -56,7 +56,9 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
     data: pricingInfo,
     error,
     isLoading,
-  } = useQuery('getPriceForParking', fetchPrice, { cacheTime: 0 })
+  } = useQuery(['getPriceForParking', ecv, parkingEnd, udr.udrid], fetchPrice, {
+    cacheTime: 0,
+  })
 
   if (error) {
     return (
