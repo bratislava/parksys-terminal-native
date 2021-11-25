@@ -29,6 +29,18 @@ To get Env keys:
 
 For help reach to @mpinter (Martin Pinter) or @Balros (Adam Grund)
 
+### ENV variables
+
+- all possible variables are in .env.XXX.template files
+  - APP config
+    - ENABLE_MOCK_API (enable mocking api)
+    - MOCK_API_DELAY (add delay to calls)
+    - SENTRY_AUTH_TOKEN
+    - API_TIMEOUT (cancel call after xxx MS, 0 = no timeout)
+  - API URLS
+    - PRICING_API_URL (pricing api)
+    - PAPAYA_API_URL (terminal api)
+
 ### Project structure
 
 - \_\_mock\_\_ (mocking api)
