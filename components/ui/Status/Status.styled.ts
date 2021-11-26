@@ -24,10 +24,13 @@ export const StatusSC = styled.View`
   justify-content: center;
 `
 
-export const StatusText = styled.Text<ComponentProps>`
+export const StatusText = styled.Text<
+  ComponentProps & { hasDescription?: boolean }
+>`
   text-align: center;
   font-size: 24px;
   font-weight: bold;
+  margin-bottom: ${({ hasDescription }) => (hasDescription ? 0 : 24)}px;
   color: ${({ theme, variant }) => getColor(theme, variant)};
 `
 

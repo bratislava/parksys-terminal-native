@@ -8,3 +8,7 @@ export type RootStackParamList = {
   NotFound: undefined
   EnterParkingInfo: undefined
 }
+
+export type AuthStackParamList = {
+  Login: undefined
+}

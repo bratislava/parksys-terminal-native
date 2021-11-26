@@ -29,6 +29,17 @@ To get Env keys:
 
 For help reach to @mpinter (Martin Pinter) or @Balros (Adam Grund)
 
+### Auth
+
+This app uses Azure login. You need to configure:
+
+- AZURE_AUTH_TENANT_ID (settings/tenant id)
+- AZURE_AUTH_CLIENT_ID (registered apps -> manifest)
+
+in env variables to be able to use login. You can obtain these from [Azure](https://portal.azure.com/).
+
+For more information use [Expo AuthSession](https://docs.expo.dev/guides/authentication/#azure) tutorial in Expo docs.
+
 ### Running on device
 
 You need the [Expo Go](https://expo.io/client) application installed on your device. With Android you only need to scan the QR shown to you after `yarn start`. On iOs you may need access to the bratislava expo organisation - ping Martin Pinter to get it.

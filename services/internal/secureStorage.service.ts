@@ -1,3 +1,4 @@
+import { TokenResponse } from 'expo-auth-session'
 import * as SecureStore from 'expo-secure-store'
 import { EStorage } from '../../types/storage'
 /**
@@ -38,41 +39,29 @@ async function getValueFor(key: string) {
  * @param token access token to store
  * @returns promise
  */
-function setAccessToken(token: string) {
-  return save(EStorage.azureAccessToken, token)
+function setAuthSession(session: Record<string, string>) {
+  return save(EStorage.azureSession, JSON.stringify(session))
 }
 
 /**
- * Get access token from storage
+ * Get azure session from storage or null
  * @returns promise
  */
-function getAccessToken() {
-  return getValueFor(EStorage.azureAccessToken)
-}
+async function getAuthSession(): Promise<Record<string, string> | null> {
+  const session = await getValueFor(EStorage.azureSession)
 
-/**
- * Store refresh token to storage
- * @param token refresh token to store
- * @returns promise
- */
-function setRefreshToken(token: string) {
-  return save(EStorage.azureRefreshToken, token)
-}
+  if (session) {
+    return JSON.parse(session)
+  }
 
-/**
- * Get refresh token from storage
- * @returns promise
- */
-function getRefreshToken() {
-  return getValueFor(EStorage.azureRefreshToken)
+  return null
 }
 
 /**
  * Clear tokens from storage
  */
-async function clearAuthTokens() {
-  await clear(EStorage.azureAccessToken)
-  await clear(EStorage.azureRefreshToken)
+async function clearAuthSession() {
+  await clear(EStorage.azureSession)
 }
 
 /**
@@ -104,11 +93,9 @@ const secureStorageService = {
   /**
    * Tokens
    */
-  getAccessToken,
-  setAccessToken,
-  getRefreshToken,
-  setRefreshToken,
-  clearAuthTokens,
+  setAuthSession,
+  getAuthSession,
+  clearAuthSession,
   /**
    * udr
    */

@@ -1,5 +1,10 @@
-import secureStorageService from '@services/internal/secureStorage.service'
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios'
+// import authService from '@services/internal/auth.service'
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from 'axios'
 import MockAdapter from 'axios-mock-adapter/types'
 import Constants from 'expo-constants'
 
@@ -13,6 +18,8 @@ interface IBaseApiConfig {
 abstract class BaseApi {
   protected axios: AxiosInstance
   protected mockInstance?: MockAdapter
+  static isRefreshing = false
+  static refreshSubscribers = []
 
   constructor(private baseURL: string, config?: IBaseApiConfig) {
     /**
@@ -39,20 +46,69 @@ abstract class BaseApi {
     if (config?.includeAuthorization) {
       this.axios.interceptors.request.use(
         async (config) => {
-          const accessToken = await secureStorageService.getAccessToken()
           const newConfig: AxiosRequestConfig = {
             ...config,
             headers: {
               ...config.headers,
-              // TODO: add access token from azure
-              Authorization: `Bearer ${accessToken}`,
             },
           }
+
           return newConfig
         },
-        (error: AxiosError) => error
+        (error: AxiosError) => Promise.reject(error)
+      )
+
+      this.axios.interceptors.response.use(
+        (response: AxiosResponse) => response,
+        // TODO: handle token refresh
+        (error: AxiosError) => {
+          // const { config, response } = error
+          // const originalRequest = config
+          // const data: any = response?.data || {}
+          // const status: any = response?.status || ''
+
+          // if (invalidToken) {
+          //   authService
+          //     .refreshAccessToken()
+          //     .then((tokens) => BaseApi.onRefreshed(tokens.accessToken))
+          //     .catch(() => {})
+
+          //   // Postpone all requests with invalid token in array
+          //   return new Promise((resolve) => {
+          //     // we are passing a function, that accepts token, all wrapped in Promise
+          //     BaseApi.subscribeTokenRefresh((token: string) => {
+          //       // replace the expired token and retry
+          //       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          //       originalRequest.headers!.Authorization = `Bearer ${token}`
+          //       resolve(axios(originalRequest))
+          //     })
+          //   })
+          // }
+
+          // Create verbose error, not just error message
+          return Promise.reject(error.response)
+        }
       )
     }
+  }
+
+  /**
+   * Function to subscribe to refresh token queue
+   * @param callback callback after refresh
+   */
+  static subscribeTokenRefresh(callback: (token: string) => void): void {
+    BaseApi.refreshSubscribers.push(callback as never)
+  }
+
+  /**
+   * Pop all requests in queue and give them new access token
+   * @param token new access token
+   */
+  static onRefreshed(token: string): void {
+    // in this case an "fnc" is a function, which we call with new token, its original request
+    BaseApi.refreshSubscribers.map((fnc: (token: string) => void) => fnc(token))
+    // clear an array after reply
+    BaseApi.refreshSubscribers = []
   }
 
   /**

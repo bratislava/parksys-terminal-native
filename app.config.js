@@ -43,6 +43,8 @@ export default {
     papayaApiUrl: process.env.PAPAYA_API_URL,
     enableMockApi: process.env.ENABLE_MOCK_API,
     apiTimeout: process.env.API_TIMEOUT,
+    azureClientId: process.env.AZURE_AUTH_CLIENT_ID,
+    azureTenantId: process.env.AZURE_AUTH_TENANT_ID,
     googlePlacesApiKey: process.env.GOOGLE_PLACES_API_KEY,
   },
   packagerOpts: {
