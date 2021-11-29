@@ -1,6 +1,6 @@
 import { TokenResponse } from 'expo-auth-session'
 import * as SecureStore from 'expo-secure-store'
-import { EStorage } from '../../types/storage'
+import { EStorage } from '../../types/storage.d'
 /**
  * Service for secure storage on device
  * https://docs.expo.dev/versions/latest/sdk/securestore/

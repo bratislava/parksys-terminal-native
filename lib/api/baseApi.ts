@@ -26,7 +26,9 @@ abstract class BaseApi {
      * Create axios config with base url and timeout from env
      */
     const axiosConfig: AxiosRequestConfig = {
-      timeout: Constants.manifest?.extra?.apiTimeout,
+      timeout: Constants.manifest?.extra?.apiTimeout
+        ? Number(Constants.manifest?.extra?.apiTimeout)
+        : 0,
       baseURL,
     }
 

@@ -27,6 +27,7 @@ export const StatusSC = styled.View`
 export const StatusText = styled.Text<
   ComponentProps & { hasDescription?: boolean }
 >`
+  margin-top: 8px;
   text-align: center;
   font-size: 24px;
   font-weight: bold;

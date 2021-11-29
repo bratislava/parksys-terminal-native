@@ -1,4 +1,5 @@
 import MockAdapter from 'axios-mock-adapter/types'
+import priceMock from './price.mock'
 import udrMock from './udr.mock'
 
 /**
@@ -6,6 +7,7 @@ import udrMock from './udr.mock'
  */
 const rootMock: ((mock: MockAdapter) => Record<string, MockAdapter>)[] = [
   udrMock,
+  priceMock,
 ]
 
 /**

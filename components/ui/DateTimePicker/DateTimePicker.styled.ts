@@ -10,7 +10,7 @@ export const DatePickerWrapper = styled.TouchableOpacity<{ error?: boolean }>`
   width: 100%;
   height: 39px;
 
-  padding: 12px;
+  padding: 6px;
 
   flex-direction: row;
   align-items: center;

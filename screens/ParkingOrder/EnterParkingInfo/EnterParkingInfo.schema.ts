@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import { ZonedDateTime, convert } from '@js-joda/core'
+import { ZonedDateTime } from '@js-joda/core'
 
 const ECV_REGEX = /^[A-Z|0-9]*$/gm
 
@@ -13,7 +13,20 @@ export const validationSchema: Yup.SchemaOf<EnterParkingForm> = Yup.object({
   udr: Yup.string().default('').required(),
   parkingEnd: Yup.date()
     .test(
-      'date-test',
+      'date-test-min',
+      'screens.enterParkingInfo.formErrors.minDate',
+      (value) => {
+        if (!value) {
+          return true
+        }
+        const selected = ZonedDateTime.parse(value.toISOString())
+        const min = ZonedDateTime.now()
+
+        return selected.isAfter(min)
+      }
+    )
+    .test(
+      'date-test-max',
       'screens.enterParkingInfo.formErrors.maxDate',
       (value) => {
         if (!value) {

@@ -3,10 +3,11 @@ import { createStackNavigator } from '@react-navigation/stack'
 import i18n from 'i18n-js'
 import EnterParkingInfo from '@screens/ParkingOrder/EnterParkingInfo'
 import ParkingOrderSummary from '@screens/ParkingOrder/ParkingOrderSummary'
+import { TOneStackParamList } from 'types'
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const OneStack = createStackNavigator<any>()
+const OneStack = createStackNavigator<TOneStackParamList>()
 
 function OneStackNavigator() {
   return (

@@ -45,6 +45,7 @@ export default {
     apiTimeout: process.env.API_TIMEOUT,
     azureClientId: process.env.AZURE_AUTH_CLIENT_ID,
     azureTenantId: process.env.AZURE_AUTH_TENANT_ID,
+    mockApiDelay: process.env.MOCK_API_DELAY,
     googlePlacesApiKey: process.env.GOOGLE_PLACES_API_KEY,
   },
   packagerOpts: {
