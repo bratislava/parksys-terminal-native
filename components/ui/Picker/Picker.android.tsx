@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Picker as BasePicker } from '@react-native-picker/picker'
 import { PickerSC } from './Picker.styled'
-import { Platform } from 'react-native'
 import { useTheme } from 'styled-components'
 import { PickerProps } from './pickerType'
 
@@ -10,7 +9,14 @@ type TPicker = <T>(
 ) => ReturnType<typeof _Picker>
 
 const _Picker = <T extends any>(
-  { children, dropdownIconColor, error, placeholder, ...rest }: PickerProps<T>,
+  {
+    children,
+    dropdownIconColor,
+    error,
+    placeholder,
+    clearable,
+    ...rest
+  }: PickerProps<T>,
   ref: React.Ref<BasePicker<T>>
 ) => {
   const theme = useTheme()
@@ -23,8 +29,10 @@ const _Picker = <T extends any>(
           error ? theme.colors.error : dropdownIconColor ?? theme.colors.black
         }
       >
-        <Picker.Item value="" label={placeholder} />
-        {Platform.OS === 'android' && children
+        {placeholder || clearable ? (
+          <Picker.Item label={placeholder || '-'} />
+        ) : null}
+        {children
           ? React.Children.map(children, (child) =>
               React.cloneElement(child, {
                 ...child.props,
@@ -37,7 +45,7 @@ const _Picker = <T extends any>(
                 },
               })
             )
-          : children}
+          : []}
       </BasePicker>
     </PickerSC>
   )

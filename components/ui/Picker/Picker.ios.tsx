@@ -30,6 +30,7 @@ const _Picker = <T extends any>(
     containerStyle,
     itemStyle,
     dropdownIconColor,
+    clearable,
     ...rest
   }: PickerProps<T>,
   ref: React.Ref<BasePicker<T>>
@@ -126,7 +127,9 @@ const _Picker = <T extends any>(
             ref={ref}
             {...rest}
           >
-            <Picker.Item label="-" value="" />
+            {placeholder || clearable ? (
+              <Picker.Item label={placeholder || '-'} />
+            ) : null}
             {children}
           </BasePicker>
           <Button.Group style={{ paddingHorizontal: 16 }}>

@@ -22,4 +22,8 @@ export type PickerProps<T> = Omit<BaseProps<T>, 'children'> & {
    * Style of container surrounding input
    */
   containerStyle?: StyleProp<ViewStyle>
+  /**
+   * Add empty element to enable select null value
+   */
+  clearable?: boolean
 }
