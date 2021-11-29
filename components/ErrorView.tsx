@@ -5,7 +5,7 @@ import i18n from 'i18n-js'
 import { ValidationError } from 'yup'
 
 import { colors } from '@utils/theme'
-import { Button } from '.'
+import { Button } from './ui'
 
 interface ErrorViewProps {
   action?: () => unknown

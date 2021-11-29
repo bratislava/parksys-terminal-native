@@ -12,6 +12,7 @@ import { Dimensions, Keyboard, View } from 'react-native'
 import Modal from '@components/Modal'
 import Button from '@components/ui/Button'
 import { MaterialIcons } from '@expo/vector-icons'
+import i18n from 'i18n-js'
 
 const WIDTH = Dimensions.get('screen').width * 0.8
 
@@ -111,8 +112,15 @@ const _DateTimePicker = ({
             />
           )}
           <Button.Group style={{ paddingHorizontal: 16 }}>
-            <Button title="cancel" onPress={onCancel} />
-            <Button title="save" onPress={onDone} />
+            <Button
+              title={i18n.t('components.dateTimePicker.cancelAction')}
+              variant="secondary"
+              onPress={onCancel}
+            />
+            <Button
+              title={i18n.t('components.dateTimePicker.saveAction')}
+              onPress={onDone}
+            />
           </Button.Group>
         </View>
       </Modal>

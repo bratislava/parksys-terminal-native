@@ -1,4 +1,4 @@
-# Hybaj
+# Bratislava Parking Native
 
 React Native Expo app. Bootstraped with expo typescript tabs example.
 
@@ -28,6 +28,46 @@ To get Env keys:
   3. Get Auth token with scope: org:read, project:releases, project:write
 
 For help reach to @mpinter (Martin Pinter) or @Balros (Adam Grund)
+
+### ENV variables
+
+- all possible variables are in .env.XXX.template files
+  - APP config
+    - ENABLE_MOCK_API (enable mocking api)
+    - MOCK_API_DELAY (add delay to calls)
+    - SENTRY_AUTH_TOKEN
+    - API_TIMEOUT (cancel call after xxx MS, 0 = no timeout)
+  - API URLS
+    - PRICING_API_URL (pricing api)
+    - PAPAYA_API_URL (terminal api)
+
+### Project structure
+
+- \_\_mock\_\_ (mocking api)
+- assets (static assets)
+- components (generic components of app)
+  - form (form components)
+  - ui (ui components as Buttons, Pickers...)
+  - ...
+- hooks (react hooks)
+- models (DTO + validations files)
+- navigation (react navigation navigators)
+- screens (screens)
+- services
+  - external (api calls)
+  - internal (internal services)
+- translations
+- types
+- utils
+
+### File naming
+
+- api files (.api.ts)
+- services (.service.ts)
+- styles (.styled.ts)
+- validation (.schema.ts)
+- mock (.mock.ts)
+- definitions (.d.ts)
 
 ### Running on device
 

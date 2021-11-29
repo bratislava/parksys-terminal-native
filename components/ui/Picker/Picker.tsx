@@ -1,61 +1,25 @@
-import * as React from 'react'
-import {
-  PickerProps as BaseProps,
-  Picker as BasePicker,
-  PickerItemProps,
-} from '@react-native-picker/picker'
-import { PickerSC } from './Picker.styled'
+import React from 'react'
+import { Picker as BasePicker } from '@react-native-picker/picker'
 import { Platform } from 'react-native'
-import { useTheme } from 'styled-components'
-
-type PickerProps<T> = Omit<BaseProps<T>, 'children'> & {
-  error?: boolean
-  children?:
-    | React.ReactElement<PickerItemProps<T>>
-    | React.ReactElement<PickerItemProps<T>>[]
-}
+import { PickerProps } from './pickerType'
 
 type TPicker = <T>(
   props: PickerProps<T> & { ref?: React.ForwardedRef<BasePicker<T>> }
-) => ReturnType<typeof Picker>
+) => ReturnType<typeof _Picker>
 
-const Picker = <T extends any>(
-  { children, dropdownIconColor, error, ...rest }: PickerProps<T>,
-  ref: React.Ref<BasePicker<T>>
-) => {
-  const theme = useTheme()
-  return (
-    <PickerSC error={error}>
-      <BasePicker
-        {...rest}
-        ref={ref}
-        dropdownIconColor={
-          error ? theme.colors.error : dropdownIconColor ?? theme.colors.black
-        }
-      >
-        {Platform.OS === 'android' && children
-          ? React.Children.map(children, (child) =>
-              React.cloneElement(child, {
-                ...child.props,
-                style: {
-                  ...(child.props.style && typeof child.props.style === 'object'
-                    ? child.props.style
-                    : {}),
-                  fontSize: 12,
-                  lineHeight: 14,
-                },
-              })
-            )
-          : children}
-      </BasePicker>
-    </PickerSC>
-  )
+/**
+ * Component for selecting one value.
+ * It uses native android picker and Modal with native picker on iOS
+ */
+export const _Picker = <T extends any>() => {
+  React.useEffect(() => {
+    console.warn(`PickerSelect is not supported on: ${Platform.OS}`)
+  }, [])
+  return null
 }
 
-const ForwardedPicker = React.forwardRef(Picker) as unknown as TPicker & {
+export const Picker = React.forwardRef(_Picker) as unknown as TPicker & {
   Item: typeof BasePicker.Item
 }
 
-ForwardedPicker.Item = BasePicker.Item
-
-export default ForwardedPicker
+Picker.Item = BasePicker.Item
