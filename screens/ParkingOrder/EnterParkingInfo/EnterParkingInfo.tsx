@@ -158,7 +158,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
           </FormItem>
           <DateWrapper>
             <FormItem
-              label={i18n.t('screens.enterParkingInfo.form.udr')}
+              label={i18n.t('screens.enterParkingInfo.form.date')}
               error={
                 errors.parkingEnd
                   ? i18n.t(errors.parkingEnd as string)
@@ -175,10 +175,11 @@ const EnterParkingInfo: React.FunctionComponent = () => {
                 maximumDate={convert(
                   ZonedDateTime.now().plusHours(48)
                 ).toDate()}
+                display="spinner"
               />
             </FormItem>
             <FormItem
-              label={i18n.t('screens.enterParkingInfo.form.udr')}
+              label={i18n.t('screens.enterParkingInfo.form.time')}
               error={
                 errors.parkingEnd
                   ? i18n.t(errors.parkingEnd as string)
@@ -195,6 +196,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
                 maximumDate={convert(
                   ZonedDateTime.now().plusHours(48)
                 ).toDate()}
+                display="spinner"
               />
             </FormItem>
           </DateWrapper>

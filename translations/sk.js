@@ -24,6 +24,8 @@ export default {
         ecv: 'ECV',
         ulica: 'Ulica',
         udr: 'UDR',
+        time: 'Dátum ukončenia',
+        date: 'Čas ukončenia',
         parkingEnd: 'Ukončenie parkovania',
         submitAction: 'Vypočítať cenu',
       },
