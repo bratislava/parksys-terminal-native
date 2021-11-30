@@ -8,10 +8,10 @@ import {
   DatePickerWrapper,
   DateTimePickerPlaceholder,
 } from './DateTimePicker.styled'
-import { DateTimeFormatter, ZonedDateTime } from '@js-joda/core'
 import { displayFormats, IconMap } from './formats'
 import { View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
+import { formatNativeDate } from '@utils/ui/dateUtils'
 
 /**
  * Combine date and time to one timestamp on android
@@ -114,9 +114,7 @@ const _DateTimePicker = ({
       <DatePickerWrapper onPress={toggleModal} error={error}>
         <DateTimePickerPlaceholder>
           {value && mode
-            ? ZonedDateTime.parse(value.toISOString()).format(
-                DateTimeFormatter.ofPattern(displayFormats[mode])
-              )
+            ? formatNativeDate(value, displayFormats[mode])
             : placeholder}
         </DateTimePickerPlaceholder>
         <MaterialIcons name={IconMap.get(mode)} size={16} color="black" />

@@ -12,6 +12,16 @@ import {
   printReqValidation,
   printResValidation,
 } from '@models/papaya/print/print.schema'
+import { ICashReqParams, ICashResponse } from '@models/papaya/cash/cash.d'
+import {
+  cashPaymentReqValidation,
+  cashPaymentResValidation,
+} from '@models/papaya/cash/cash.schema'
+import { ICardPaymentReq } from '@models/papaya/card/card'
+import {
+  cardPaymentReqValidation,
+  requestContentValidation,
+} from '@models/papaya/card/card.schema'
 
 /**
  * Print receipt from terminal
@@ -47,5 +57,34 @@ export function getReceipts(data: IGetReceiptReqData) {
       data,
     },
     getReceiptReqValidation
+  )
+}
+
+/**
+ * PrintReceipt for cash payment
+ * @param params params to print
+ * @returns promise
+ */
+export function payByCash(params: ICashReqParams) {
+  return papayaApi.requestValidate<ICashResponse>(
+    '/api/cash',
+    {
+      method: 'POST',
+      data: params,
+    },
+    cashPaymentReqValidation,
+    cashPaymentResValidation
+  )
+}
+
+export function payByCard(params: ICardPaymentReq) {
+  return papayaApi.requestValidate(
+    '/api/terminal/pay',
+    {
+      method: 'POST',
+      data: params,
+    },
+    requestContentValidation,
+    cardPaymentReqValidation
   )
 }

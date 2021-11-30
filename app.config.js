@@ -1,9 +1,9 @@
 import 'dotenv/config'
 
 export default {
-  name: 'hybaj',
+  name: 'Parksys terminal',
   owner: 'bratislava',
-  slug: 'hybaj',
+  slug: 'parksys-terminal',
   version: '1.0.6',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
@@ -23,7 +23,7 @@ export default {
   },
   android: {
     softwareKeyboardLayoutMode: 'pan',
-    package: 'com.bratislava.hybaj',
+    package: 'com.bratislava.parksys-terminal',
     versionCode: 6,
     adaptiveIcon: {
       foregroundImage: './assets/images/adaptive-icon.png',
