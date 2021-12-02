@@ -27,7 +27,13 @@ import { useQuery } from 'react-query'
 import { getUdrsInfo } from '@services/external/pricing.api'
 import secureStorageService from '@services/internal/secureStorage.service'
 import i18n from 'i18n-js'
-import { ZonedDateTime, convert } from '@js-joda/core'
+import {
+  ZonedDateTime,
+  convert,
+  LocalDateTime,
+  Instant,
+  nativeJs,
+} from '@js-joda/core'
 import { TOneStackParamList } from 'types'
 
 /**
@@ -80,12 +86,36 @@ const EnterParkingInfo: React.FunctionComponent = () => {
     [push, udrs]
   )
 
-  const { values, errors, setFieldValue, submitForm, isValid } = useFormik({
-    initialValues,
-    validationSchema,
-    onSubmit,
-    enableReinitialize: true,
-  })
+  const { values, errors, setFieldValue, submitForm, isValid, resetForm } =
+    useFormik({
+      initialValues,
+      validationSchema,
+      onSubmit,
+      enableReinitialize: true,
+    })
+
+  const addTime = React.useCallback((current: Date, minutes: number) => {
+    let newDate = LocalDateTime.ofInstant(Instant.from(nativeJs(current)))
+
+    /** check if plus or minus */
+    if (minutes < 0) {
+      newDate = newDate.minusMinutes(Math.abs(minutes))
+    } else {
+      newDate = newDate.plusMinutes(minutes)
+    }
+
+    /** check if we ate still in future */
+    if (newDate.isBefore(LocalDateTime.now())) {
+      if (minutes < 0) {
+        newDate = LocalDateTime.now().minusMinutes(Math.abs(minutes))
+      } else {
+        newDate = LocalDateTime.now().plusMinutes(minutes)
+      }
+    }
+
+    /** convert to js */
+    return convert(newDate).toDate()
+  }, [])
 
   if (udrsLoading) {
     return (
@@ -118,7 +148,10 @@ const EnterParkingInfo: React.FunctionComponent = () => {
   return (
     <EnterParkingInfoSC>
       <AvoidKeyboard useHeaderOffset>
-        <FormWrapper contentContainerStyle={styles.formStyle}>
+        <FormWrapper
+          contentContainerStyle={styles.formStyle}
+          keyboardShouldPersistTaps="handled"
+        >
           <FormItem
             label={i18n.t('screens.enterParkingInfo.form.ecv')}
             required
@@ -200,6 +233,48 @@ const EnterParkingInfo: React.FunctionComponent = () => {
               />
             </FormItem>
           </DateWrapper>
+          <Button.Group>
+            <Button
+              title="-1h"
+              variant="secondary"
+              onPress={() =>
+                setFieldValue('parkingEnd', addTime(values.parkingEnd, -30))
+              }
+            />
+            <Button
+              title="-0.5h"
+              variant="secondary"
+              onPress={() =>
+                setFieldValue('parkingEnd', addTime(values.parkingEnd, -60))
+              }
+            />
+            <Button
+              title="+0.5h"
+              variant="secondary"
+              onPress={() =>
+                setFieldValue('parkingEnd', addTime(values.parkingEnd, 30))
+              }
+            />
+            <Button
+              title="+1h"
+              variant="secondary"
+              onPress={() =>
+                setFieldValue('parkingEnd', addTime(values.parkingEnd, 60))
+              }
+            />
+          </Button.Group>
+          <Button
+            title={i18n.t('screens.enterParkingInfo.form.nowAction')}
+            onPress={() => setFieldValue('parkingEnd', new Date())}
+            variant="secondary"
+            style={styles.button}
+          />
+          <Button
+            title={i18n.t('screens.enterParkingInfo.form.resetAction')}
+            onPress={() => resetForm()}
+            variant="danger"
+            style={styles.button}
+          />
         </FormWrapper>
       </AvoidKeyboard>
       <ButtonWrapper>
@@ -215,8 +290,8 @@ const EnterParkingInfo: React.FunctionComponent = () => {
 
 const styles = StyleSheet.create({
   formStyle: {
-    paddingVertical: 32,
-    paddingHorizontal: 24,
+    paddingVertical: 24,
+    paddingHorizontal: 16,
   },
   dateItemRight: {
     flex: 1,
@@ -225,6 +300,9 @@ const styles = StyleSheet.create({
   dateItemLeft: {
     flex: 1,
     marginRight: 4,
+  },
+  button: {
+    marginTop: 16,
   },
 })
 
