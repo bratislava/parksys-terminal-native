@@ -1,10 +1,11 @@
-import { TokenResponse } from 'expo-auth-session'
+/**================================================================================================
+ * ?                                      ABOUT
+ * @description    : Service for secure storage on device
+ * @link          : https://docs.expo.dev/versions/latest/sdk/securestore/
+ *================================================================================================**/
+
 import * as SecureStore from 'expo-secure-store'
 import { EStorage } from '../../types/storage.d'
-/**
- * Service for secure storage on device
- * https://docs.expo.dev/versions/latest/sdk/securestore/
- */
 
 /**
  * Store key value pair to secure storage
@@ -39,29 +40,41 @@ async function getValueFor(key: string) {
  * @param token access token to store
  * @returns promise
  */
-function setAuthSession(session: Record<string, string>) {
-  return save(EStorage.azureSession, JSON.stringify(session))
+function setAccessToken(token: string) {
+  return save(EStorage.azureAccessToken, token)
 }
 
 /**
- * Get azure session from storage or null
+ * Get access token from storage
  * @returns promise
  */
-async function getAuthSession(): Promise<Record<string, string> | null> {
-  const session = await getValueFor(EStorage.azureSession)
+function getAccessToken() {
+  return getValueFor(EStorage.azureAccessToken)
+}
 
-  if (session) {
-    return JSON.parse(session)
-  }
+/**
+ * Store refresh token to storage
+ * @param token refresh token to store
+ * @returns promise
+ */
+function setRefreshToken(token: string) {
+  return save(EStorage.azureRefreshToken, token)
+}
 
-  return null
+/**
+ * Get refresh token from storage
+ * @returns promise
+ */
+function getRefreshToken() {
+  return getValueFor(EStorage.azureRefreshToken)
 }
 
 /**
  * Clear tokens from storage
  */
-async function clearAuthSession() {
-  await clear(EStorage.azureSession)
+async function clearAuthTokens() {
+  await clear(EStorage.azureAccessToken)
+  await clear(EStorage.azureRefreshToken)
 }
 
 /**
@@ -93,9 +106,11 @@ const secureStorageService = {
   /**
    * Tokens
    */
-  setAuthSession,
-  getAuthSession,
-  clearAuthSession,
+  getAccessToken,
+  setAccessToken,
+  getRefreshToken,
+  setRefreshToken,
+  clearAuthTokens,
   /**
    * udr
    */

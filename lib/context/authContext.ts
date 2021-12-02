@@ -1,22 +1,24 @@
-import { useAuthRequest } from 'expo-auth-session'
+import { IAuthSession } from './../../types/authService.d'
+import { IAzureProfile } from '@models/azure/user/azureUser'
+import authService from '@services/internal/auth.service'
 import * as React from 'react'
 
-type TAuthHook = ReturnType<typeof useAuthRequest>
-
 export interface IAuthContext {
-  request: TAuthHook[0]
-  result: TAuthHook[1]
-  promptAsync: TAuthHook[2]
+  tokens?: IAuthSession
+  profile?: IAzureProfile
   loggedIn: boolean
+  login: typeof authService.authenticate
+  logout: typeof authService.revokeTokens
 }
 
 export const defaultValue: IAuthContext = {
-  request: null,
-  result: null,
-  promptAsync: async () => {
-    return { type: 'cancel' }
-  },
   loggedIn: false,
+  login: async () => {
+    throw new Error()
+  },
+  logout: async () => {
+    return
+  },
 }
 
 export const authContext = React.createContext<IAuthContext>(defaultValue)

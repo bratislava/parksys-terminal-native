@@ -1,4 +1,5 @@
 // import authService from '@services/internal/auth.service'
+import authService from '@services/internal/auth.service'
 import axios, {
   AxiosError,
   AxiosInstance,
@@ -35,19 +36,13 @@ abstract class BaseApi {
     this.axios = axios.create(axiosConfig)
 
     /**
-     * Extract error response form axios error
-     */
-    this.axios.interceptors.response.use(
-      (response) => response,
-      (error: AxiosError) => Promise.reject(error.response)
-    )
-
-    /**
      * If we should include auth, add interceptor to include token to each request
      */
     if (config?.includeAuthorization) {
       this.axios.interceptors.request.use(
         async (config) => {
+          const tokens = await authService.getSession()
+
           const newConfig: AxiosRequestConfig = {
             ...config,
             headers: {
@@ -55,43 +50,68 @@ abstract class BaseApi {
             },
           }
 
+          if (tokens && tokens.accessToken && newConfig.headers) {
+            newConfig.headers['Authorization'] = `Bearer ${tokens.accessToken}`
+          }
+
           return newConfig
         },
         (error: AxiosError) => Promise.reject(error)
       )
 
+      /**
+       * Intercept response and handle token errors
+       */
       this.axios.interceptors.response.use(
         (response: AxiosResponse) => response,
-        // TODO: handle token refresh
         (error: AxiosError) => {
-          // const { config, response } = error
-          // const originalRequest = config
-          // const data: any = response?.data || {}
-          // const status: any = response?.status || ''
+          const { config, response } = error
+          const originalRequest = config
+          const status = response?.status
 
-          // if (invalidToken) {
-          //   authService
-          //     .refreshAccessToken()
-          //     .then((tokens) => BaseApi.onRefreshed(tokens.accessToken))
-          //     .catch(() => {})
+          /**
+           * Refresh token if needed
+           */
+          if (status === 401) {
+            BaseApi.isRefreshing = true
+            authService
+              .refreshAccessToken()
+              .then((tokens) => {
+                console.log()
+                BaseApi.onRefreshed(tokens.accessToken)
+              })
+              .catch(() => {
+                authService.revokeTokens()
+              })
+              .finally(() => {
+                BaseApi.isRefreshing = true
+              })
 
-          //   // Postpone all requests with invalid token in array
-          //   return new Promise((resolve) => {
-          //     // we are passing a function, that accepts token, all wrapped in Promise
-          //     BaseApi.subscribeTokenRefresh((token: string) => {
-          //       // replace the expired token and retry
-          //       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          //       originalRequest.headers!.Authorization = `Bearer ${token}`
-          //       resolve(axios(originalRequest))
-          //     })
-          //   })
-          // }
+            // Postpone all requests with invalid token in array
+            return new Promise((resolve) => {
+              // we are passing a function, that accepts token, all wrapped in Promise
+              BaseApi.subscribeTokenRefresh((token: string) => {
+                if (originalRequest.headers) {
+                  originalRequest.headers['Authorization'] = `Bearer ${token}`
+                  resolve(axios(originalRequest))
+                }
+              })
+            })
+          }
 
           // Create verbose error, not just error message
-          return Promise.reject(error.response)
+          return Promise.reject(error)
         }
       )
     }
+
+    /**
+     * Extract error response form axios error
+     */
+    this.axios.interceptors.response.use(
+      (response) => response,
+      (error: AxiosError) => Promise.reject(error.response)
+    )
   }
 
   /**

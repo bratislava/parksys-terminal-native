@@ -23,7 +23,7 @@ export interface DescriptionsItemProps {
   /**
    * Content of description
    */
-  children?: React.ReactElement | React.ReactElement[]
+  children?: React.ReactNode | React.ReactNodeArray
 }
 
 const DescriptionsItem: React.FunctionComponent<DescriptionsItemProps> = ({

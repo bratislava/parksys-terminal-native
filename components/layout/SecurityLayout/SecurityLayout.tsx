@@ -6,12 +6,9 @@ import {
 import LinkingConfiguration from '@navigation/LinkingConfiguration'
 import * as React from 'react'
 import { useColorScheme } from 'react-native'
-import * as WebBrowser from 'expo-web-browser'
 import AuthNavigator from '@navigation/navigators/AuthNavigator'
 import RootNavigator from '@navigation/navigators/RootNavigator'
 import { useAuthContext } from '@lib/context/authContext'
-
-WebBrowser.maybeCompleteAuthSession()
 
 /**
  * Component to handle authentication of app

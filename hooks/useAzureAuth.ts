@@ -1,14 +1,6 @@
-import authService, { TListener } from '@services/internal/auth.service'
-import Constants from 'expo-constants'
 import * as React from 'react'
-import * as AuthSession from 'expo-auth-session'
-
-const useProxy = true
-
-const redirectUri = AuthSession.makeRedirectUri({
-  scheme: 'your.app',
-  useProxy,
-})
+import authService from '@services/internal/auth.service'
+import { IAuthSession, TListener } from 'types/authService.d'
 
 /**
  * Hook to auth user with Azure Login
@@ -17,61 +9,34 @@ const redirectUri = AuthSession.makeRedirectUri({
  */
 function useAzureAuth() {
   const [loggedIn, setLoggedIn] = React.useState(false)
-  // Endpoint
-  const discovery = AuthSession.useAutoDiscovery(
-    `https://login.microsoftonline.com/${Constants.manifest?.extra?.azureTenantId}/v2.0`
-  )
-  // Request
-  const [request, result, promptAsync] = AuthSession.useAuthRequest(
-    {
-      clientId: Constants.manifest?.extra?.azureClientId,
-      scopes: ['openid', 'profile', 'email', 'offline_access'],
-      redirectUri,
-    },
-    discovery
-  )
+  const [tokens, setTokens] = React.useState<IAuthSession | undefined>()
 
-  /**
-   * Handle tokens form auth
-   */
-  const handleAuthResponse = React.useCallback(async () => {
-    if (result?.type === 'success') {
-      await authService.setSession(result.params)
-    }
-  }, [result])
+  const login = authService.authenticate
+  const logout = authService.revokeTokens
 
   /**
    * Load tokens from storage, and log in user if token is not expired
    */
   const initAuth = React.useCallback(async () => {
-    const tokens = await authService.getTokens()
+    const token = await authService.getDecoded()
 
-    if (tokens) {
-      if (tokens.accessToken && !tokens.shouldRefresh()) {
-        setLoggedIn(true)
-      }
+    if (token) {
+      setLoggedIn(true)
     }
   }, [])
-
-  /**
-   * Handle response from Auth callback
-   */
-  React.useEffect(() => {
-    handleAuthResponse()
-  }, [handleAuthResponse])
 
   /**
    * Listen for changes in auth service
    */
   React.useEffect(() => {
-    const handleTokenChange: TListener = (_, tokens) => {
-      if (tokens) {
-        if (tokens.accessToken && !tokens.shouldRefresh()) {
-          setLoggedIn(true)
-          return
-        }
+    const handleTokenChange: TListener = (session, decoded) => {
+      if (session) {
+        setLoggedIn(true)
+        setTokens(session)
+      } else {
+        setLoggedIn(false)
+        setTokens(undefined)
       }
-      setLoggedIn(false)
     }
 
     const remove = authService.addEventListener(handleTokenChange)
@@ -83,7 +48,10 @@ function useAzureAuth() {
     }
   }, [initAuth])
 
-  return { loggedIn, request, result, promptAsync }
+  return React.useMemo(
+    () => ({ login, logout, loggedIn, tokens }),
+    [login, logout, loggedIn, tokens]
+  )
 }
 
 export default useAzureAuth

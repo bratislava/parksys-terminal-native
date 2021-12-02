@@ -1,4 +1,5 @@
 export enum EStorage {
-  azureSession = 'azureSession',
+  azureAccessToken = 'azureAccessToken',
+  azureRefreshToken = 'azureRefreshToken',
   selectedUdr = 'selectedUdr',
 }

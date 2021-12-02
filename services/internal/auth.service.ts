@@ -1,27 +1,43 @@
 import secureStorageService from '@services/internal/secureStorage.service'
-import { fetchDiscoveryAsync, TokenResponse } from 'expo-auth-session'
 import Constants from 'expo-constants'
 import uuid from 'react-native-uuid'
+import decode, { JwtPayload } from 'jwt-decode'
+import { IAuthSession, TListener } from 'types/authService.d'
+import {
+  ILoginReqParams,
+  ILoginRes,
+  IRefreshReqParams,
+} from '@models/azure/authRequests/authRequests'
+import {
+  loginReqValidation,
+  loginResValidation,
+  refreshReqValidation,
+} from '@models/azure/authRequests/authRequests.schema'
+import createXWwwForm from '@utils/api/createXWwwForm'
+import axios, { AxiosResponse } from 'axios'
 
-export type TListener = (
-  session: Record<string, string> | null,
-  tokens: TokenResponse | null
-) => void
+/**------------------------------------------------------------------------------------------------
+ **                                   Constants
+ *------------------------------------------------------------------------------------------------**/
 
-/**
- * Service to handle auth tokens
- */
+const REQUIRED_SCOPES = new Set(['user.read', 'offline_access'])
+const BASE_URL = 'https://login.microsoftonline.com'
+const AUTH_BASE_URL = `${BASE_URL}/${Constants.manifest?.extra?.azureTenantId}`
+
+/**================================================================================================
+ * ?                                    ABOUT
+ * @description    : Service for handling auth flows as login/logout/refresh-token
+ *================================================================================================**/
 class AuthService {
-  private session: Record<string, string> | null
-  private tokens: TokenResponse | null
+  private session: IAuthSession | null
+  private decoded: JwtPayload | null
   private listeners: Record<string, TListener>
-  private refreshPromise?: Promise<TokenResponse>
+  private refreshPromise?: Promise<IAuthSession>
 
   constructor() {
     this.session = null
-    this.tokens = null
     this.listeners = {}
-
+    this.decoded = null
     this.rehydrate()
   }
 
@@ -29,8 +45,14 @@ class AuthService {
    * Load session on start and notify all listeners
    */
   public rehydrate = async () => {
-    const stored = await secureStorageService.getAuthSession()
-    this.setSession(stored)
+    const accessToken = await secureStorageService.getAccessToken()
+    const refreshToken = await secureStorageService.getRefreshToken()
+
+    if (accessToken && refreshToken) {
+      await this.setSession({ accessToken, refreshToken })
+    } else {
+      await this.setSession(null)
+    }
   }
 
   /**
@@ -42,12 +64,7 @@ class AuthService {
      * If session null, try to load from storage
      */
     if (this.session === null) {
-      const session = await secureStorageService.getAuthSession()
-
-      if (session) {
-        this.session = session
-        return session
-      }
+      await this.rehydrate()
     }
 
     return this.session
@@ -57,35 +74,39 @@ class AuthService {
    * Get tokens from session
    * @returns parsed tokens
    */
-  public getTokens = async () => {
-    if (!this.tokens) {
-      const session = await this.getSession()
-
-      if (session) {
-        return TokenResponse.fromQueryParams(session)
-      }
-
-      return null
+  public getDecoded = async () => {
+    /**
+     * If decoded null, try to load from storage
+     */
+    if (!this.decoded) {
+      await this.rehydrate()
     }
 
-    return this.tokens
+    return this.decoded
   }
 
   /**
    * Set session and notify listeners
    * @param session session
    */
-  public setSession = async (session: Record<string, string> | null) => {
+  private setSession = async (session: IAuthSession | null) => {
     if (session) {
-      this.session = session
-      this.tokens = session ? TokenResponse.fromQueryParams(session) : null
-      secureStorageService.setAuthSession(this.session)
+      try {
+        this.session = session
+        this.decoded = decode(session.accessToken)
+        await secureStorageService.setAccessToken(session.accessToken)
+        await secureStorageService.setRefreshToken(session.refreshToken)
+      } catch (error) {
+        console.log('[auth]: ', error)
+      }
     } else {
-      secureStorageService.clearAuthSession()
+      this.session = null
+      this.decoded = null
+      await secureStorageService.clearAuthTokens()
     }
 
     for (const listener of Object.values(this.listeners)) {
-      listener(this.session, this.tokens)
+      listener(this.session, this.decoded)
     }
   }
 
@@ -104,7 +125,7 @@ class AuthService {
     /**
      * Call listener
      */
-    listener(this.session, this.tokens)
+    listener(this.session, this.decoded)
 
     /**
      * Return unsubscribe
@@ -121,43 +142,54 @@ class AuthService {
   }
 
   /**
+   * Refresh tokens function
+   * ! Don't use alone, use refreshAccessToken instead
+   * @throws refresh error
+   * @returns tokes
+   */
+  private refreshFuncPromise = async () => {
+    const tokens = await this.getSession()
+
+    if (!tokens || !tokens.refreshToken) {
+      throw new Error("Can't refresh tokens")
+    }
+
+    const params: IRefreshReqParams = {
+      grant_type: 'refresh_token',
+      refresh_token: tokens.refreshToken,
+      client_id: Constants.manifest?.extra?.azureClientId,
+    }
+
+    const validated = refreshReqValidation.validateSync(params)
+    const [reqBody, headers] = createXWwwForm(validated)
+
+    const response: AxiosResponse<ILoginRes> = await axios.post(
+      `${AUTH_BASE_URL}/oauth2/v2.0/token`,
+      reqBody,
+      { headers }
+    )
+    const responseData = loginResValidation.validateSync(response.data)
+
+    const newSession: IAuthSession = {
+      accessToken: responseData.access_token,
+      refreshToken: responseData.refresh_token,
+    }
+    await this.setSession(newSession)
+
+    return newSession
+  }
+
+  /**
    * Refresh tokens
    * @returns new tokens
    */
   public refreshAccessToken = async () => {
     /**
-     * If refreshing return existing promise
+     * If refreshing wait for ongoing request
      */
     if (this.refreshPromise) {
-      return this.refreshPromise
-    }
-
-    /**
-     * Refresh tokens
-     * @throws refresh error
-     * @returns tokes
-     */
-    const refreshFuncPromise = async () => {
-      const tokens = await this.getTokens()
-
-      if (!tokens || !tokens.refreshToken) {
-        throw new Error("Can't refresh tokens")
-      }
-
-      // TODO: REFRESH
-      const document = await fetchDiscoveryAsync(
-        `https://login.microsoftonline.com/${Constants.manifest?.extra?.azureTenantId}/v2.0`
-      )
-      const freshTokens = await tokens.refreshAsync(
-        { clientId: Constants.manifest?.extra?.azureClientId },
-        document
-      )
-
-      const serialized = JSON.parse(JSON.stringify(freshTokens))
-      const newSession = { ...this.session, ...serialized }
-      await this.setSession(newSession)
-
-      return freshTokens
+      const newSession = await this.refreshPromise
+      return newSession
     }
 
     /**
@@ -165,7 +197,7 @@ class AuthService {
      * After that clean promise and return tokens
      * Or clear auth
      */
-    this.refreshPromise = refreshFuncPromise()
+    this.refreshPromise = this.refreshFuncPromise()
     try {
       const newTokens = await this.refreshPromise
       return newTokens
@@ -175,6 +207,63 @@ class AuthService {
     } finally {
       this.refreshPromise = undefined
     }
+  }
+
+  /**
+   * Authenticate user with credentials
+   * @param username username of user
+   * @param password users password
+   * @param scopes scopes/permissions
+   * @returns promise
+   */
+  public authenticate = async (
+    username: string,
+    password: string,
+    scopes: string[] = []
+  ) => {
+    /**
+     * Create unique scopes
+     */
+    const finalScopes = new Set(REQUIRED_SCOPES)
+    for (const scope of scopes) {
+      finalScopes.add(scope)
+    }
+
+    const reqParams: ILoginReqParams = {
+      client_id: Constants.manifest?.extra?.azureClientId,
+      grant_type: 'password',
+      username,
+      password,
+      scope: Array.from(finalScopes.values()).join(' '),
+    }
+    const validated = loginReqValidation.validateSync(reqParams)
+    const [reqBody, headers] = createXWwwForm(validated)
+
+    try {
+      const response: AxiosResponse<ILoginRes> = await axios.post(
+        `${AUTH_BASE_URL}/oauth2/v2.0/token`,
+        reqBody,
+        { headers }
+      )
+      const responseData = loginResValidation.validateSync(response.data)
+
+      const newSession: IAuthSession = {
+        accessToken: responseData.access_token,
+        refreshToken: responseData.refresh_token,
+      }
+      await this.setSession(newSession)
+      return newSession
+    } catch (error) {
+      throw (error as any).response
+    }
+  }
+
+  /**
+   * Clear tokens
+   * ? Look for API logout on azure
+   */
+  public revokeTokens = async () => {
+    await this.setSession(null)
   }
 }
 

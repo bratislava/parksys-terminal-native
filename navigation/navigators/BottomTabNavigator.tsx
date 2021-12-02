@@ -4,7 +4,7 @@ import TabBar, { BOTTOM_TAB_NAVIGATOR_HEIGHT } from '@navigation/TabBar'
 import i18n from 'i18n-js'
 import OneStackNavigator from './OneStackNavigator'
 import TwoStackNavigator from './TwoStackNavigator'
-import BurgerMenuSvg from '@images/burger-menu.svg'
+import SettingsNavigator from './SettingsNavigator'
 import { MaterialIcons } from '@expo/vector-icons'
 
 const BottomTab = createBottomTabNavigator<any>()
@@ -12,7 +12,6 @@ const BottomTab = createBottomTabNavigator<any>()
 function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
-      initialRouteName="One"
       tabBarOptions={{
         activeTintColor: '#FD4344',
         style: {
@@ -20,9 +19,10 @@ function BottomTabNavigator() {
         },
       }}
       tabBar={(props) => <TabBar {...props} />}
+      screenOptions={{ unmountOnBlur: true }}
     >
       <BottomTab.Screen
-        name="One"
+        name="PaymentStack"
         component={OneStackNavigator}
         options={{
           title: i18n.t('one'),
@@ -32,11 +32,23 @@ function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="Two"
+        name="HistoryStack"
         component={TwoStackNavigator}
         options={{
-          title: i18n.t('two'),
-          tabBarIcon: BurgerMenuSvg,
+          title: i18n.t('screens.history.title'),
+          tabBarIcon: ({ fill }: any) => {
+            return <MaterialIcons name="history" size={32} color={fill} />
+          },
+        }}
+      />
+      <BottomTab.Screen
+        name="SettingsStack"
+        component={SettingsNavigator}
+        options={{
+          title: i18n.t('screens.settings.title'),
+          tabBarIcon: ({ fill }: any) => {
+            return <MaterialIcons name="settings" size={32} color={fill} />
+          },
         }}
       />
     </BottomTab.Navigator>
