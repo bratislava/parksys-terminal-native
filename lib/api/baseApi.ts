@@ -1,4 +1,3 @@
-// import authService from '@services/internal/auth.service'
 import authService from '@services/internal/auth.service'
 import axios, {
   AxiosError,
@@ -84,7 +83,7 @@ abstract class BaseApi {
                 authService.revokeTokens()
               })
               .finally(() => {
-                BaseApi.isRefreshing = true
+                BaseApi.isRefreshing = false
               })
 
             // Postpone all requests with invalid token in array
