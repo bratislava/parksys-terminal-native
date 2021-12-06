@@ -31,24 +31,29 @@ interface ButtonProps extends PressableProps {
   activeOpacity?: number
 }
 
-type TButton = React.FunctionComponent<ButtonProps> & {
+type TButton = React.ForwardRefExoticComponent<
+  ButtonProps & React.RefAttributes<View>
+> & {
   Group: typeof ButtonGroup
 }
 
-const Button: TButton = ({
-  title,
-  variant = 'primary',
-  isGrouped,
-  isFullWidth,
-  size = 'medium',
-  disabled,
-  titleStyle,
-  loading,
-  testID,
-  style,
-  activeOpacity = 0.85,
-  ...rest
-}: ButtonProps) => {
+const _Button = (
+  {
+    title,
+    variant = 'primary',
+    isGrouped,
+    isFullWidth,
+    size = 'medium',
+    disabled,
+    titleStyle,
+    loading,
+    testID,
+    style,
+    activeOpacity = 0.85,
+    ...rest
+  }: ButtonProps,
+  ref?: React.Ref<View>
+) => {
   const showDisabledStyle = disabled && !loading
 
   function getStyle(styleProps: PressableStateCallbackType) {
@@ -75,6 +80,7 @@ const Button: TButton = ({
       style={getStyle}
       testID={testID}
       disabled={disabled || loading}
+      ref={ref}
     >
       {({ pressed }) => (
         <View
@@ -118,6 +124,8 @@ const Button: TButton = ({
     </ButtonSC>
   )
 }
+
+const Button = React.forwardRef(_Button) as TButton
 
 Button.Group = ButtonGroup
 
