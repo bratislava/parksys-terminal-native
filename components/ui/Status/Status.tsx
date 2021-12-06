@@ -91,7 +91,9 @@ const Status: React.FunctionComponent<StatusProps> = ({
   return (
     <StatusSC style={style}>
       {IconIndicator}
-      <StatusText variant={variant}>{title}</StatusText>
+      <StatusText variant={variant} hasDescription={!!description}>
+        {title}
+      </StatusText>
       {description ? (
         <StatusDescription>{description}</StatusDescription>
       ) : null}

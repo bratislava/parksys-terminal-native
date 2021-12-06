@@ -9,10 +9,10 @@ import Constants from 'expo-constants'
 // import * as Sentry from 'sentry-expo'
 
 import useCachedResources from '@hooks/useCachedResources'
-import useColorScheme from '@hooks/useColorScheme'
-import Navigation from '@navigation/index'
 import { ThemeProvider } from 'styled-components'
 import { defaultTheme } from '@utils/theme'
+import { SecurityLayout } from '@components/layout'
+import AzureProvider from '@components/layout/AzureProvider/AzureProvider'
 
 // TODO create Sentry project & integrate
 // Sentry.init({
@@ -27,7 +27,6 @@ Location.setGoogleApiKey(Constants.manifest?.extra?.googlePlacesApiKey)
 
 export default function App() {
   const isLoadingComplete = useCachedResources()
-  const colorScheme = useColorScheme()
 
   if (!isLoadingComplete) {
     return null
@@ -36,7 +35,9 @@ export default function App() {
       <ThemeProvider theme={defaultTheme}>
         <QueryClientProvider client={queryClient}>
           <SafeAreaProvider>
-            <Navigation colorScheme={colorScheme} />
+            <AzureProvider>
+              <SecurityLayout />
+            </AzureProvider>
             <StatusBar />
           </SafeAreaProvider>
         </QueryClientProvider>

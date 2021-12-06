@@ -18,3 +18,7 @@ export type TOneStackParamList = {
     parkingEnd: string
   }
 }
+
+export type AuthStackParamList = {
+  Login: undefined
+}
