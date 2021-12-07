@@ -182,8 +182,8 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    paddingVertical: 32,
-    paddingHorizontal: 24,
+    paddingVertical: 24,
+    paddingHorizontal: 16,
   },
 })
 

@@ -28,6 +28,8 @@ export default {
         date: 'Čas ukončenia',
         parkingEnd: 'Ukončenie parkovania',
         submitAction: 'Vypočítať cenu',
+        nowAction: 'Teraz',
+        resetAction: 'Začať znova',
       },
 
       formErrors: {
