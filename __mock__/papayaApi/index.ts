@@ -1,6 +1,7 @@
 import MockAdapter from 'axios-mock-adapter/types'
 import getReceiptMock from './getReceipt.mock'
 import printMock from './print.mock'
+import setupTerminalMock from './setupTerminal.mock'
 
 /**
  * Add all mocks
@@ -8,6 +9,7 @@ import printMock from './print.mock'
 const rootMock: ((mock: MockAdapter) => Record<string, MockAdapter>)[] = [
   printMock,
   getReceiptMock,
+  setupTerminalMock,
 ]
 
 /**

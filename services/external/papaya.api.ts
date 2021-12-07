@@ -1,3 +1,4 @@
+import { ISetupTerminalReqParams } from './../../models/papaya/setupTerminal/setupTerminal.d'
 import papayaApi from '@lib/api/papayaApi'
 import { getReceiptReqValidation } from '@models/papaya/receipt/receipt.schema'
 import type {
@@ -22,6 +23,10 @@ import {
   cardPaymentReqValidation,
   requestContentValidation,
 } from '@models/papaya/card/card.schema'
+import {
+  setupTerminalReqValidation,
+  setupTerminalResValidation,
+} from '@models/papaya/setupTerminal/setupTerminal'
 
 /**
  * Print receipt from terminal
@@ -33,10 +38,7 @@ import {
 export function printReceipt(data: TPrintRequestData) {
   return papayaApi.requestValidate<TPrintResponseData>(
     '/api/print',
-    {
-      method: 'POST',
-      data,
-    },
+    { method: 'POST', data },
     printReqValidation,
     printResValidation
   )
@@ -52,10 +54,7 @@ export function printReceipt(data: TPrintRequestData) {
 export function getReceipts(data: IGetReceiptReqData) {
   return papayaApi.requestValidate<IGetReceiptRes>(
     '/api/document/get',
-    {
-      method: 'POST',
-      data,
-    },
+    { method: 'POST', data },
     getReceiptReqValidation
   )
 }
@@ -86,5 +85,19 @@ export function payByCard(params: ICardPaymentReq) {
     },
     requestContentValidation,
     cardPaymentReqValidation
+  )
+}
+
+/**
+ * Get/set terminal settings
+ * @param data settings
+ * @returns promise with settings
+ */
+export function setupTerminal(data: ISetupTerminalReqParams) {
+  return papayaApi.requestValidate(
+    '/api/setup',
+    { method: 'POST', data },
+    setupTerminalReqValidation,
+    setupTerminalResValidation
   )
 }
