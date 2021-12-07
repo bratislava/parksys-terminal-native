@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { ViewStyle } from 'react-native'
 import {
   DescriptionContentSC,
   DescriptionLabelSC,
@@ -24,6 +25,10 @@ export interface DescriptionsItemProps {
    * Content of description
    */
   children?: React.ReactNode | React.ReactNodeArray
+  /**
+   * Style of body
+   */
+  style?: StyleProp<ViewStyle>
 }
 
 const DescriptionsItem: React.FunctionComponent<DescriptionsItemProps> = ({
@@ -31,6 +36,7 @@ const DescriptionsItem: React.FunctionComponent<DescriptionsItemProps> = ({
   layout,
   children,
   colon,
+  style,
 }) => {
   return (
     <DescriptionsItemSC layout={layout}>
@@ -40,7 +46,9 @@ const DescriptionsItem: React.FunctionComponent<DescriptionsItemProps> = ({
           colon ? ':' : ''
         }`}</DescriptionLabelTextSC>
       </DescriptionLabelSC>
-      <DescriptionContentSC layout={layout}>{children}</DescriptionContentSC>
+      <DescriptionContentSC style={style} layout={layout}>
+        {children}
+      </DescriptionContentSC>
     </DescriptionsItemSC>
   )
 }

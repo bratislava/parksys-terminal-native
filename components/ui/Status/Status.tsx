@@ -66,7 +66,14 @@ const Status: React.FunctionComponent<StatusProps> = ({
 
   const IconIndicator = React.useMemo(() => {
     if (loading) {
-      return <ActivityIndicator size="large" />
+      return (
+        <ActivityIndicator
+          size="large"
+          style={{ opacity: 1 }}
+          color={theme.colors.primary}
+          animating
+        />
+      )
     }
 
     if (icon === null) {

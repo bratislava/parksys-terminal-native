@@ -12,7 +12,7 @@ export const ButtonWrapper = styled.View`
 `
 
 export const ParkingSummarySC = styled(Descriptions)`
-  margin-top: 32px;
+  margin-top: 0px;
 `
 
 export const StatusWrapper = styled.View`

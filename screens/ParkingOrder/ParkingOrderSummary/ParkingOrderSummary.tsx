@@ -11,11 +11,20 @@ import {
 import i18n from 'i18n-js'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { TOneStackParamList } from 'types'
-import { DateTimeFormatter, ZonedDateTime, ChronoUnit } from '@js-joda/core'
+import {
+  DateTimeFormatter,
+  ZonedDateTime,
+  ChronoUnit,
+  Instant,
+  LocalDateTime,
+  nativeJs,
+} from '@js-joda/core'
 import { useQuery } from 'react-query'
 import { getPriceForParking } from '@services/external/pricing.api'
 import { presentPrice } from '@utils/utils'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { payByCash, payByCard } from '@services/external/papaya.api'
+import { formatNativeDate } from '@utils/ui/dateUtils'
 
 /**
  * Screen to show user summary about parking ticket before purchase
@@ -26,6 +35,28 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
   } = useRoute<RouteProp<TOneStackParamList, 'ParkingOrderSummary'>>()
   const { canGoBack, goBack } =
     useNavigation<StackNavigationProp<TOneStackParamList>>()
+
+  const payByCashHandler = React.useCallback(() => {
+    payByCash({
+      externalId: 'uuid:bb78531a-f2f7-c27f-9523-819b1d280a4b',
+      amount: 300,
+      footer: 'Morning deposit',
+      exception: false,
+    })
+  }, [])
+
+  const payByCardHandler = React.useCallback(() => {
+    payByCard({
+      externalId: 'a94ffc06-a5ba-4ac6-a6a9-53da9ab8b6ff',
+      requestContents: {
+        operation: 'CP',
+        amount: '1',
+        transactionId: '558bb7e5-205d-4168-bbf0-db2908cbfb50',
+      },
+      printCustomerReceipt: false,
+      printMerchantReceipt: false,
+    })
+  }, [])
 
   /**
    * Fetch price based on info from prev. step
@@ -128,9 +159,7 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
             )}
           >
             <Descriptions.Text>
-              {parkingEndDate.format(
-                DateTimeFormatter.ofPattern('d.M.yyyy HH:mm')
-              )}
+              {formatNativeDate(new Date(parkingEnd), 'd.M.yyyy HH:mm')}
             </Descriptions.Text>
           </Descriptions.Item>
         </Descriptions>
@@ -156,23 +185,30 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
             {/* TODO: what is status */}
             <Descriptions.Text>???</Descriptions.Text>
           </Descriptions.Item>
-          <Descriptions.Item
-            label={i18n.t('screens.parkingOrderSummary.parkingSummary.price')}
-          >
-            <Descriptions.Text>
-              {presentPrice(pricingInfo.priceTotal * 100)}
-            </Descriptions.Text>
-          </Descriptions.Item>
         </ParkingSummarySC>
       </ScrollView>
       <ButtonWrapper>
-        <Button.Group vertical>
+        <Descriptions
+          layout="horizontal"
+          style={{ width: '100%', marginBottom: 10 }}
+        >
+          <Descriptions.Item
+            label={i18n.t('screens.parkingOrderSummary.parkingSummary.price')}
+          >
+            <Descriptions.Text style={styles.price}>
+              {presentPrice(pricingInfo.priceTotal * 100)}
+            </Descriptions.Text>
+          </Descriptions.Item>
+        </Descriptions>
+        <Button.Group>
           <Button
             title={i18n.t('screens.parkingOrderSummary.actions.cashAction')}
             variant="primary-submit"
+            onPress={payByCashHandler}
           />
           <Button
             title={i18n.t('screens.parkingOrderSummary.actions.cardAction')}
+            onPress={payByCardHandler}
           />
         </Button.Group>
       </ButtonWrapper>
@@ -184,6 +220,11 @@ const styles = StyleSheet.create({
   wrapper: {
     paddingVertical: 24,
     paddingHorizontal: 16,
+  },
+  price: {
+    textAlign: 'right',
+    flex: 1,
+    fontSize: 32,
   },
 })
 
