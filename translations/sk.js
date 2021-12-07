@@ -94,8 +94,18 @@ export default {
       cancelAction: 'Zrušiť',
     },
     userInfo: {
+      title: 'Informácie o používateľovi',
       displayName: 'Meno',
       logoutAction: 'Odhlásiť sa',
+    },
+    logoutSettings: {
+      logoutAction: 'Odhlásiť sa',
+    },
+    terminalSettings: {
+      title: 'Nastavenia terminálu (jednorázové)',
+      hideFrontActivity: 'hideFrontActivity',
+      isKioskMode: 'isKioskMode',
+      saveAction: 'Uložiť nastavenia',
     },
   },
 }
