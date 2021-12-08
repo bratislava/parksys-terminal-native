@@ -1,9 +1,13 @@
 import * as Yup from 'yup'
+import { TPaymentMethod } from './createTicket.dto'
 
 export const createTicketReqValidation = Yup.object({
   payment_id: Yup.string().required(),
   transactionState: Yup.number().required(),
   terminalId: Yup.string().required(),
+  payment_type: Yup.mixed<TPaymentMethod>()
+    .oneOf(['cash', 'card', 'webpay'])
+    .required(),
 })
 
 export const createTicketResValidation = Yup.object({

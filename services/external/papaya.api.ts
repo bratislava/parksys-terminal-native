@@ -17,10 +17,10 @@ import {
   cashPaymentReqValidation,
   cashPaymentResValidation,
 } from '@models/papaya/cash/cash.schema'
-import { ICardPaymentReq } from '@models/papaya/card/card.dto'
+import { ICardPaymentReq, ICardPaymentRes } from '@models/papaya/card/card.dto'
 import {
   cardPaymentReqValidation,
-  requestContentValidation,
+  cardPaymentResValidation,
 } from '@models/papaya/card/card.schema'
 
 /**
@@ -79,13 +79,13 @@ export function payByCash(params: ICashReqParams) {
 }
 
 export function payByCard(params: ICardPaymentReq) {
-  return papayaApi.requestValidate(
+  return papayaApi.requestValidate<ICardPaymentRes>(
     '/api/terminal/pay',
     {
       method: 'POST',
       data: params,
     },
-    requestContentValidation,
-    cardPaymentReqValidation
+    cardPaymentReqValidation,
+    cardPaymentResValidation
   )
 }

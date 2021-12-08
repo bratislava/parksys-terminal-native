@@ -1,9 +1,11 @@
 import { TTicketState } from '../pricing.d'
 
+export type TPaymentMethod = 'cash' | 'card' | 'webpay'
 export interface ICreateTicketReqParams {
   payment_id: string
   transactionState: number
   terminalId: string
+  payment_type: TPaymentMethod
 }
 
 export interface ICreateTicketRes {

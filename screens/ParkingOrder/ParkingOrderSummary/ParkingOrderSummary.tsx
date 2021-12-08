@@ -117,11 +117,28 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
       try {
         /** pay ticket on terminal */
         await payTicket(finalPrice, type, udr.udrid)
-        /** call ticket activation */
+      } catch (error) {
+        console.log('ERROR', error)
+        const err = error as AxiosResponse<ITicketPayment>
+        await createTicket(finalPrice.id, {
+          payment_id: finalPrice.payment_id,
+          terminalId: profile.id,
+          transactionState: 400,
+          payment_type: type,
+        })
+        replace('PaymentStatus', {
+          id: err.data.id,
+          state: err.data.state,
+          type: 'error',
+        })
+      }
+
+      try {
         const finalTicket = await createTicket(finalPrice.id, {
           payment_id: finalPrice.payment_id,
           terminalId: profile.id,
           transactionState: 200,
+          payment_type: type,
         })
         replace('PaymentStatus', {
           id: finalTicket.id,
@@ -131,6 +148,12 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
       } catch (error) {
         console.log('ERROR', error)
         const err = error as AxiosResponse<ITicketPayment>
+        await createTicket(finalPrice.id, {
+          payment_id: finalPrice.payment_id,
+          terminalId: profile.id,
+          transactionState: 400,
+          payment_type: type,
+        })
         replace('PaymentStatus', {
           id: err.data.id,
           state: err.data.state,
