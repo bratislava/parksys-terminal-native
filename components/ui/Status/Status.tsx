@@ -16,6 +16,7 @@ const ICON_MAP = new Map<TStatusVariant, TIconsName>([
   ['info', 'info'],
   ['warn', 'warning'],
   ['error', 'error'],
+  ['success', 'check-circle-outline'],
 ])
 
 interface StatusProps {

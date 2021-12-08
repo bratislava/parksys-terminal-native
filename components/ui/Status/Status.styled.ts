@@ -1,6 +1,6 @@
 import styled, { DefaultTheme } from 'styled-components/native'
 
-export type TStatusVariant = 'info' | 'error' | 'warn' | 'default'
+export type TStatusVariant = 'info' | 'error' | 'warn' | 'default' | 'success'
 
 interface ComponentProps {
   variant: TStatusVariant
@@ -14,6 +14,8 @@ export function getColor(theme: DefaultTheme, variant: TStatusVariant) {
       return theme.colors.warn
     case 'error':
       return theme.colors.error
+    case 'success':
+      return theme.colors.green
     default:
       return theme.colors.black
   }

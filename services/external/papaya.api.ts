@@ -3,21 +3,21 @@ import { getReceiptReqValidation } from '@models/papaya/receipt/receipt.schema'
 import type {
   IGetReceiptReqData,
   IGetReceiptRes,
-} from '@models/papaya/receipt/receipt'
+} from '@models/papaya/receipt/receipt.dto'
 import type {
   TPrintRequestData,
   TPrintResponseData,
-} from '@models/papaya/print/print.d'
+} from '@models/papaya/print/print.dto'
 import {
   printReqValidation,
   printResValidation,
 } from '@models/papaya/print/print.schema'
-import { ICashReqParams, ICashResponse } from '@models/papaya/cash/cash.d'
+import { ICashReqParams, ICashResponse } from '@models/papaya/cash/cash.dto'
 import {
   cashPaymentReqValidation,
   cashPaymentResValidation,
 } from '@models/papaya/cash/cash.schema'
-import { ICardPaymentReq } from '@models/papaya/card/card'
+import { ICardPaymentReq } from '@models/papaya/card/card.dto'
 import {
   cardPaymentReqValidation,
   requestContentValidation,
@@ -63,6 +63,7 @@ export function getReceipts(data: IGetReceiptReqData) {
 /**
  * PrintReceipt for cash payment
  * @param params params to print
+ * ! Ekasa is necessary, don't use
  * @returns promise
  */
 export function payByCash(params: ICashReqParams) {
