@@ -3,7 +3,8 @@
  * https://reactnavigation.org/docs/typescript/
  */
 
-import { udrInfo } from '@models/pricing/udr/udr.d'
+import { TTicketState } from '@models/pricing/pricing'
+import { IUdrInfo } from '@models/pricing/udr/udr.d'
 
 export type RootStackParamList = {
   Root: undefined
@@ -13,9 +14,14 @@ export type RootStackParamList = {
 export type TOneStackParamList = {
   EnterParkingInfo: undefined
   ParkingOrderSummary: {
-    udr: udrInfo
+    udr: IUdrInfo
     ecv: string
     parkingEnd: string
+  }
+  PaymentStatus: {
+    type: 'success' | 'error'
+    state: TTicketState
+    id: string
   }
 }
 

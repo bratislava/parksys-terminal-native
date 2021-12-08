@@ -1,14 +1,12 @@
 import * as Yup from 'yup'
 
-export const getPriceReqValidation = Yup.object({
-  partnerId: Yup.string().required(),
+export const createTicketReqValidation = Yup.object({
+  payment_id: Yup.string().required(),
+  transactionState: Yup.number().required(),
   terminalId: Yup.string().required(),
-  udr: Yup.string().required(),
-  parkingEnd: Yup.string().required(),
-  ecv: Yup.string().required(),
 })
 
-export const getPriceResValidation = Yup.object({
+export const createTicketResValidation = Yup.object({
   id: Yup.string().required(),
   ecv: Yup.string().required(),
   employee: Yup.string().required(),

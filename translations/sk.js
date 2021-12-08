@@ -58,15 +58,37 @@ export default {
         udr: 'UDR',
         parkingEnd: 'Ukončenie parkovania',
       },
+
       parkingSummary: {
         duration: 'Dĺžka parkovania',
         durationString: '{{hours}} hodín {{minutes}} minút',
         status: 'Status',
+        status_extension: 'Predĺženie',
+        status_new: 'Nový lístok',
         price: 'Cena',
       },
+
       actions: {
         cashAction: 'Platba v hotovosti',
         cardAction: 'Platba kartou',
+      },
+
+      priceAlert: {
+        title: 'Zmena ceny',
+        message: 'Prosím skontrolujte si novú cenu a operáciu opakujte',
+        resetAction: 'Začať znova',
+        checkAction: 'Skontolovať cenu',
+      },
+
+      errorAlert: {
+        title: 'Niečo sa pokazilo :(',
+        message: 'Začnite proces znova prosím.',
+        resetAction: 'Začať znova',
+      },
+
+      paymentProgress: {
+        title: 'Prebieha platba',
+        description: 'Prosím nasledujte informácie na obrazovke',
       },
     },
     login: {
@@ -88,6 +110,17 @@ export default {
     },
     history: {
       title: 'História',
+    },
+    paymentStatus: {
+      success: {
+        title: 'Parkovanie uhradené',
+        description: 'Parkovací lístok je platný',
+      },
+      error: {
+        title: 'Niečo sa pokazilo :(',
+        description: 'Lístok sa nepodarilo zakúpiť, operáciu opakujte',
+        action: 'Začať znova',
+      },
     },
   },
   components: {

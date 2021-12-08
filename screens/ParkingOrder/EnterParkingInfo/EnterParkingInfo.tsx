@@ -8,23 +8,11 @@ import {
   EnterParkingInfoSC,
   FormWrapper,
 } from './EnterParkingInfo.styled'
-import {
-  AvoidKeyboard,
-  Button,
-  DateTimePicker,
-  Picker,
-  Status,
-} from '@components/ui'
+import { AvoidKeyboard, Button, DateTimePicker, Picker } from '@components/ui'
 import { useFormik } from 'formik'
-import {
-  initialValues as formInitialValues,
-  validationSchema,
-  EnterParkingForm,
-} from './EnterParkingInfo.schema'
-import { useNavigation } from '@react-navigation/native'
+import { validationSchema, EnterParkingForm } from './EnterParkingInfo.schema'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { useQuery } from 'react-query'
-import { getUdrsInfo } from '@services/external/pricing.api'
 import secureStorageService from '@services/internal/secureStorage.service'
 import i18n from 'i18n-js'
 import {
@@ -35,6 +23,7 @@ import {
   nativeJs,
 } from '@js-joda/core'
 import { TOneStackParamList } from 'types'
+import UDRS from 'constants/udrs'
 
 /**
  * Screen to enter customer data to purchase parking ticket
@@ -42,16 +31,20 @@ import { TOneStackParamList } from 'types'
 const EnterParkingInfo: React.FunctionComponent = () => {
   const { push } = useNavigation<StackNavigationProp<TOneStackParamList>>()
 
-  const [initialValues, setInitialValues] = React.useState({
-    ...formInitialValues,
-  })
+  const [initialValues, setInitialValues] = React.useState(
+    () =>
+      ({
+        ...validationSchema.getDefault(),
+        parkingEnd: new Date(),
+      } as EnterParkingForm)
+  )
 
   /**
    * Fetch udrs list and get last selected udr from storage
    */
-  const fetchUdrs = React.useCallback(async () => {
+  const initForm = React.useCallback(async () => {
     const initiallySelected = await secureStorageService.getSelectedUdr()
-    const data = await getUdrsInfo()
+    const data = UDRS
     setInitialValues((o) => ({
       ...o,
       udr: initiallySelected ?? data[0]?.udrid ?? '',
@@ -60,20 +53,13 @@ const EnterParkingInfo: React.FunctionComponent = () => {
     return data
   }, [])
 
-  const {
-    data: udrs,
-    error: udrsError,
-    isLoading: udrsLoading,
-    refetch,
-  } = useQuery('getudrsInfo', fetchUdrs)
-
   /**
    * After submit go to next screen
    */
   const onSubmit = React.useCallback(
     async (values: EnterParkingForm) => {
       await secureStorageService.setSelectedUdr(values.udr)
-      const selectedUdr = udrs?.find((udr) => values.udr === udr.udrid)
+      const selectedUdr = UDRS.find((udr) => values.udr === udr.udrid)
 
       if (selectedUdr) {
         push('ParkingOrderSummary', {
@@ -83,16 +69,8 @@ const EnterParkingInfo: React.FunctionComponent = () => {
         })
       }
     },
-    [push, udrs]
+    [push]
   )
-
-  const { values, errors, setFieldValue, submitForm, isValid, resetForm } =
-    useFormik({
-      initialValues,
-      validationSchema,
-      onSubmit,
-      enableReinitialize: true,
-    })
 
   const addTime = React.useCallback((current: Date, minutes: number) => {
     let newDate = LocalDateTime.ofInstant(Instant.from(nativeJs(current)))
@@ -116,34 +94,22 @@ const EnterParkingInfo: React.FunctionComponent = () => {
     /** convert to js */
     return convert(newDate).toDate()
   }, [])
+  /**
+   * Init form on mount
+   */
+  React.useEffect(() => {
+    initForm()
+  }, [initForm])
 
-  if (udrsLoading) {
-    return (
-      <Status
-        title={i18n.t('screens.enterParkingInfo.loading.title')}
-        loading
-        style={{ flex: 1 }}
-      />
-    )
-  }
+  const { values, errors, setFieldValue, submitForm, isValid, resetForm } =
+    useFormik({
+      initialValues,
+      validationSchema,
+      onSubmit,
+      enableReinitialize: true,
+    })
 
-  if (udrsError) {
-    return (
-      <Status
-        variant="error"
-        title={i18n.t('screens.enterParkingInfo.error.title')}
-        description={i18n.t('screens.enterParkingInfo.error.description')}
-        extra={
-          <Button
-            title={i18n.t('screens.enterParkingInfo.error.action')}
-            variant="primary"
-            onPress={() => refetch()}
-          />
-        }
-        style={{ flex: 1 }}
-      />
-    )
-  }
+  useFocusEffect(resetForm)
 
   return (
     <EnterParkingInfoSC>
@@ -174,20 +140,14 @@ const EnterParkingInfo: React.FunctionComponent = () => {
               mode="dropdown"
               onValueChange={(itemValue) => setFieldValue('udr', itemValue)}
             >
-              {udrs?.map((udr) => (
+              {UDRS.map((udr) => (
                 <Picker.Item
                   key={udr.udrid}
                   value={udr.udrid}
-                  label={udr.nazov}
+                  label={`${udr.nazov} (UDR ${udr.udrid})`}
                 />
               ))}
             </Picker>
-          </FormItem>
-          <FormItem
-            label={i18n.t('screens.enterParkingInfo.form.udr')}
-            required
-          >
-            <Input value={values.udr} editable={false} />
           </FormItem>
           <DateWrapper>
             <FormItem

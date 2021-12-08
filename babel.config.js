@@ -20,6 +20,7 @@ module.exports = function (api) {
             '@mock': './__mock__',
             '@custom-types': './types',
             '@models': './models',
+            constants: './constants',
           },
         },
       ],

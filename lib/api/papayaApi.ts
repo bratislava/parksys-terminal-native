@@ -12,15 +12,18 @@ class PapayaApi extends BaseApi {
     /**
      * Register mocks for api if in env
      */
-    // if (Constants.manifest?.extra?.enableMockApi) {
-    //   this.mockInstance = new MockAdapter(this.axios, {
-    //     onNoMatch: 'passthrough',
-    //     delayResponse: Constants.manifest?.extra?.mockApiDelay
-    //       ? Number(Constants.manifest?.extra?.mockApiDelay)
-    //       : 0,
-    //   })
-    //   registerPapayaMocks(this.mockInstance)
-    // }
+    if (
+      Constants.manifest?.extra?.enableMockApi === 'true' ||
+      Constants.manifest?.extra?.enableMockApi === true
+    ) {
+      this.mockInstance = new MockAdapter(this.axios, {
+        onNoMatch: 'passthrough',
+        delayResponse: Constants.manifest?.extra?.mockApiDelay
+          ? Number(Constants.manifest?.extra?.mockApiDelay)
+          : 0,
+      })
+      registerPapayaMocks(this.mockInstance)
+    }
   }
 }
 

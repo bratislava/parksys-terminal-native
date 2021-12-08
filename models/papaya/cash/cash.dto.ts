@@ -9,7 +9,7 @@
  * ----------------------------------------------------------------------
  */
 
-import { EKasaStatus } from '@models/ekasa/eKasa.d'
+import { EKasaStatus } from '@models/ekasa/eKasa.dto'
 
 /**========================================================================
  **                       Cash payment request
