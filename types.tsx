@@ -3,6 +3,7 @@
  * https://reactnavigation.org/docs/typescript/
  */
 
+import { ITicketHistoryItem } from '@models/pricing/getTickets/getTickets.dto'
 import { udrInfo } from '@models/pricing/udr/udr.d'
 
 export type RootStackParamList = {
@@ -21,4 +22,11 @@ export type TOneStackParamList = {
 
 export type AuthStackParamList = {
   Login: undefined
+}
+
+export type HistoryStackParamList = {
+  TransactionsHistory: undefined
+  TransactionDetail: {
+    item: ITicketHistoryItem
+  }
 }

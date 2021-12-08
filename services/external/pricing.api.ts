@@ -1,5 +1,13 @@
 import pricingApi from '@lib/api/pricingApi'
 import {
+  ITickets,
+  ITicketsReqParams,
+} from '@models/pricing/getTickets/getTickets.dto'
+import {
+  getTicketsReqValidation,
+  getTicketsResValidation,
+} from '@models/pricing/getTickets/getTickets.schema'
+import {
   TParkingPriceReqData,
   IParkinPriceResData,
 } from '@models/pricing/parkingPrice/parkingPrice.d'
@@ -40,5 +48,19 @@ export function getPriceForParking(data: TParkingPriceReqData) {
     },
     getPriceReqValidation,
     getPriceResValidation
+  )
+}
+
+/**
+ * Get tickets for user
+ * @param params params for api
+ */
+export function getTickets(params: ITicketsReqParams) {
+  return pricingApi.requestValidate<ITickets>(
+    `/api-terminal/tickets/${params.employee}`,
+    { params },
+    undefined,
+    getTicketsResValidation,
+    getTicketsReqValidation
   )
 }
