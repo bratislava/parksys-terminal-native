@@ -3,6 +3,7 @@
  * https://reactnavigation.org/docs/typescript/
  */
 
+import { IParkinPriceResData } from '@models/pricing/parkingPrice/parkingPrice.dto'
 import { TTicketState } from '@models/pricing/pricing'
 import { IUdrInfo } from '@models/pricing/udr/udr.d'
 
@@ -22,6 +23,18 @@ export type TOneStackParamList = {
     type: 'success' | 'error'
     state: TTicketState
     id: string
+  }
+  PayByCash: {
+    udr: IUdrInfo
+    ecv: string
+    parkingEnd: string
+    finalPrice: IParkinPriceResData
+  }
+  PayByCard: {
+    udr: IUdrInfo
+    ecv: string
+    parkingEnd: string
+    finalPrice: IParkinPriceResData
   }
 }
 

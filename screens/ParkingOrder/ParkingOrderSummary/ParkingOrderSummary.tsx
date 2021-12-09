@@ -14,7 +14,6 @@ import { TOneStackParamList } from 'types'
 import { ZonedDateTime, ChronoUnit } from '@js-joda/core'
 import { useMutation, useQuery } from 'react-query'
 import {
-  createTicket,
   getPriceForParking,
   ticketPayment,
 } from '@services/external/pricing.api'
@@ -24,7 +23,7 @@ import { formatNativeDate } from '@utils/ui/dateUtils'
 import { useAuthContext } from '@lib/context/authContext'
 import { AxiosResponse } from 'axios'
 import { ITicketPayment } from '@models/pricing/ticketPayment/ticketPayment.dto'
-import { showErrorAlert, showPriceChangeAlert, payTicket } from './utils'
+import { showErrorAlert, showPriceChangeAlert } from './utils'
 import { ETicketState } from '@models/pricing/pricing.d'
 
 const t = i18n.t
@@ -36,7 +35,7 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
   const {
     params: { ecv, parkingEnd, udr },
   } = useRoute<RouteProp<TOneStackParamList, 'ParkingOrderSummary'>>()
-  const { canGoBack, goBack, replace } =
+  const { canGoBack, goBack, push } =
     useNavigation<StackNavigationProp<TOneStackParamList>>()
   const { profile } = useAuthContext()
 
@@ -114,50 +113,19 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
         throw new Error('No price calculation')
       }
 
-      try {
-        /** pay ticket on terminal */
-        await payTicket(finalPrice, type, udr.udrid)
-      } catch (error) {
-        console.log('ERROR', error)
-        const err = error as AxiosResponse<ITicketPayment>
-        await createTicket(finalPrice.id, {
-          payment_id: finalPrice.payment_id,
-          terminalId: profile.id,
-          transactionState: 400,
-          payment_type: type,
+      if (type === 'cash') {
+        push('PayByCash', {
+          ecv,
+          finalPrice,
+          parkingEnd,
+          udr,
         })
-        replace('PaymentStatus', {
-          id: err.data.id,
-          state: err.data.state,
-          type: 'error',
-        })
-      }
-
-      try {
-        const finalTicket = await createTicket(finalPrice.id, {
-          payment_id: finalPrice.payment_id,
-          terminalId: profile.id,
-          transactionState: 200,
-          payment_type: type,
-        })
-        replace('PaymentStatus', {
-          id: finalTicket.id,
-          state: finalTicket.state,
-          type: 'success',
-        })
-      } catch (error) {
-        console.log('ERROR', error)
-        const err = error as AxiosResponse<ITicketPayment>
-        await createTicket(finalPrice.id, {
-          payment_id: finalPrice.payment_id,
-          terminalId: profile.id,
-          transactionState: 400,
-          payment_type: type,
-        })
-        replace('PaymentStatus', {
-          id: err.data.id,
-          state: err.data.state,
-          type: 'error',
+      } else {
+        push('PayByCard', {
+          ecv,
+          finalPrice,
+          parkingEnd,
+          udr,
         })
       }
     },
@@ -167,9 +135,9 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
       parkingEnd,
       pricingInfo,
       profile,
+      push,
       refetchPrice,
-      replace,
-      udr.udrid,
+      udr,
     ]
   )
 

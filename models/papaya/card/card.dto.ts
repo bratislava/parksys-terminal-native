@@ -47,7 +47,12 @@ export enum EPaymentResult {
 export type TPaymentResult = `${EPaymentResult}`
 
 export interface ICardPaymentRes {
-  content: { [key: string]: string; result: TPaymentResult }
+  content: {
+    [key: string]: string
+    result: TPaymentResult
+    customerReceipt: string
+    merchantReceipt: string
+  }
   status: Status
   success: boolean
 }

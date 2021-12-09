@@ -27,6 +27,8 @@ export const cardPaymentReqValidation = Yup.object({
 export const cardPaymentResValidation = Yup.object({
   content: Yup.object({
     result: Yup.string().required(),
+    customerReceipt: Yup.string().required(),
+    merchantReceipt: Yup.string().required(),
   }),
   status: Yup.object({
     code: Yup.number().required(),
