@@ -11,7 +11,6 @@ import {
 import i18n from 'i18n-js'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { TOneStackParamList } from 'types'
-import { ZonedDateTime, ChronoUnit } from '@js-joda/core'
 import { useMutation, useQuery } from 'react-query'
 import {
   getPriceForParking,
@@ -19,7 +18,7 @@ import {
 } from '@services/external/pricing.api'
 import { presentPrice } from '@utils/utils'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { formatNativeDate } from '@utils/ui/dateUtils'
+import { calculateTimeDifference, formatNativeDate } from '@utils/ui/dateUtils'
 import { useAuthContext } from '@lib/context/authContext'
 import { AxiosResponse } from 'axios'
 import { ITicketPayment } from '@models/pricing/ticketPayment/ticketPayment.dto'
@@ -193,14 +192,12 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
   /**
    * Calculate durations of parking for given end timestamp
    */
-  const parkingEndDate = ZonedDateTime.parse(parkingEnd)
-  const durationHours = ZonedDateTime.now().until(
-    parkingEndDate,
-    ChronoUnit.HOURS
+  const parkingStartDate = new Date()
+  const parkingEndDate = new Date(parkingEnd)
+  const { hours, minutes } = calculateTimeDifference(
+    parkingStartDate,
+    parkingEndDate
   )
-  const durationMinutes = ZonedDateTime.now()
-    .plusHours(durationHours)
-    .until(parkingEndDate, ChronoUnit.MINUTES)
 
   return (
     <ParkingOrderSummarySC>
@@ -229,7 +226,7 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
             )}
           >
             <Descriptions.Text>
-              {formatNativeDate(new Date(parkingEnd), 'd.M.yyyy HH:mm')}
+              {formatNativeDate(parkingEndDate, 'dd.MM.yyyy HH:mm')}
             </Descriptions.Text>
           </Descriptions.Item>
         </Descriptions>
@@ -243,8 +240,8 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
               {i18n.t(
                 'screens.parkingOrderSummary.parkingSummary.durationString',
                 {
-                  hours: durationHours,
-                  minutes: durationMinutes,
+                  hours: hours,
+                  minutes: minutes,
                 }
               )}
             </Descriptions.Text>

@@ -1,12 +1,16 @@
+/* eslint-disable react-native/no-raw-text */
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import FormItem from '@components/form/FormItem'
 import Input from '@components/ui/Input'
 import {
+  ButtonGrid,
   ButtonWrapper,
   DateWrapper,
   EnterParkingInfoSC,
   FormWrapper,
+  GridButton,
+  TimeText,
 } from './EnterParkingInfo.styled'
 import { AvoidKeyboard, Button, DateTimePicker, Picker } from '@components/ui'
 import { useFormik } from 'formik'
@@ -24,6 +28,7 @@ import {
 } from '@js-joda/core'
 import { TOneStackParamList } from 'types'
 import UDRS from 'constants/udrs'
+import { calculateTimeDifference } from '@utils/ui/dateUtils'
 
 /**
  * Screen to enter customer data to purchase parking ticket
@@ -109,6 +114,11 @@ const EnterParkingInfo: React.FunctionComponent = () => {
       enableReinitialize: true,
     })
 
+  const { hours, minutes } = calculateTimeDifference(
+    new Date(),
+    values.parkingEnd
+  )
+
   useFocusEffect(resetForm)
 
   return (
@@ -144,7 +154,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
                 <Picker.Item
                   key={udr.udrid}
                   value={udr.udrid}
-                  label={`${udr.nazov} (UDR ${udr.udrid})`}
+                  label={`(${udr.udrid}) ${udr.nazov}`}
                 />
               ))}
             </Picker>
@@ -193,36 +203,41 @@ const EnterParkingInfo: React.FunctionComponent = () => {
               />
             </FormItem>
           </DateWrapper>
-          <Button.Group>
-            <Button
-              title="-1h"
-              variant="secondary"
-              onPress={() =>
-                setFieldValue('parkingEnd', addTime(values.parkingEnd, -30))
-              }
-            />
-            <Button
-              title="-0.5h"
-              variant="secondary"
-              onPress={() =>
-                setFieldValue('parkingEnd', addTime(values.parkingEnd, -60))
-              }
-            />
-            <Button
-              title="+0.5h"
-              variant="secondary"
-              onPress={() =>
-                setFieldValue('parkingEnd', addTime(values.parkingEnd, 30))
-              }
-            />
-            <Button
+          <ButtonGrid>
+            <GridButton
               title="+1h"
-              variant="secondary"
+              variant="primary-submit"
               onPress={() =>
                 setFieldValue('parkingEnd', addTime(values.parkingEnd, 60))
               }
+              contentContainerStyle={styles.buttonContent}
             />
-          </Button.Group>
+
+            <GridButton
+              title="+0.5h"
+              variant="primary-submit"
+              onPress={() =>
+                setFieldValue('parkingEnd', addTime(values.parkingEnd, 30))
+              }
+              contentContainerStyle={styles.buttonContent}
+            />
+            <GridButton
+              title="-1h"
+              variant="primary"
+              onPress={() =>
+                setFieldValue('parkingEnd', addTime(values.parkingEnd, -30))
+              }
+              contentContainerStyle={styles.buttonContent}
+            />
+            <GridButton
+              title="-0.5h"
+              variant="primary"
+              onPress={() =>
+                setFieldValue('parkingEnd', addTime(values.parkingEnd, -60))
+              }
+              contentContainerStyle={styles.buttonContent}
+            />
+          </ButtonGrid>
           <Button
             title={i18n.t('screens.enterParkingInfo.form.nowAction')}
             onPress={() => setFieldValue('parkingEnd', new Date())}
@@ -238,10 +253,12 @@ const EnterParkingInfo: React.FunctionComponent = () => {
         </FormWrapper>
       </AvoidKeyboard>
       <ButtonWrapper>
+        <TimeText>{`${hours}h ${minutes}m`}</TimeText>
         <Button
           title={i18n.t('screens.enterParkingInfo.form.submitAction')}
           onPress={submitForm}
           variant={isValid ? 'primary-submit' : 'secondary'}
+          style={styles.confirmButton}
         />
       </ButtonWrapper>
     </EnterParkingInfoSC>
@@ -263,6 +280,15 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 16,
+  },
+  confirmButton: {
+    flex: 1,
+  },
+  buttonContent: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
 
