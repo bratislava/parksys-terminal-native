@@ -29,6 +29,7 @@ export interface ITicketHistoryItem {
   partner_id: string
   parking_end: string
   ticket_id_parksys: string
+  payment_type: 'card' | 'cash'
 }
 
 export interface Meta {}

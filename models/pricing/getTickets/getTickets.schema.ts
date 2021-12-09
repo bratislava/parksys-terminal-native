@@ -29,6 +29,7 @@ export const ticketsItemValidation = Yup.object({
   partner_id: Yup.string(),
   parking_end: Yup.string().required(),
   ticket_id_parksys: Yup.string(),
+  payment_type: Yup.string(),
 })
 
 export const getTicketsResValidation = withPaginationValidation(
