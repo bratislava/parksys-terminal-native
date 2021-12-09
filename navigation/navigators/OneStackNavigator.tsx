@@ -15,7 +15,7 @@ function OneStackNavigator() {
       <OneStack.Screen
         name="EnterParkingInfo"
         component={EnterParkingInfo}
-        options={{ headerTitle: i18n.t('screens.enterParkingInfo.title') }}
+        options={{ headerShown: false }}
       />
       <OneStack.Screen
         name="ParkingOrderSummary"

@@ -16,6 +16,7 @@ import { useQuery } from 'react-query'
 import { getPriceForParking } from '@services/external/pricing.api'
 import { presentPrice } from '@utils/utils'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { calculateTimeDifference, formatNativeDate } from '@utils/ui/dateUtils'
 
 /**
  * Screen to show user summary about parking ticket before purchase
@@ -92,14 +93,12 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
   /**
    * Calculate durations of parking for given end timestamp
    */
-  const parkingEndDate = ZonedDateTime.parse(parkingEnd)
-  const durationHours = ZonedDateTime.now().until(
-    parkingEndDate,
-    ChronoUnit.HOURS
+  const parkingStartDate = new Date()
+  const parkingEndDate = new Date(parkingEnd)
+  const { hours, minutes } = calculateTimeDifference(
+    parkingStartDate,
+    parkingEndDate
   )
-  const durationMinutes = ZonedDateTime.now()
-    .plusHours(durationHours)
-    .until(parkingEndDate, ChronoUnit.MINUTES)
 
   return (
     <ParkingOrderSummarySC>
@@ -128,9 +127,7 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
             )}
           >
             <Descriptions.Text>
-              {parkingEndDate.format(
-                DateTimeFormatter.ofPattern('d.M.yyyy HH:mm')
-              )}
+              {formatNativeDate(parkingEndDate, 'dd.MM.yyyy HH:mm')}
             </Descriptions.Text>
           </Descriptions.Item>
         </Descriptions>
@@ -144,8 +141,8 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
               {i18n.t(
                 'screens.parkingOrderSummary.parkingSummary.durationString',
                 {
-                  hours: durationHours,
-                  minutes: durationMinutes,
+                  hours: hours,
+                  minutes: minutes,
                 }
               )}
             </Descriptions.Text>

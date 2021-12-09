@@ -6,6 +6,7 @@ import {
   TextStyle,
   Text,
   View,
+  ViewStyle,
 } from 'react-native'
 import { ButtonSC, COLORS, FONT_WEIGHT, styles } from './Button.styled'
 import ButtonGroup from './ButtonGroup'
@@ -29,6 +30,7 @@ interface ButtonProps extends PressableProps {
   loading?: boolean
   testID?: string
   activeOpacity?: number
+  contentContainerStyle?: StyleProp<ViewStyle>
 }
 
 type TButton = React.ForwardRefExoticComponent<
@@ -50,6 +52,7 @@ const _Button = (
     testID,
     style,
     activeOpacity = 0.85,
+    contentContainerStyle,
     ...rest
   }: ButtonProps,
   ref?: React.Ref<View>
@@ -88,6 +91,7 @@ const _Button = (
             styles.container,
             styles[size],
             { opacity: pressed ? activeOpacity : 1 },
+            contentContainerStyle,
           ]}
         >
           {loading ? (
