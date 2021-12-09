@@ -154,6 +154,28 @@ export default {
       printAction: 'Tlačiť kópiu',
       printError: 'Nastala chyba pri tlačení',
     },
+    payByCash: {
+      status: {
+        title: 'Vyžiadajte peniaze',
+        description: 'Po zaplatení potvrďte platbu',
+      },
+      errorStatus: {
+        title: 'Niečo sa pokazilo :(',
+        description: 'Začnite znova',
+        action: 'Začať znova',
+      },
+      successStatus: {
+        title: 'Lístok aktivovaný',
+        description: 'Môžete vytlačiť potvrdenky',
+        merchantPrint: 'Tlač obchodník',
+        clientPrint: 'Tlač klient',
+        backAction: 'Nový lístok',
+      },
+      actions: {
+        confirmAction: 'Zaplatené',
+        cancelAction: 'Zrušiť',
+      },
+    },
   },
   components: {
     dateTimePicker: {
