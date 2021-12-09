@@ -101,7 +101,8 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
         const response = err.data || {}
 
         if (response.state === ETicketState.PRICE_WAS_CHANGED) {
-          showPriceChangeAlert(afterErrorHandler, refetchPrice)
+          refetchPrice()
+          showPriceChangeAlert(afterErrorHandler)
         } else {
           showErrorAlert(afterErrorHandler)
         }
