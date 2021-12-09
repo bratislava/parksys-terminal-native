@@ -47,7 +47,6 @@ class AuthService {
   public rehydrate = async () => {
     const accessToken = await secureStorageService.getAccessToken()
     const refreshToken = await secureStorageService.getRefreshToken()
-
     if (accessToken && refreshToken) {
       await this.setSession({ accessToken, refreshToken })
     } else {

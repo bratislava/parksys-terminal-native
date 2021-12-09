@@ -15,6 +15,9 @@ import { formatNativeDate } from '@utils/ui/dateUtils'
 import { ZonedDateTime, ChronoUnit } from '@js-joda/core'
 import { presentPrice } from '@utils/utils'
 import TransactionState from '../../components/common/TransactionState'
+import { printReceipt } from '@services/external/papaya.api'
+import generateReceipt from '@utils/terminal/cashReceipt'
+import { useMutation } from 'react-query'
 
 const t = i18n.t
 
@@ -26,6 +29,20 @@ const TransactionDetail: React.FunctionComponent = () => {
   const udr = React.useMemo(
     () => UDRS.find((udr) => udr.udrid === item.udr.toString()),
     [item]
+  )
+
+  const handlePrintReceipt = React.useCallback(async () => {
+    await printReceipt({
+      printer: {},
+      printData: generateReceipt({
+        items: [{ name: `Parkovanie v ${udr?.udrid}`, price: item.price }],
+      }),
+    })
+  }, [item.price, udr?.udrid])
+
+  const { mutate: onPrintPress, isLoading: isPrinting } = useMutation(
+    ['print-receipt-copy'],
+    handlePrintReceipt
   )
 
   /**
@@ -95,7 +112,13 @@ const TransactionDetail: React.FunctionComponent = () => {
             </Descriptions.Text>
           </Descriptions.Item>
         </Descriptions>
-        <Button style={styles.button} variant="secondary" />
+        <Button
+          style={styles.button}
+          variant="secondary"
+          title={t('screens.transactionDetail.printAction')}
+          onPress={() => onPrintPress()}
+          loading={isPrinting}
+        />
       </ScrollView>
     </TransactionDetailSC>
   )

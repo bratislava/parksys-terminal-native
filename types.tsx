@@ -4,7 +4,7 @@
  */
 
 import { ITicketHistoryItem } from '@models/pricing/getTickets/getTickets.dto'
-import { udrInfo } from '@models/pricing/udr/udr.d'
+import { IUdrInfo } from '@models/pricing/udr/udr.d'
 
 export type RootStackParamList = {
   Root: undefined
@@ -14,7 +14,7 @@ export type RootStackParamList = {
 export type TOneStackParamList = {
   EnterParkingInfo: undefined
   ParkingOrderSummary: {
-    udr: udrInfo
+    udr: IUdrInfo
     ecv: string
     parkingEnd: string
   }

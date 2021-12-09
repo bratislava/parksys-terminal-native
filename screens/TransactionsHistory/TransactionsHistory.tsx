@@ -59,10 +59,8 @@ const TransactionsHistory: React.FunctionComponent = () => {
     [_onPress]
   )
 
-  const { data, isLoading, error, refetch, fetchNextPage } = useInfiniteQuery(
-    ['getTicketsHandler', profile],
-    getTicketsHandler,
-    {
+  const { data, isLoading, error, refetch, fetchNextPage, remove } =
+    useInfiniteQuery(['getTicketsHandler', profile], getTicketsHandler, {
       cacheTime: 0,
       getNextPageParam: (lastPage) => {
         const pagination = lastPage.pagination
@@ -74,14 +72,18 @@ const TransactionsHistory: React.FunctionComponent = () => {
         }
         return undefined
       },
-    }
-  )
+    })
 
   const _onEndReached = React.useCallback(() => {
     if (!isLoading) {
       fetchNextPage()
     }
   }, [fetchNextPage, isLoading])
+
+  const onRefresh = React.useCallback(() => {
+    remove()
+    refetch()
+  }, [refetch, remove])
 
   const errorHeader = React.useMemo(() => {
     return error ? (
@@ -108,7 +110,7 @@ const TransactionsHistory: React.FunctionComponent = () => {
         refreshing={isLoading}
         ItemSeparatorComponent={ItemSeparator}
         refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={refetch} />
+          <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
         }
         contentContainerStyle={error ? styles.wrapper : undefined}
         onEndReached={_onEndReached}

@@ -21,14 +21,14 @@ export const ticketsItemValidation = Yup.object({
   udr: Yup.string().required(),
   price: Yup.number().required(),
   state: Yup.string().required(),
-  message: Yup.string().required(),
+  message: Yup.string(),
   extension: Yup.boolean().required(),
-  parent: Yup.string().required(),
-  payment_id: Yup.string().required(),
-  employee: Yup.string().required(),
-  partner_id: Yup.string().required(),
+  parent: Yup.string(),
+  payment_id: Yup.string(),
+  employee: Yup.string(),
+  partner_id: Yup.string(),
   parking_end: Yup.string().required(),
-  ticket_id_parksys: Yup.string().required(),
+  ticket_id_parksys: Yup.string(),
 })
 
 export const getTicketsResValidation = withPaginationValidation(
