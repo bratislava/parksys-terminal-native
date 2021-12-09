@@ -4,7 +4,6 @@
  */
 
 import { IParkinPriceResData } from '@models/pricing/parkingPrice/parkingPrice.dto'
-import { TTicketState } from '@models/pricing/pricing'
 import { IUdrInfo } from '@models/pricing/udr/udr.d'
 
 export type RootStackParamList = {
@@ -18,11 +17,6 @@ export type TOneStackParamList = {
     udr: IUdrInfo
     ecv: string
     parkingEnd: string
-  }
-  PaymentStatus: {
-    type: 'success' | 'error'
-    state: TTicketState
-    id: string
   }
   PayByCash: {
     udr: IUdrInfo

@@ -13,7 +13,7 @@ import { Button, Status } from '@components/ui'
 
 const t = i18n.t
 
-type TRouteProps = RouteProp<TOneStackParamList, 'PayByCash'>
+type TRouteProps = RouteProp<TOneStackParamList, 'PayByCard'>
 
 const PayByCard: React.FunctionComponent = () => {
   const { params } = useRoute<TRouteProps>()
@@ -92,14 +92,14 @@ const PayByCard: React.FunctionComponent = () => {
     if (error) {
       return (
         <Status
-          title={t('screens.payByCash.errorStatus.title')}
-          description={t('screens.payByCash.errorStatus.description')}
+          title={t('screens.payByCard.errorStatus.title')}
+          description={t('screens.payByCard.errorStatus.description')}
           style={{ flex: 1 }}
           variant="error"
           extra={
             <>
               <Button
-                title={t('screens.payByCash.errorStatus.action')}
+                title={t('screens.payByCard.errorStatus.action')}
                 onPress={() => replace('EnterParkingInfo')}
               />
             </>
@@ -111,19 +111,19 @@ const PayByCard: React.FunctionComponent = () => {
     if (paidTicket) {
       return (
         <Status
-          title={t('screens.payByCash.successStatus.title')}
-          description={t('screens.payByCash.successStatus.description')}
+          title={t('screens.payByCard.successStatus.title')}
+          description={t('screens.payByCard.successStatus.description')}
           style={{ flex: 1 }}
           variant="success"
           extra={
             <Button.Group style={{ marginHorizontal: 32 }}>
               <Button
-                title={t('screens.payByCash.successStatus.merchantPrint')}
+                title={t('screens.payByCard.successStatus.merchantPrint')}
                 onPress={() => onPrintPress('merchantReceipt')}
                 variant="secondary"
               />
               <Button
-                title={t('screens.payByCash.successStatus.clientPrint')}
+                title={t('screens.payByCard.successStatus.clientPrint')}
                 onPress={() => onPrintPress('customerReceipt')}
                 variant="secondary"
               />
@@ -135,8 +135,8 @@ const PayByCard: React.FunctionComponent = () => {
 
     return (
       <Status
-        title={t('screens.payByCash.status.title')}
-        description={t('screens.payByCash.status.description')}
+        title={t('screens.payByCard.status.title')}
+        description={t('screens.payByCard.status.description')}
         style={{ flex: 1 }}
         loading={payLoading}
       />

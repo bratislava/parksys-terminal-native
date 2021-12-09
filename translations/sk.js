@@ -109,21 +109,32 @@ export default {
     history: {
       title: 'História',
     },
-    paymentStatus: {
-      success: {
-        title: 'Parkovanie uhradené',
-        description: 'Parkovací lístok je platný',
-      },
-      error: {
-        title: 'Niečo sa pokazilo :(',
-        description: 'Lístok sa nepodarilo zakúpiť, operáciu opakujte',
-        action: 'Začať znova',
-      },
-    },
     payByCash: {
       status: {
         title: 'Vyžiadajte peniaze',
         description: 'Po zaplatení potvrďte platbu',
+      },
+      errorStatus: {
+        title: 'Niečo sa pokazilo :(',
+        description: 'Začnite znova',
+        action: 'Začať znova',
+      },
+      successStatus: {
+        title: 'Lístok aktivovaný',
+        description: 'Môžete vytlačiť potvrdenky',
+        merchantPrint: 'Tlač obchodník',
+        clientPrint: 'Tlač klient',
+        backAction: 'Nový lístok',
+      },
+      actions: {
+        confirmAction: 'Zaplatené',
+        cancelAction: 'Zrušiť',
+      },
+    },
+    payByCard: {
+      status: {
+        title: 'Prebieha platba kartou',
+        description: 'Nasledujte inštrukcie na obrazovke',
       },
       errorStatus: {
         title: 'Niečo sa pokazilo :(',
