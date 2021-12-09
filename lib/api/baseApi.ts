@@ -67,6 +67,7 @@ abstract class BaseApi {
           const { config, response } = error
           const originalRequest = config
           const status = response?.status
+          console.log('[API error]', config.url, status, response)
 
           /**
            * Refresh token if needed
@@ -164,22 +165,26 @@ abstract class BaseApi {
    */
   requestValidate = async <D extends any>(
     path: string,
-    params?: Omit<AxiosRequestConfig, 'baseURL' | 'url'>,
-    requestValidation?: any,
-    responseValidation?: any
+    config?: Omit<AxiosRequestConfig, 'baseURL' | 'url'>,
+    requestDataValidation?: any,
+    responseDataValidation?: any,
+    requestParamsValidation?: any
   ): Promise<D> => {
-    if (params?.data && requestValidation) {
-      requestValidation.validateSync(params?.data)
+    if (config?.data && requestDataValidation) {
+      requestDataValidation.validateSync(config?.data)
+    }
+    if (config?.params && requestParamsValidation) {
+      requestParamsValidation.validateSync(config?.params)
     }
 
     const response = await this.axios({
-      ...params,
+      ...config,
       url: path,
-      method: params?.method || 'GET',
+      method: config?.method || 'GET',
     })
 
-    if (response.data && responseValidation) {
-      return responseValidation.validateSync(response.data)
+    if (response.data && responseDataValidation) {
+      return responseDataValidation.validateSync(response.data)
     }
 
     return response.data

@@ -4,6 +4,7 @@
  */
 
 import { TTicketState } from '@models/pricing/pricing'
+import { ITicketHistoryItem } from '@models/pricing/getTickets/getTickets.dto'
 import { IUdrInfo } from '@models/pricing/udr/udr.d'
 
 export type RootStackParamList = {
@@ -27,4 +28,11 @@ export type TOneStackParamList = {
 
 export type AuthStackParamList = {
   Login: undefined
+}
+
+export type HistoryStackParamList = {
+  TransactionsHistory: undefined
+  TransactionDetail: {
+    item: ITicketHistoryItem
+  }
 }

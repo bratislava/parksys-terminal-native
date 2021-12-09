@@ -3,9 +3,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import TabBar, { BOTTOM_TAB_NAVIGATOR_HEIGHT } from '@navigation/TabBar'
 import i18n from 'i18n-js'
 import OneStackNavigator from './OneStackNavigator'
-import TwoStackNavigator from './TwoStackNavigator'
 import SettingsNavigator from './SettingsNavigator'
 import { MaterialIcons } from '@expo/vector-icons'
+import HistoryStackNavigator from './HistoryStackNavigator'
 
 const BottomTab = createBottomTabNavigator<any>()
 
@@ -20,6 +20,7 @@ function BottomTabNavigator() {
       }}
       tabBar={(props) => <TabBar {...props} />}
       screenOptions={{ unmountOnBlur: true }}
+      initialRouteName="HistoryStack"
     >
       <BottomTab.Screen
         name="PaymentStack"
@@ -33,7 +34,7 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="HistoryStack"
-        component={TwoStackNavigator}
+        component={HistoryStackNavigator}
         options={{
           title: i18n.t('screens.history.title'),
           tabBarIcon: ({ fill }: any) => {

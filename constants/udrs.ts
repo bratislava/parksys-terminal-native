@@ -1,4 +1,4 @@
-import { IUdrInfo } from '@models/pricing/udr/udr'
+import { IUdrInfo } from '@models/pricing/udr/udr.d'
 
 const UDRS: IUdrInfo[] = [
   {

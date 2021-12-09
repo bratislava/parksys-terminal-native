@@ -122,6 +122,33 @@ export default {
         action: 'Začať znova',
       },
     },
+    transactionsHistory: {
+      title: 'História transakcií',
+
+      error: {
+        title: 'Niečo sa pokazilo :(',
+        description: 'Opakujte potiahnutím z vrchu',
+      },
+    },
+    transactionDetail: {
+      title: 'Detail platby',
+
+      parkingDescription: {
+        ecv: 'ECV',
+        street: 'Ulica',
+        udr: 'UDR',
+        parkingEnd: 'Ukončenie parkovania',
+      },
+      parkingSummary: {
+        duration: 'Dĺžka parkovania',
+        durationString: '{{hours}} hodín {{minutes}} minút',
+        status: 'Status',
+        status_extension: 'Predĺženie',
+        status_new: 'Nový lístok',
+        price: 'Cena',
+      },
+      printAction: 'Tlačiť kópiu',
+    },
   },
   components: {
     dateTimePicker: {
@@ -141,6 +168,18 @@ export default {
       hideFrontActivity: 'hideFrontActivity',
       isKioskMode: 'isKioskMode',
       saveAction: 'Uložiť nastavenia',
+    },
+    transactionState: {
+      NEW: 'Nová transakcia',
+      GET_PRICE: 'Kontrola ceny',
+      PRICE_WAS_CHANGED: 'Cena sa zmenila',
+      GET_PAYMENT_PRICE: 'Pred platbou',
+      GET_PAYMENT_PRICE_FAILED: 'Overenie ceny zlyhalo',
+      PAYMENT_FAILED: 'Platba zlyhala',
+      PAYMENT_AUTH: 'Overenie zlyhalo',
+      PAYMENT_SUCCESS: 'Zaplatené',
+      TICKET_FAILED: 'Lístok zlyhal',
+      SUCCESS: 'Zaplatené',
     },
   },
 }
