@@ -146,8 +146,13 @@ export default {
         status_extension: 'Predĺženie',
         status_new: 'Nový lístok',
         price: 'Cena',
+        paymentTime: 'Čas a dátum platby',
+        paymentType: 'Spôsob platby',
+        paymentType_card: 'Karta',
+        paymentType_cash: 'Hotovosť',
       },
       printAction: 'Tlačiť kópiu',
+      printError: 'Nastala chyba pri tlačení',
     },
   },
   components: {

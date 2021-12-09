@@ -2,7 +2,7 @@
 import { Button, Descriptions } from '@components/ui'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import React from 'react'
-import { ScrollView, StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet, Alert } from 'react-native'
 import { HistoryStackParamList } from 'types'
 import {
   IconSC,
@@ -18,6 +18,7 @@ import TransactionState from '../../components/common/TransactionState'
 import { printReceipt } from '@services/external/papaya.api'
 import generateReceipt from '@utils/terminal/cashReceipt'
 import { useMutation } from 'react-query'
+import { ETicketState } from '@models/pricing/pricing.d'
 
 const t = i18n.t
 
@@ -32,13 +33,21 @@ const TransactionDetail: React.FunctionComponent = () => {
   )
 
   const handlePrintReceipt = React.useCallback(async () => {
-    await printReceipt({
-      printer: {},
-      printData: generateReceipt({
-        items: [{ name: `Parkovanie v ${udr?.udrid}`, price: item.price }],
-      }),
-    })
-  }, [item.price, udr?.udrid])
+    if (!item || !udr) {
+      return
+    }
+    try {
+      await printReceipt({
+        printer: {},
+        printData: generateReceipt({
+          items: [{ name: `Parkovanie v ${udr?.udrid}`, price: item.price }],
+          date: new Date(item.updated_at),
+        }),
+      })
+    } catch (error) {
+      Alert.alert(t('screens.transactionDetail.printError'))
+    }
+  }, [item, udr])
 
   const { mutate: onPrintPress, isLoading: isPrinting } = useMutation(
     ['print-receipt-copy'],
@@ -49,11 +58,15 @@ const TransactionDetail: React.FunctionComponent = () => {
    * Calculate durations of parking for given end timestamp
    */
   const parkingEndDate = ZonedDateTime.parse(item.parking_end)
-  const parkingStartDate = ZonedDateTime.parse(item.created_at)
+  const parkingStartDate = ZonedDateTime.parse(item.updated_at)
   const durationHours = parkingStartDate.until(parkingEndDate, ChronoUnit.HOURS)
   const durationMinutes = parkingStartDate
     .plusHours(durationHours)
     .until(parkingEndDate, ChronoUnit.MINUTES)
+
+  const isPaidTicket =
+    item.state === ETicketState.SUCCESS ||
+    item.state === ETicketState.PAYMENT_SUCCESS
 
   return (
     <TransactionDetailSC>
@@ -85,8 +98,6 @@ const TransactionDetail: React.FunctionComponent = () => {
               {formatNativeDate(new Date(item.parking_end), 'd.M.yyyy HH:mm')}
             </Descriptions.Text>
           </Descriptions.Item>
-        </Descriptions>
-        <Descriptions layout="horizontal">
           <Descriptions.Item
             label={t('screens.transactionDetail.parkingSummary.duration')}
           >
@@ -97,11 +108,34 @@ const TransactionDetail: React.FunctionComponent = () => {
               })}
             </Descriptions.Text>
           </Descriptions.Item>
+        </Descriptions>
+        <Descriptions layout="horizontal">
           <Descriptions.Item
             label={t('screens.transactionDetail.parkingSummary.status')}
           >
             <Descriptions.Text>
               <TransactionState state={item.state} />
+            </Descriptions.Text>
+          </Descriptions.Item>
+          <Descriptions.Item
+            label={t('screens.transactionDetail.parkingSummary.paymentType')}
+          >
+            <Descriptions.Text>
+              {t(
+                `screens.transactionDetail.parkingSummary.paymentType_${item.payment_type}`
+              )}
+            </Descriptions.Text>
+          </Descriptions.Item>
+          <Descriptions.Item
+            label={t('screens.transactionDetail.parkingSummary.paymentTime')}
+          >
+            <Descriptions.Text>
+              {isPaidTicket
+                ? formatNativeDate(
+                    new Date(item.updated_at),
+                    'HH:mm, dd.MM.yyyy'
+                  )
+                : 'X'}
             </Descriptions.Text>
           </Descriptions.Item>
           <Descriptions.Item
@@ -112,13 +146,15 @@ const TransactionDetail: React.FunctionComponent = () => {
             </Descriptions.Text>
           </Descriptions.Item>
         </Descriptions>
-        <Button
-          style={styles.button}
-          variant="secondary"
-          title={t('screens.transactionDetail.printAction')}
-          onPress={() => onPrintPress()}
-          loading={isPrinting}
-        />
+        {isPaidTicket ? (
+          <Button
+            style={styles.button}
+            variant="secondary"
+            title={t('screens.transactionDetail.printAction')}
+            onPress={() => onPrintPress()}
+            loading={isPrinting}
+          />
+        ) : null}
       </ScrollView>
     </TransactionDetailSC>
   )
