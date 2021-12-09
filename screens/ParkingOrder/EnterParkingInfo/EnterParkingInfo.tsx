@@ -225,7 +225,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
               title="-1h"
               variant="primary"
               onPress={() =>
-                setFieldValue('parkingEnd', addTime(values.parkingEnd, -30))
+                setFieldValue('parkingEnd', addTime(values.parkingEnd, -60))
               }
               contentContainerStyle={styles.buttonContent}
             />
@@ -233,7 +233,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
               title="-0.5h"
               variant="primary"
               onPress={() =>
-                setFieldValue('parkingEnd', addTime(values.parkingEnd, -60))
+                setFieldValue('parkingEnd', addTime(values.parkingEnd, -30))
               }
               contentContainerStyle={styles.buttonContent}
             />
