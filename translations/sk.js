@@ -69,11 +69,35 @@ export default {
         cardAction: 'Platba kartou',
       },
     },
+    login: {
+      title: 'Parksys terminál',
+      description: 'Prosím prihláste sa pomocou Microsoft účtu',
+
+      username: 'Používateľské meno',
+      password: 'Heslo',
+      submitAction: 'Prihlásiť sa',
+
+      errors: {
+        usernameRequired: 'Meno je povinné',
+        passwordRequired: 'Heslo je povinné',
+        loginError: 'Zlé meno a heslo.',
+      },
+    },
+    settings: {
+      title: 'Nastavenia',
+    },
+    history: {
+      title: 'História',
+    },
   },
   components: {
     dateTimePicker: {
       saveAction: 'Zvloliť',
       cancelAction: 'Zrušiť',
+    },
+    userInfo: {
+      displayName: 'Meno',
+      logoutAction: 'Odhlásiť sa',
     },
   },
 }

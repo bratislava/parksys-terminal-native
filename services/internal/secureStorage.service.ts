@@ -1,9 +1,11 @@
+/**================================================================================================
+ * ?                                      ABOUT
+ * @description    : Service for secure storage on device
+ * @link          : https://docs.expo.dev/versions/latest/sdk/securestore/
+ *================================================================================================**/
+
 import * as SecureStore from 'expo-secure-store'
 import { EStorage } from '../../types/storage.d'
-/**
- * Service for secure storage on device
- * https://docs.expo.dev/versions/latest/sdk/securestore/
- */
 
 /**
  * Store key value pair to secure storage

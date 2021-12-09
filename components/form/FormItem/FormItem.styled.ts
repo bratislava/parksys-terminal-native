@@ -2,7 +2,6 @@ import styled from 'styled-components/native'
 
 export const FormItemSC = styled.View`
   width: 100%;
-  flex: 1;
   margin-bottom: 16px;
 `
 export const FormLabelText = styled.Text`
