@@ -10,8 +10,6 @@ import * as React from 'react'
 const AzureProvider: React.FunctionComponent = ({ children }) => {
   const authContext = useAzureAuth()
 
-  console.log(authContext.tokens?.accessToken)
-
   return (
     <AuthContextProvider value={authContext}>{children}</AuthContextProvider>
   )
