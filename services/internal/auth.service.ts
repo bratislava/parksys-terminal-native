@@ -1,8 +1,8 @@
 import secureStorageService from '@services/internal/secureStorage.service'
 import Constants from 'expo-constants'
 import uuid from 'react-native-uuid'
-import decode, { JwtPayload } from 'jwt-decode'
-import { IAuthSession, TListener } from 'types/authService.d'
+import decode from 'jwt-decode'
+import { IAuthSession, IAzureToken, TListener } from 'types/authService.d'
 import {
   ILoginReqParams,
   ILoginRes,
@@ -20,7 +20,10 @@ import axios, { AxiosResponse } from 'axios'
  **                                   Constants
  *------------------------------------------------------------------------------------------------**/
 
-const REQUIRED_SCOPES = new Set(['user.read', 'offline_access'])
+const REQUIRED_SCOPES = new Set([
+  `api://${Constants.manifest?.extra?.azureClientId}/user_auth`,
+  'offline_access',
+])
 const BASE_URL = 'https://login.microsoftonline.com'
 const AUTH_BASE_URL = `${BASE_URL}/${Constants.manifest?.extra?.azureTenantId}`
 
@@ -30,7 +33,7 @@ const AUTH_BASE_URL = `${BASE_URL}/${Constants.manifest?.extra?.azureTenantId}`
  *================================================================================================**/
 class AuthService {
   private session: IAuthSession | null
-  private decoded: JwtPayload | null
+  private decoded: IAzureToken | null
   private listeners: Record<string, TListener>
   private refreshPromise?: Promise<IAuthSession>
 
@@ -92,7 +95,7 @@ class AuthService {
     if (session) {
       try {
         this.session = session
-        this.decoded = decode(session.accessToken)
+        this.decoded = decode<IAzureToken>(session.accessToken)
         await secureStorageService.setAccessToken(session.accessToken)
         await secureStorageService.setRefreshToken(session.refreshToken)
       } catch (error) {
