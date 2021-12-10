@@ -1,6 +1,7 @@
 import * as React from 'react'
 import authService from '@services/internal/auth.service'
 import { IAuthSession, TListener } from 'types/authService.d'
+import { IAzureProfile } from '@models/azure/user/azureUser.d'
 
 /**
  * Hook to auth user with Azure Login
@@ -10,6 +11,7 @@ import { IAuthSession, TListener } from 'types/authService.d'
 function useAzureAuth() {
   const [loggedIn, setLoggedIn] = React.useState(false)
   const [tokens, setTokens] = React.useState<IAuthSession | undefined>()
+  const [profile, setProfile] = React.useState<IAzureProfile | undefined>()
 
   const login = authService.authenticate
   const logout = authService.revokeTokens
@@ -30,9 +32,14 @@ function useAzureAuth() {
    */
   React.useEffect(() => {
     const handleTokenChange: TListener = (session, decoded) => {
-      if (session) {
-        setLoggedIn(true)
+      if (session && decoded) {
+        setProfile({
+          id: decoded.oid,
+          mail: decoded.preferred_username,
+          displayName: decoded.name,
+        })
         setTokens(session)
+        setLoggedIn(true)
       } else {
         setLoggedIn(false)
         setTokens(undefined)
@@ -49,8 +56,8 @@ function useAzureAuth() {
   }, [initAuth])
 
   return React.useMemo(
-    () => ({ login, logout, loggedIn, tokens }),
-    [login, logout, loggedIn, tokens]
+    () => ({ login, logout, loggedIn, tokens, profile }),
+    [login, logout, loggedIn, tokens, profile]
   )
 }
 
