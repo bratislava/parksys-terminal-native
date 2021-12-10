@@ -7,5 +7,11 @@ export interface IAuthSession {
 
 export type TListener = (
   session: IAuthSession | null,
-  decoded: JwtPayload | null
+  decoded: IAzureToken | null
 ) => void
+
+export interface IAzureToken extends JwtPayload {
+  oid: string
+  name: string
+  preferred_username: string
+}
