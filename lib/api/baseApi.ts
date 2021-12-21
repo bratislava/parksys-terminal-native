@@ -73,19 +73,20 @@ abstract class BaseApi {
            * Refresh token if needed
            */
           if (status === 401) {
-            BaseApi.isRefreshing = true
-            authService
-              .refreshAccessToken()
-              .then((tokens) => {
-                console.log()
-                BaseApi.onRefreshed(tokens.accessToken)
-              })
-              .catch(() => {
-                authService.revokeTokens()
-              })
-              .finally(() => {
-                BaseApi.isRefreshing = false
-              })
+            if (!BaseApi.isRefreshing) {
+              BaseApi.isRefreshing = true
+              authService
+                .refreshAccessToken()
+                .then((tokens) => {
+                  BaseApi.onRefreshed(tokens.accessToken)
+                })
+                .catch(() => {
+                  authService.revokeTokens()
+                })
+                .finally(() => {
+                  BaseApi.isRefreshing = false
+                })
+            }
 
             // Postpone all requests with invalid token in array
             return new Promise((resolve) => {
