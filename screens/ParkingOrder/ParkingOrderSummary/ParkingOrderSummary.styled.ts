@@ -6,6 +6,8 @@ export const ParkingOrderSummarySC = styled.View`
   background: ${({ theme }) => theme.colors.lightLightGray};
 `
 export const ButtonWrapper = styled.View`
+  flex-direction: row;
+  align-items: center;
   border-top-width: 1px;
   border-top-color: ${({ theme }) => theme.colors.gray};
   padding: 16px;

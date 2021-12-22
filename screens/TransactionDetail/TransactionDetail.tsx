@@ -3,7 +3,7 @@ import { Button, Descriptions } from '@components/ui'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import React from 'react'
 import { ScrollView, StyleSheet, Alert } from 'react-native'
-import { HistoryStackParamList } from 'types'
+import { RootStackParamList } from 'types'
 import {
   IconSC,
   IconWrapper,
@@ -22,7 +22,7 @@ import { ETicketState } from '@models/pricing/pricing.d'
 
 const t = i18n.t
 
-type TRouteProp = RouteProp<HistoryStackParamList, 'TransactionDetail'>
+type TRouteProp = RouteProp<RootStackParamList, 'TransactionDetail'>
 
 const TransactionDetail: React.FunctionComponent = () => {
   const { params } = useRoute<TRouteProp>()
@@ -149,7 +149,7 @@ const TransactionDetail: React.FunctionComponent = () => {
         {isPaidTicket ? (
           <Button
             style={styles.button}
-            variant="secondary"
+            variant="primary-submit"
             title={t('screens.transactionDetail.printAction')}
             onPress={() => onPrintPress()}
             loading={isPrinting}

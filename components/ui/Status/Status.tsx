@@ -16,7 +16,7 @@ const ICON_MAP = new Map<TStatusVariant, TIconsName>([
   ['info', 'info'],
   ['warn', 'warning'],
   ['error', 'error'],
-  ['success', 'check-circle-outline'],
+  ['success', 'check-circle'],
 ])
 
 interface StatusProps {
@@ -83,7 +83,7 @@ const Status: React.FunctionComponent<StatusProps> = ({
     return (
       <MaterialIcons
         name={icon ?? ICON_MAP.get(variant) ?? 'info'}
-        size={50}
+        size={100}
         color={getColor(theme, variant)}
       />
     )

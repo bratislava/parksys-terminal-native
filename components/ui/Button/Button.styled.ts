@@ -25,11 +25,12 @@ export const FONT_WEIGHT: Record<string, FontWeightType> = {
   filled: 'normal',
   danger: 'normal',
   chat: 'normal',
+  outlined: 'normal',
 } as const
 
 export const styles = StyleSheet.create({
   touchable: {
-    borderRadius: 3,
+    borderRadius: 250,
     borderWidth: 1,
   },
   touchableFullWidth: {
@@ -55,8 +56,8 @@ export const styles = StyleSheet.create({
   },
   // eslint-disable-next-line react-native/no-unused-styles
   medium: {
-    height: 40,
-    borderRadius: 20,
+    height: 50,
+    borderRadius: 250,
   },
   // eslint-disable-next-line react-native/no-unused-styles
   large: {
@@ -139,4 +140,7 @@ export const COLORS = {
   },
 }
 
-export const ButtonSC = styled(Pressable)``
+export const ButtonSC = styled(Pressable)`
+  border-radius: 250px;
+  overflow: hidden;
+`

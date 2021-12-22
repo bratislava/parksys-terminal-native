@@ -26,15 +26,16 @@ import {
   Instant,
   nativeJs,
 } from '@js-joda/core'
-import { TOneStackParamList } from 'types'
+import { RootStackParamList } from 'types'
 import UDRS from 'constants/udrs'
 import { calculateTimeDifference } from '@utils/ui/dateUtils'
+import HoursInput from '@components/common/HoursInput'
 
 /**
  * Screen to enter customer data to purchase parking ticket
  */
 const EnterParkingInfo: React.FunctionComponent = () => {
-  const { push } = useNavigation<StackNavigationProp<TOneStackParamList>>()
+  const { push } = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   const [initialValues, setInitialValues] = React.useState(
     () =>
@@ -122,7 +123,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
   useFocusEffect(resetForm)
 
   return (
-    <EnterParkingInfoSC>
+    <EnterParkingInfoSC edges={['bottom']}>
       <AvoidKeyboard useHeaderOffset>
         <FormWrapper
           contentContainerStyle={styles.formStyle}
@@ -203,47 +204,25 @@ const EnterParkingInfo: React.FunctionComponent = () => {
               />
             </FormItem>
           </DateWrapper>
-          <ButtonGrid>
-            <GridButton
-              title="+1h"
-              variant="primary-submit"
-              onPress={() =>
-                setFieldValue('parkingEnd', addTime(values.parkingEnd, 60))
-              }
-              contentContainerStyle={styles.buttonContent}
-            />
-
-            <GridButton
-              title="+0.5h"
-              variant="primary-submit"
-              onPress={() =>
-                setFieldValue('parkingEnd', addTime(values.parkingEnd, 30))
-              }
-              contentContainerStyle={styles.buttonContent}
-            />
-            <GridButton
-              title="-1h"
-              variant="primary"
-              onPress={() =>
-                setFieldValue('parkingEnd', addTime(values.parkingEnd, -60))
-              }
-              contentContainerStyle={styles.buttonContent}
-            />
-            <GridButton
-              title="-0.5h"
-              variant="primary"
-              onPress={() =>
-                setFieldValue('parkingEnd', addTime(values.parkingEnd, -30))
-              }
-              contentContainerStyle={styles.buttonContent}
-            />
-          </ButtonGrid>
-          <Button
-            title={i18n.t('screens.enterParkingInfo.form.nowAction')}
-            onPress={() => setFieldValue('parkingEnd', new Date())}
-            variant="secondary"
-            style={styles.button}
+          <HoursInput
+            label="1 Hodina"
+            onAdd={() =>
+              setFieldValue('parkingEnd', addTime(values.parkingEnd, 60))
+            }
+            onSub={() =>
+              setFieldValue('parkingEnd', addTime(values.parkingEnd, -60))
+            }
           />
+          <HoursInput
+            label="15 minút"
+            onAdd={() =>
+              setFieldValue('parkingEnd', addTime(values.parkingEnd, 15))
+            }
+            onSub={() =>
+              setFieldValue('parkingEnd', addTime(values.parkingEnd, -15))
+            }
+          />
+
           <Button
             title={i18n.t('screens.enterParkingInfo.form.resetAction')}
             onPress={() => resetForm()}

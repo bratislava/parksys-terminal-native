@@ -11,9 +11,7 @@ export type RootStackParamList = {
   Root: undefined
   NotFound: undefined
   SessionClose: undefined
-}
 
-export type TOneStackParamList = {
   EnterParkingInfo: undefined
   ParkingOrderSummary: {
     udr: IUdrInfo
@@ -32,15 +30,22 @@ export type TOneStackParamList = {
     parkingEnd: string
     finalPrice: IParkinPriceResData
   }
-}
+  ParkinOrderPaymentType: {
+    udr: IUdrInfo
+    ecv: string
+    parkingEnd: string
+    finalPrice: IParkinPriceResData
+  }
 
-export type AuthStackParamList = {
-  Login: undefined
-}
-
-export type HistoryStackParamList = {
   TransactionsHistory: undefined
   TransactionDetail: {
     item: ITicketHistoryItem
   }
+
+  Settings: undefined
+  Home: undefined
+}
+
+export type AuthStackParamList = {
+  Login: undefined
 }

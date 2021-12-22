@@ -10,13 +10,12 @@ import {
 } from 'react-native'
 import { useInfiniteQuery } from 'react-query'
 import TransactionHistoryItem from './components/TransactionHistoryItem'
-import { ItemSeparator } from './components/TransactionHistoryItem/TransactionHistoryItem.styled'
 import { TransactionsHistorySC } from './TransactionsHistory.styled'
 import { Status } from '@components/ui'
 import i18n from 'i18n-js'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { HistoryStackParamList } from 'types'
+import { RootStackParamList } from 'types'
 
 const t = i18n.t
 
@@ -24,7 +23,7 @@ const PER_PAGE = 20
 
 const TransactionsHistory: React.FunctionComponent = () => {
   const { profile } = useAuthContext()
-  const { push } = useNavigation<StackNavigationProp<HistoryStackParamList>>()
+  const { push } = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   const getTicketsHandler = React.useCallback(
     ({ pageParam = 1 }: any) => {
@@ -53,8 +52,14 @@ const TransactionsHistory: React.FunctionComponent = () => {
   }, [])
 
   const _renderItem = React.useCallback(
-    ({ item }: ListRenderItemInfo<ITicketHistoryItem>) => {
-      return <TransactionHistoryItem item={item} onPress={_onPress} />
+    ({ item, index }: ListRenderItemInfo<ITicketHistoryItem>) => {
+      return (
+        <TransactionHistoryItem
+          item={item}
+          onPress={_onPress}
+          odd={index % 2 === 1}
+        />
+      )
     },
     [_onPress]
   )
@@ -108,7 +113,6 @@ const TransactionsHistory: React.FunctionComponent = () => {
         renderItem={_renderItem}
         keyExtractor={_keyExtractor}
         refreshing={isLoading}
-        ItemSeparatorComponent={ItemSeparator}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
         }

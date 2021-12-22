@@ -8,7 +8,7 @@ export default {
       goHome: 'Go to home screen!',
     },
     enterParkingInfo: {
-      title: '1. Platba',
+      title: 'Platba',
 
       loading: {
         title: 'Inicializujem formulár',
@@ -29,7 +29,7 @@ export default {
         parkingEnd: 'Ukončenie parkovania',
         submitAction: 'Vypočítať cenu',
         nowAction: 'Teraz',
-        resetAction: 'Začať znova',
+        resetAction: 'Vynulovať',
       },
 
       formErrors: {
@@ -40,7 +40,7 @@ export default {
       },
     },
     parkingOrderSummary: {
-      title: '2. Platba',
+      title: 'Platba',
 
       loading: {
         title: 'Zisťujem cenu parkovného',
@@ -69,8 +69,7 @@ export default {
       },
 
       actions: {
-        cashAction: 'Platba v hotovosti',
-        cardAction: 'Platba kartou',
+        payAction: 'Zaplatiť parkovné',
       },
 
       priceAlert: {
@@ -87,7 +86,7 @@ export default {
       },
 
       paymentProgress: {
-        title: 'Prebieha platba',
+        title: 'Kontrolujem informácie',
         description: 'Prosím nasledujte informácie na obrazovke',
       },
     },
@@ -113,7 +112,7 @@ export default {
     },
     payByCash: {
       status: {
-        title: 'Vyžiadajte peniaze',
+        title: 'Vyžiadajte Sumu',
         description: 'Po zaplatení potvrďte platbu',
       },
       errorStatus: {
@@ -134,7 +133,7 @@ export default {
       },
     },
     transactionsHistory: {
-      title: 'História transakcií',
+      title: 'História',
 
       error: {
         title: 'Niečo sa pokazilo :(',
@@ -197,6 +196,17 @@ export default {
       createdAt: 'Dátum a čas začatia',
       id: 'Identifikátor relácie',
       logout: 'Odhlásiť',
+    },
+    home: {
+      payment: 'Platba',
+      history: 'História',
+      settings: 'Nastavenia',
+      closeSession: 'Uzávierka',
+    },
+    parkinOrderPaymentType: {
+      title: 'Spôsob platby',
+      card: 'Kartou',
+      cash: 'V hotovosti',
     },
   },
   components: {

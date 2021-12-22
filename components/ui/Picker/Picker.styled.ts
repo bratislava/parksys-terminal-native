@@ -1,3 +1,4 @@
+import Typography from '../Typography'
 import { Platform } from 'react-native'
 import styled, { css } from 'styled-components/native'
 
@@ -7,7 +8,7 @@ export const PickerSC = styled.View<{ error?: boolean }>`
   ${Platform.OS === 'android'
     ? css`
         justify-content: center;
-        height: 39px;
+        height: 48px;
         padding: 6px 0px;
         padding-left: 4px;
         border: none;
@@ -17,14 +18,14 @@ export const PickerSC = styled.View<{ error?: boolean }>`
     : ''};
 
   border-radius: 3px;
-  border-width: 1px;
+  border-width: 2px;
   border-color: ${({ theme, error }) =>
-    error ? theme.colors.error : 'transparent'};
+    error ? theme.colors.error : '#C5C5C5'};
 `
 
 export const PickerWrapper = styled.TouchableOpacity<{ error?: boolean }>`
   width: 100%;
-  height: 39px;
+  height: 48px;
 
   padding: 6px;
 
@@ -33,14 +34,14 @@ export const PickerWrapper = styled.TouchableOpacity<{ error?: boolean }>`
   justify-content: space-between;
 
   border-radius: 3px;
-  border-width: 1px;
+  border-width: 2px;
   border-color: ${({ theme, error }) =>
-    error ? theme.colors.error : 'transparent'};
+    error ? theme.colors.error : '#C5C5C5'};
 
   background-color: ${({ theme }) => theme.colors.white};
 `
 
-export const PickerPlaceholder = styled.Text`
+export const PickerPlaceholder = styled(Typography)`
   font-style: normal;
   font-weight: normal;
   font-size: 12px;

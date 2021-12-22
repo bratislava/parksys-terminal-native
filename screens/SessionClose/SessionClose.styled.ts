@@ -1,3 +1,4 @@
+import { Typography } from '@components/ui'
 import styled from 'styled-components/native'
 
 export const SessionCloseSC = styled.View`
@@ -10,9 +11,9 @@ export const ButtonWrapper = styled.View`
   padding: 16px;
 `
 
-export const SectionTitle = styled.Text`
-  font-weight: 600;
+export const SectionTitle = styled(Typography)`
+  font-weight: bold;
   font-size: 20px;
   line-height: 26px;
-  margin-bottom: 28px;
+  margin-bottom: 14px;
 `

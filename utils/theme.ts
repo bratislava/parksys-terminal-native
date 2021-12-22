@@ -1,10 +1,10 @@
 export const colors = {
   primary: '#C22604',
   secondary: '#444444',
-  green: 'green',
+  green: '#579636',
   tertiary: '#FFE600',
   alert: '#FD4344',
-  error: '#d32223',
+  error: '#B03030',
   gray: '#C3C3C3',
   lighterGray: '#b0b0b0', // 0.1 alpha
   mediumGray: '#C5C5C5',
@@ -13,10 +13,10 @@ export const colors = {
   lightText: '#83919b',
   darkText: '#454545',
   white: '#ffffff',
-  black: '#000000',
+  black: '#16254C',
   blackLighter: '#444444',
   transparentBlack: 'rgba(0, 0, 0, 0.5)',
-  info: '#2e78b7',
+  info: '#16254C',
   warn: 'orange',
 } as const
 

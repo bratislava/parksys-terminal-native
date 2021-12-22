@@ -1,7 +1,10 @@
 import React from 'react'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { useAuthContext } from '@lib/context/authContext'
-import { getEmployeeSession } from '@services/external/pricing.api'
+import {
+  closeSession,
+  getEmployeeSession,
+} from '@services/external/pricing.api'
 
 function useSession() {
   const { profile, logout } = useAuthContext()
@@ -29,6 +32,17 @@ function useSession() {
     { initialData: undefined }
   )
 
+  const { mutate } = useMutation(['close-session', data?.id], async () => {
+    if (!data?.id) {
+      throw new Error('NO SESSION ID')
+    }
+    try {
+      await closeSession(data?.id)
+    } catch (error) {
+      console.log('Close session error', error)
+    }
+  })
+
   const getSession = React.useCallback(async () => {
     const data = await refetch()
 
@@ -41,8 +55,9 @@ function useSession() {
       getSession,
       sessionLoading: isLoading,
       sessionError: error,
+      closeSession: mutate as () => Promise<void>,
     }),
-    [data, error, getSession, isLoading]
+    [data, error, getSession, isLoading, mutate]
   )
 }
 

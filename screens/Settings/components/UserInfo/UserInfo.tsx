@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-raw-text */
-import { Descriptions } from '@components/ui'
+import { Descriptions, Typography } from '@components/ui'
 import { useAuthContext } from '@lib/context/authContext'
 import * as React from 'react'
 import { SectionTitle, UserInfoSC } from './UserInfo.styled'
@@ -16,7 +16,9 @@ const UserInfo: React.FunctionComponent = () => {
 
   return (
     <UserInfoSC>
-      <SectionTitle>{t('components.userInfo.title')}</SectionTitle>
+      <SectionTitle variant="sectionTitle">
+        {t('components.userInfo.title')}
+      </SectionTitle>
       <Descriptions>
         <Descriptions.Item label="ID">
           <Descriptions.Text selectable>{profile.id}</Descriptions.Text>

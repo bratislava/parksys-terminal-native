@@ -1,7 +1,7 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React from 'react'
-import { TOneStackParamList } from 'types'
-import { PayByCardSC } from './PayByCard.styled'
+import { RootStackParamList } from 'types'
+import { ButtonWrapper, HomeSC, PayByCardSC } from './PayByCard.styled'
 import i18n from 'i18n-js'
 import { useAuthContext } from '@lib/context/authContext'
 import { StackNavigationProp } from '@react-navigation/stack'
@@ -10,16 +10,18 @@ import { payByCard, printReceipt } from '@services/external/papaya.api'
 import { EPaymentResult, ICardPaymentRes } from '@models/papaya/card/card.dto'
 import { useMutation } from 'react-query'
 import { Button, Status } from '@components/ui'
+import { StatusBar } from 'expo-status-bar'
+import { TouchableOpacity } from 'react-native'
 
 const t = i18n.t
 
-type TRouteProps = RouteProp<TOneStackParamList, 'PayByCard'>
+type TRouteProps = RouteProp<RootStackParamList, 'PayByCard'>
 
 const PayByCard: React.FunctionComponent = () => {
   const { params } = useRoute<TRouteProps>()
   const { profile } = useAuthContext()
 
-  const { replace } = useNavigation<StackNavigationProp<TOneStackParamList>>()
+  const { replace } = useNavigation<StackNavigationProp<RootStackParamList>>()
   const { finalPrice } = params
 
   const [paidTicket, setPaidTicket] = React.useState<
@@ -97,11 +99,12 @@ const PayByCard: React.FunctionComponent = () => {
           description={t('screens.payByCard.errorStatus.description')}
           style={{ flex: 1 }}
           variant="error"
+          icon="money"
           extra={
             <>
               <Button
                 title={t('screens.payByCard.errorStatus.action')}
-                onPress={() => replace('EnterParkingInfo')}
+                onPress={() => replace('Home')}
               />
             </>
           }
@@ -148,7 +151,25 @@ const PayByCard: React.FunctionComponent = () => {
     pay()
   }, [pay])
 
-  return <PayByCardSC>{currentStatus}</PayByCardSC>
+  return (
+    <PayByCardSC>
+      <StatusBar style="dark" />
+      {currentStatus}
+      {paidTicket ? (
+        <ButtonWrapper>
+          <TouchableOpacity onPress={() => replace('Home')}>
+            <HomeSC source={require('@images/home.png')} />
+          </TouchableOpacity>
+          <Button
+            title={t('screens.payByCash.successStatus.backAction')}
+            onPress={() => replace('EnterParkingInfo')}
+            variant="primary-submit"
+            style={{ flex: 1, marginLeft: 32 }}
+          />
+        </ButtonWrapper>
+      ) : null}
+    </PayByCardSC>
+  )
 }
 
 export default React.memo(PayByCard)

@@ -8,7 +8,6 @@ const BUTTON_SIZE = (WIDTH - 100) / 2
 
 export const EnterParkingInfoSC = styled(SafeAreaView)`
   flex: 1;
-
   background: ${({ theme }) => theme.colors.lightLightGray};
 `
 

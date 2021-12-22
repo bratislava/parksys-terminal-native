@@ -1,10 +1,14 @@
 import styled from 'styled-components/native'
 
-export const TransactionHistoryItemSC = styled.TouchableOpacity`
+export const TransactionHistoryItemSC = styled.TouchableOpacity<{
+  odd: boolean
+}>`
   padding: 12px 16px;
 
   flex-direction: row;
   align-items: center;
+  background: ${({ theme, odd }) =>
+    odd ? theme.colors.white : theme.colors.lightLightGray};
 `
 
 export const ECVText = styled.Text`

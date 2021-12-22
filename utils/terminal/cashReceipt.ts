@@ -3,7 +3,7 @@ const PAPER_WIDTH = 38
 const SPACER = '-'.repeat(PAPER_WIDTH)
 const EMPTY_SPACER = ' '.repeat(PAPER_WIDTH)
 const DEFAULT_FOOTER = [
-  'Dakujeme Vám.',
+  'Ďakujeme Vám.',
   'Potvrdenku si odložte',
   'pre pripadnú kontrolu.',
 ]
@@ -107,12 +107,18 @@ function getReceiptType(type: TReceiptType) {
       return 'POTVRDENKA PRE ZÁKAZNIKA'
     case 'copyReceipt':
       return 'KÓPIA DOKLADU'
+    case 'sessionClose':
+      return 'UZÁVIERKA'
     default:
       return ''
   }
 }
 
-type TReceiptType = 'customerReceipt' | 'merchantReceipt' | 'copyReceipt'
+type TReceiptType =
+  | 'customerReceipt'
+  | 'merchantReceipt'
+  | 'copyReceipt'
+  | 'sessionClose'
 
 type TGenerateParams = {
   /** title of receipt */

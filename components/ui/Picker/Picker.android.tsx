@@ -40,8 +40,8 @@ const _Picker = <T extends any>(
                   ...(child.props.style && typeof child.props.style === 'object'
                     ? child.props.style
                     : {}),
-                  fontSize: 12,
-                  lineHeight: 14,
+                  fontSize: 16,
+                  lineHeight: 21,
                 },
               })
             )

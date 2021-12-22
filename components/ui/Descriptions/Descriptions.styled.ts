@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components/native'
+import Typography from '../Typography'
 
 export type TLayout = 'vertical' | 'horizontal'
 
@@ -16,7 +17,8 @@ export const DescriptionsItemSC = styled.View`
 `
 
 export const DescriptionsContentSC = styled.View<IStyledProps>`
-  padding: 4px 0;
+  padding: 8px 0;
+  flex: 1;
 
   ${({ layout }) => {
     if (layout === 'horizontal') {
@@ -71,16 +73,14 @@ export const DescriptionLabelSC = styled(
       : ''};
 `
 
-export const DescriptionLabelTextSC = styled.Text`
+export const DescriptionLabelTextSC = styled(Typography)`
   font-style: normal;
   font-weight: bold;
-
-  color: ${({ theme }) => theme.colors.black};
+  font-size: 12px;
 `
 
-export const DescriptionContentTextSC = styled(DescriptionLabelTextSC)`
-  font-weight: normal;
-  font-size: 16px;
+export const DescriptionContentTextSC = styled(Typography)`
+  font-size: 20px;
 `
 
 export const PrefixSC = styled.View`

@@ -15,14 +15,15 @@ import TransactionStateIcon from '@components/common/TransactionStateIcon'
 interface TransactionHistoryItemProps {
   item: ITicketHistoryItem
   onPress: (item: ITicketHistoryItem) => void
+  odd: boolean
 }
 
 const TransactionHistoryItem: React.FunctionComponent<TransactionHistoryItemProps> =
-  ({ item, onPress }) => {
+  ({ item, onPress, odd }) => {
     const date = formatNativeDate(new Date(item.created_at), 'd.m.yyyy HH:mm')
 
     return (
-      <TransactionHistoryItemSC onPress={() => onPress(item)}>
+      <TransactionHistoryItemSC onPress={() => onPress(item)} odd={odd}>
         <TransactionStateIcon style={styles.icon} state={item.state} />
         <ECVText>{item.ecv}</ECVText>
         <PriceText>{presentPrice(item.price * 100)}</PriceText>

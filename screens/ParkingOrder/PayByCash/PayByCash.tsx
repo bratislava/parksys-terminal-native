@@ -7,19 +7,27 @@ import { createTicket } from '@services/external/pricing.api'
 import generateReceipt from '@utils/terminal/cashReceipt'
 import React from 'react'
 import { useMutation } from 'react-query'
-import { TOneStackParamList } from 'types'
-import { ButtonWrapper, PayByCashSC } from './PayByCash.styled'
+import { RootStackParamList } from 'types'
+import {
+  ButtonWrapper,
+  PayByCashSC,
+  AmountText,
+  HomeSC,
+} from './PayByCash.styled'
 import i18n from 'i18n-js'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { presentPrice } from '@utils/utils'
+import { StatusBar } from 'expo-status-bar'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const t = i18n.t
 
-type TRouteProps = RouteProp<TOneStackParamList, 'PayByCash'>
+type TRouteProps = RouteProp<RootStackParamList, 'PayByCash'>
 
 const PayByCash: React.FunctionComponent = () => {
   const { params } = useRoute<TRouteProps>()
   const { profile } = useAuthContext()
-  const { replace } = useNavigation<StackNavigationProp<TOneStackParamList>>()
+  const { replace } = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   const [paidTicket, setPaidTicket] = React.useState<
     ICreateTicketRes | undefined
@@ -83,7 +91,7 @@ const PayByCash: React.FunctionComponent = () => {
     } catch (error) {
       console.log('ERR')
     } finally {
-      replace('EnterParkingInfo')
+      replace('Home')
     }
   }, [finalPrice.id, finalPrice.payment_id, profile, replace])
 
@@ -130,7 +138,7 @@ const PayByCash: React.FunctionComponent = () => {
               <Button
                 title={t('screens.payByCash.successStatus.clientPrint')}
                 onPress={() => onPrintPress('customerReceipt')}
-                variant="secondary"
+                variant="primary-submit"
               />
             </Button.Group>
           }
@@ -143,17 +151,24 @@ const PayByCash: React.FunctionComponent = () => {
         title={t('screens.payByCash.status.title')}
         description={t('screens.payByCash.status.description')}
         style={{ flex: 1 }}
+        icon="euro-symbol"
         loading={payLoading}
+        extra={
+          <>
+            <AmountText>{presentPrice(finalPrice.price)}</AmountText>
+          </>
+        }
       />
     )
-  }, [error, onPrintPress, paidTicket, payLoading, replace])
+  }, [error, finalPrice.price, onPrintPress, paidTicket, payLoading, replace])
 
   return (
     <PayByCashSC>
+      <StatusBar style="dark" />
       {currentStatus}
       {!error && !paidTicket ? (
         <ButtonWrapper>
-          <Button.Group vertical style={{ width: '100%' }}>
+          <Button.Group style={{ width: '100%' }}>
             <Button
               title={t('screens.payByCash.actions.cancelAction')}
               variant="secondary"
@@ -169,9 +184,14 @@ const PayByCash: React.FunctionComponent = () => {
       ) : null}
       {paidTicket ? (
         <ButtonWrapper>
+          <TouchableOpacity onPress={() => replace('Home')}>
+            <HomeSC source={require('@images/home.png')} />
+          </TouchableOpacity>
           <Button
             title={t('screens.payByCash.successStatus.backAction')}
             onPress={() => replace('EnterParkingInfo')}
+            variant="primary-submit"
+            style={{ flex: 1, marginLeft: 32 }}
           />
         </ButtonWrapper>
       ) : null}

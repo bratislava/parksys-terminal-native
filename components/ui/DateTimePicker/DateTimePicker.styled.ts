@@ -3,12 +3,12 @@ import styled from 'styled-components/native'
 export const DateTimePickerPlaceholder = styled.Text`
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  line-height: 14px;
+  font-size: 16px;
+  line-height: 20px;
 `
 export const DatePickerWrapper = styled.TouchableOpacity<{ error?: boolean }>`
   width: 100%;
-  height: 39px;
+  height: 48px;
 
   padding: 6px;
 
@@ -17,9 +17,9 @@ export const DatePickerWrapper = styled.TouchableOpacity<{ error?: boolean }>`
   justify-content: space-between;
 
   border-radius: 3px;
-  border-width: 1px;
+  border-width: 2px;
   border-color: ${({ theme, error }) =>
-    error ? theme.colors.error : 'transparent'};
+    error ? theme.colors.error : '#C5C5C5'};
 
   background-color: ${({ theme }) => theme.colors.white};
 `

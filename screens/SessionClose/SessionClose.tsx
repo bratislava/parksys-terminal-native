@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-raw-text */
 import { Button, Descriptions } from '@components/ui'
 import React from 'react'
-import { Image, ScrollView, StyleSheet } from 'react-native'
+import { Alert, Image, ScrollView, StyleSheet } from 'react-native'
 import {
   ButtonWrapper,
   SectionTitle,
@@ -13,18 +13,65 @@ import { useSessionContext } from '@lib/context/sessionContext'
 import { presentPrice } from '@utils/utils'
 import { formatNativeDate } from '@utils/ui/dateUtils'
 import { useFocusEffect } from '@react-navigation/native'
+import secureStorageService from '@services/internal/secureStorage.service'
+import { printReceipt } from '@services/external/papaya.api'
+import generateReceipt from '@utils/terminal/cashReceipt'
 
 const t = i18n.t
 
 const SessionClose: React.FunctionComponent = () => {
-  const { profile } = useAuthContext()
-  const { session, getSession } = useSessionContext()
+  const { profile, logout } = useAuthContext()
+  const { session, getSession, closeSession } = useSessionContext()
 
   const refetch = React.useCallback(() => {
     getSession()
   }, [getSession])
 
   useFocusEffect(refetch)
+
+  const printSessionReceipt = React.useCallback(async () => {
+    if (!session) {
+      throw new Error('NO SESSION TO PRINT')
+    }
+    await printReceipt({
+      printer: {},
+      printData: generateReceipt({
+        title: 'Mesto Bratislava',
+        itemsTitle: ' ',
+        items: [
+          {
+            name: 'Hotovosť',
+            price: session?.price_cash ?? 0,
+          },
+          {
+            name: 'Karta',
+            price: session?.price_card ?? 0,
+          },
+        ],
+        type: 'sessionClose',
+        transactionStatus: 'RELÁCIA UKONČENÁ',
+        footer: [
+          `${session?.id}`,
+          formatNativeDate(new Date(session?.created_at), 'dd.MM.yyyy HH:mm'),
+          'Ďakujeme Vám.',
+          'Uzávierku si uchovajte',
+          'a odovzdajde s terminálom.',
+        ],
+      }),
+    })
+  }, [session])
+
+  const handleClose = React.useCallback(async () => {
+    try {
+      await closeSession()
+      await printSessionReceipt()
+      await logout()
+    } catch (error) {
+      console.log(error)
+    } finally {
+      await secureStorageService.clearStorage()
+    }
+  }, [closeSession, logout, printSessionReceipt])
 
   if (!session || !profile) {
     return null
@@ -82,7 +129,26 @@ const SessionClose: React.FunctionComponent = () => {
         </Descriptions>
       </ScrollView>
       <ButtonWrapper>
-        <Button title={t('screens.sessionClose.logout')} />
+        <Button
+          title={t('screens.sessionClose.logout')}
+          onPress={() => {
+            Alert.alert(
+              'Naozaj sa chcete odhlásiť?',
+              'Týmto ukončíte aktuálnu reláciu a bude Vám vytlačená potvrdenka.',
+              [
+                {
+                  text: 'Áno',
+                  style: 'destructive',
+                  onPress: () => handleClose(),
+                },
+                {
+                  text: 'Zrušiť',
+                  style: 'cancel',
+                },
+              ]
+            )
+          }}
+        />
       </ButtonWrapper>
     </SessionCloseSC>
   )

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Platform, ScrollView, StyleSheet } from 'react-native'
-import LogoutSettings from './components/LogoutSettings/LogoutSettings'
 import TerminalSettings from './components/TerminalSettings'
 import UserInfo from './components/UserInfo'
 import { SettingsSC } from './Settings.styled'
@@ -15,7 +14,6 @@ export const Settings: React.FunctionComponent = () => {
         <UserInfo />
         {IS_DEV_DEVICE ? <TerminalSettings /> : null}
       </ScrollView>
-      <LogoutSettings />
     </SettingsSC>
   )
 }

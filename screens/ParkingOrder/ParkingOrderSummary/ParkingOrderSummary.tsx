@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-raw-text */
 import { Button, Descriptions, Status } from '@components/ui'
 import * as React from 'react'
-import { StyleSheet, ScrollView } from 'react-native'
+import { StyleSheet, ScrollView, View } from 'react-native'
 import {
   ButtonWrapper,
   ParkingOrderSummarySC,
@@ -10,7 +10,7 @@ import {
 } from './ParkingOrderSummary.styled'
 import i18n from 'i18n-js'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
-import { TOneStackParamList } from 'types'
+import { RootStackParamList } from 'types'
 import { useMutation, useQuery } from 'react-query'
 import {
   getPriceForParking,
@@ -33,9 +33,9 @@ const t = i18n.t
 const ParkingOrderSummary: React.FunctionComponent = () => {
   const {
     params: { ecv, parkingEnd, udr },
-  } = useRoute<RouteProp<TOneStackParamList, 'ParkingOrderSummary'>>()
+  } = useRoute<RouteProp<RootStackParamList, 'ParkingOrderSummary'>>()
   const { canGoBack, goBack, push } =
-    useNavigation<StackNavigationProp<TOneStackParamList>>()
+    useNavigation<StackNavigationProp<RootStackParamList>>()
   const { profile } = useAuthContext()
 
   /**
@@ -77,69 +77,57 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
   /**
    * Begin payment for selected type
    */
-  const beginTransaction = React.useCallback(
-    async (type: 'card' | 'cash') => {
-      if (!profile?.id) {
-        throw new Error('No user logged')
-      } else if (!pricingInfo?.id) {
-        throw new Error('No price check executed')
-      }
+  const beginTransaction = React.useCallback(async () => {
+    if (!profile?.id) {
+      throw new Error('No user logged')
+    } else if (!pricingInfo?.id) {
+      throw new Error('No price check executed')
+    }
 
-      /** check price last time */
-      let finalPrice: ITicketPayment
-      try {
-        finalPrice = await ticketPayment(pricingInfo.id, {
-          ecv,
-          parkingEnd,
-          udr: udr.udrid,
-          // TODO: add terminal info
-          partnerId: '1',
-          terminalId: profile.id,
-        })
-      } catch (error) {
-        const err = error as AxiosResponse<ITicketPayment>
-        const response = err.data || {}
+    /** check price last time */
+    let finalPrice: ITicketPayment
+    try {
+      finalPrice = await ticketPayment(pricingInfo.id, {
+        ecv,
+        parkingEnd,
+        udr: udr.udrid,
+        // TODO: add terminal info
+        partnerId: '1',
+        terminalId: profile.id,
+      })
+    } catch (error) {
+      const err = error as AxiosResponse<ITicketPayment>
+      const response = err.data || {}
 
-        if (response.state === ETicketState.PRICE_WAS_CHANGED) {
-          refetchPrice()
-          showPriceChangeAlert(afterErrorHandler)
-        } else {
-          showErrorAlert(afterErrorHandler)
-        }
-        throw error
-      }
-
-      if (!finalPrice) {
-        throw new Error('No price calculation')
-      }
-
-      if (type === 'cash') {
-        push('PayByCash', {
-          ecv,
-          finalPrice,
-          parkingEnd,
-          udr,
-        })
+      if (response.state === ETicketState.PRICE_WAS_CHANGED) {
+        refetchPrice()
+        showPriceChangeAlert(afterErrorHandler)
       } else {
-        push('PayByCard', {
-          ecv,
-          finalPrice,
-          parkingEnd,
-          udr,
-        })
+        showErrorAlert(afterErrorHandler)
       }
-    },
-    [
-      afterErrorHandler,
+      throw error
+    }
+
+    if (!finalPrice) {
+      throw new Error('No price calculation')
+    }
+
+    push('ParkinOrderPaymentType', {
       ecv,
+      finalPrice,
       parkingEnd,
-      pricingInfo,
-      profile,
-      push,
-      refetchPrice,
       udr,
-    ]
-  )
+    })
+  }, [
+    afterErrorHandler,
+    ecv,
+    parkingEnd,
+    pricingInfo,
+    profile,
+    push,
+    refetchPrice,
+    udr,
+  ])
 
   const { mutate: pay, isLoading: payLoading } = useMutation(
     ['pay-ticket'],
@@ -262,7 +250,7 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
       </ScrollView>
       <ButtonWrapper>
         <Descriptions
-          layout="horizontal"
+          layout="vertical"
           style={{ width: '100%', marginBottom: 10 }}
         >
           <Descriptions.Item
@@ -273,17 +261,13 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
             </Descriptions.Text>
           </Descriptions.Item>
         </Descriptions>
-        <Button.Group>
+        <View>
           <Button
-            title={i18n.t('screens.parkingOrderSummary.actions.cashAction')}
+            title={i18n.t('screens.parkingOrderSummary.actions.payAction')}
             variant="primary-submit"
-            onPress={() => pay('cash')}
+            onPress={() => pay()}
           />
-          <Button
-            title={i18n.t('screens.parkingOrderSummary.actions.cardAction')}
-            onPress={() => pay('card')}
-          />
-        </Button.Group>
+        </View>
       </ButtonWrapper>
     </ParkingOrderSummarySC>
   )
@@ -295,9 +279,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   price: {
-    textAlign: 'right',
-    flex: 1,
     fontSize: 32,
+    lineHeight: 32,
   },
 })
 

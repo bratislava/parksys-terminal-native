@@ -23,7 +23,7 @@ import AzureProvider from '@components/layout/AzureProvider/AzureProvider'
 
 const queryClient = new QueryClient()
 import { focusManager } from 'react-query'
-import useAppState from 'react-native-appstate-hook'
+// import useAppState from 'react-native-appstate-hook'
 import { AppStateStatus, Platform } from 'react-native'
 
 /**
@@ -40,24 +40,26 @@ Location.setGoogleApiKey(Constants.manifest?.extra?.googlePlacesApiKey)
 
 export default function App() {
   const isLoadingComplete = useCachedResources()
-  useAppState({
-    onChange: onAppStateChange,
-  })
+  // useAppState({
+  //   onChange: onAppStateChange,
+  // })
 
   if (!isLoadingComplete) {
     return null
   } else {
     return (
-      <ThemeProvider theme={defaultTheme}>
-        <QueryClientProvider client={queryClient}>
-          <SafeAreaProvider>
-            <AzureProvider>
-              <SecurityLayout />
-            </AzureProvider>
-            <StatusBar />
-          </SafeAreaProvider>
-        </QueryClientProvider>
-      </ThemeProvider>
+      <>
+        <StatusBar style="auto" />
+        <ThemeProvider theme={defaultTheme}>
+          <QueryClientProvider client={queryClient}>
+            <SafeAreaProvider>
+              <AzureProvider>
+                <SecurityLayout />
+              </AzureProvider>
+            </SafeAreaProvider>
+          </QueryClientProvider>
+        </ThemeProvider>
+      </>
     )
   }
 }
