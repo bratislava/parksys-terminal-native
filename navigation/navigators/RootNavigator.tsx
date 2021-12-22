@@ -6,6 +6,7 @@ import { RootStackParamList } from 'types'
 
 import { SafeAreaView } from 'react-native-safe-area-context'
 import BottomTabNavigator from './BottomTabNavigator'
+import SessionClose from '@screens/SessionClose'
 
 // A root stack navigator is often used for displaying modals on top of all other content
 // Read more here: https://reactnavigation.org/docs/modal
@@ -20,6 +21,11 @@ function RootNavigator() {
           name="NotFound"
           component={NotFoundScreen}
           options={{ title: 'Oops!' }}
+        />
+        <Stack.Screen
+          name="SessionClose"
+          component={SessionClose}
+          options={{ headerShown: true }}
         />
       </Stack.Navigator>
     </SafeAreaView>

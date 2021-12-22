@@ -9,6 +9,7 @@ import { useColorScheme } from 'react-native'
 import AuthNavigator from '@navigation/navigators/AuthNavigator'
 import RootNavigator from '@navigation/navigators/RootNavigator'
 import { useAuthContext } from '@lib/context/authContext'
+import SessionProvider from '../SessionProvider'
 
 /**
  * Component to handle authentication of app
@@ -22,7 +23,13 @@ const SecurityLayout: React.FunctionComponent = () => {
       linking={LinkingConfiguration}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
     >
-      {loggedIn ? <RootNavigator /> : <AuthNavigator />}
+      {loggedIn ? (
+        <SessionProvider>
+          <RootNavigator />
+        </SessionProvider>
+      ) : (
+        <AuthNavigator />
+      )}
     </NavigationContainer>
   )
 }

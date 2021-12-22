@@ -22,11 +22,27 @@ import AzureProvider from '@components/layout/AzureProvider/AzureProvider'
 // })
 
 const queryClient = new QueryClient()
+import { focusManager } from 'react-query'
+import useAppState from 'react-native-appstate-hook'
+import { AppStateStatus, Platform } from 'react-native'
+
+/**
+ * Setup focus manager
+ * https://react-query.tanstack.com/react-native
+ */
+function onAppStateChange(status: AppStateStatus) {
+  if (Platform.OS !== 'web') {
+    focusManager.setFocused(status === 'active')
+  }
+}
 
 Location.setGoogleApiKey(Constants.manifest?.extra?.googlePlacesApiKey)
 
 export default function App() {
   const isLoadingComplete = useCachedResources()
+  useAppState({
+    onChange: onAppStateChange,
+  })
 
   if (!isLoadingComplete) {
     return null

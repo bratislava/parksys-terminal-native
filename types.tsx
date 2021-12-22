@@ -10,6 +10,7 @@ import { IUdrInfo } from '@models/pricing/udr/udr.d'
 export type RootStackParamList = {
   Root: undefined
   NotFound: undefined
+  SessionClose: undefined
 }
 
 export type TOneStackParamList = {

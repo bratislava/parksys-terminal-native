@@ -8,7 +8,7 @@ export interface IAuthContext {
   profile?: IAzureProfile
   loggedIn: boolean
   login: typeof authService.authenticate
-  logout: typeof authService.revokeTokens
+  logout: () => Promise<void>
 }
 
 export const defaultValue: IAuthContext = {

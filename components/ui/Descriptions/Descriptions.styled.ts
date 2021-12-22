@@ -10,7 +10,12 @@ export const DescriptionsSC = styled.View`
   flex-shrink: 1;
 `
 
-export const DescriptionsItemSC = styled.View<IStyledProps>`
+export const DescriptionsItemSC = styled.View`
+  flex-direction: row;
+  align-items: center;
+`
+
+export const DescriptionsContentSC = styled.View<IStyledProps>`
   padding: 4px 0;
 
   ${({ layout }) => {
@@ -76,4 +81,8 @@ export const DescriptionLabelTextSC = styled.Text`
 export const DescriptionContentTextSC = styled(DescriptionLabelTextSC)`
   font-weight: normal;
   font-size: 16px;
+`
+
+export const PrefixSC = styled.View`
+  margin-right: 16px;
 `

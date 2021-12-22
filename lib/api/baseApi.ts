@@ -75,12 +75,15 @@ abstract class BaseApi {
           if (status === 401) {
             if (!BaseApi.isRefreshing) {
               BaseApi.isRefreshing = true
+              console.log('[BaseApi]: refreshing token')
               authService
                 .refreshAccessToken()
                 .then((tokens) => {
+                  console.log('[BaseApi]: refresh success')
                   BaseApi.onRefreshed(tokens.accessToken)
                 })
                 .catch(() => {
+                  console.log('[BaseApi]: refresh failed')
                   authService.revokeTokens()
                 })
                 .finally(() => {

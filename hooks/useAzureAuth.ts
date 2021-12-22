@@ -1,5 +1,6 @@
 import * as React from 'react'
 import authService from '@services/internal/auth.service'
+import secureStorageService from '@services/internal/secureStorage.service'
 import { IAuthSession, TListener } from 'types/authService.d'
 import { IAzureProfile } from '@models/azure/user/azureUser.d'
 
@@ -14,7 +15,10 @@ function useAzureAuth() {
   const [profile, setProfile] = React.useState<IAzureProfile | undefined>()
 
   const login = authService.authenticate
-  const logout = authService.revokeTokens
+  const logout = React.useCallback(async () => {
+    await authService.revokeTokens()
+    await secureStorageService.clearStorage()
+  }, [])
 
   /**
    * Load tokens from storage, and log in user if token is not expired

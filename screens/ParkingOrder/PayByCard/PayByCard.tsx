@@ -18,6 +18,7 @@ type TRouteProps = RouteProp<TOneStackParamList, 'PayByCard'>
 const PayByCard: React.FunctionComponent = () => {
   const { params } = useRoute<TRouteProps>()
   const { profile } = useAuthContext()
+
   const { replace } = useNavigation<StackNavigationProp<TOneStackParamList>>()
   const { finalPrice } = params
 

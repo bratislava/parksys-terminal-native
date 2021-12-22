@@ -7,6 +7,8 @@ import {
   createTicketReqValidation,
   createTicketResValidation,
 } from '@models/pricing/createTicket/createTicket.schema'
+import { ISession } from '@models/pricing/getSession/getSession.dto'
+import { getSessionResValidation } from '@models/pricing/getSession/getSession.schema'
 import {
   ITickets,
   ITicketsReqParams,
@@ -112,4 +114,31 @@ export function getTickets(params: ITicketsReqParams) {
     getTicketsResValidation,
     getTicketsReqValidation
   )
+}
+
+/**
+ * Get session for user
+ * @param employeeId employee id
+ * @returns promise
+ */
+export function getEmployeeSession(employeeId: string) {
+  return pricingApi.requestValidate<ISession>(
+    `/api-terminal/session/${employeeId}`,
+    {
+      method: 'POST',
+    },
+    undefined,
+    getSessionResValidation
+  )
+}
+
+/**
+ * Close session with given id
+ * @param sessionId session to close
+ * @returns promise
+ */
+export function closeSession(sessionId: string) {
+  return pricingApi.request(`/api-terminal/close-session/${sessionId}`, {
+    method: 'POST',
+  })
 }

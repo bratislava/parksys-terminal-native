@@ -1,17 +1,19 @@
 import React from 'react'
 import { LogoutSettingsSC } from './LogoutSettings.styled'
 import i18n from 'i18n-js'
-import { useAuthContext } from '@lib/context/authContext'
 import { Button } from '@components/ui'
+import { useNavigation } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { RootStackParamList } from 'types'
 
 const LogoutSettings: React.FunctionComponent = () => {
-  const { logout } = useAuthContext()
+  const { push } = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   return (
     <LogoutSettingsSC>
       <Button
-        title={i18n.t('components.logoutSettings.logoutAction')}
-        onPress={logout}
+        title={i18n.t('components.logoutSettings.sessionAction')}
+        onPress={() => push('SessionClose')}
       />
     </LogoutSettingsSC>
   )

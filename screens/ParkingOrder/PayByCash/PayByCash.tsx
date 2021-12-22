@@ -72,6 +72,7 @@ const PayByCash: React.FunctionComponent = () => {
     } else if (!finalPrice?.id) {
       throw new Error('No price check executed')
     }
+
     try {
       await createTicket(finalPrice.id, {
         payment_id: finalPrice.payment_id,
@@ -84,7 +85,7 @@ const PayByCash: React.FunctionComponent = () => {
     } finally {
       replace('EnterParkingInfo')
     }
-  }, [finalPrice, profile, replace])
+  }, [finalPrice.id, finalPrice.payment_id, profile, replace])
 
   const {
     mutate: pay,

@@ -102,7 +102,41 @@ function clearSelectedUdr() {
   return clear(EStorage.selectedUdr)
 }
 
+/**
+ * Set session
+ * @param sessionId session id of employee
+ * @returns promise
+ */
+function setSessionId(sessionId: string) {
+  return save(EStorage.sessionId, sessionId)
+}
+
+/**
+ * Get session
+ * @returns promise
+ */
+function getSessionId() {
+  return getValueFor(EStorage.sessionId)
+}
+
+/**
+ * Clear session
+ * @returns promise
+ */
+function clearSessionId() {
+  return clear(EStorage.sessionId)
+}
+
+/**
+ * Clear all storage
+ * @returns promise
+ */
+function clearStorage() {
+  return Promise.all([clearAuthTokens(), clearSelectedUdr(), clearSessionId()])
+}
+
 const secureStorageService = {
+  clearStorage,
   /**
    * Tokens
    */
@@ -117,6 +151,12 @@ const secureStorageService = {
   setSelectedUdr,
   getSelectedUdr,
   clearSelectedUdr,
+  /**
+   * session
+   */
+  setSessionId,
+  getSessionId,
+  clearSessionId,
 }
 
 export default secureStorageService

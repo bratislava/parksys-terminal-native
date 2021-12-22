@@ -1,11 +1,13 @@
 import * as React from 'react'
-import { ViewStyle } from 'react-native'
+import { StyleProp, ViewStyle } from 'react-native'
 import {
   DescriptionContentSC,
   DescriptionLabelSC,
   DescriptionLabelTextSC,
   DescriptionsItemSC,
+  DescriptionsContentSC,
   TLayout,
+  PrefixSC,
 } from './Descriptions.styled'
 
 export interface DescriptionsItemProps {
@@ -29,6 +31,10 @@ export interface DescriptionsItemProps {
    * Style of body
    */
   style?: StyleProp<ViewStyle>
+  /**
+   * Prefix element for row
+   */
+  prefix?: React.ReactNode
 }
 
 const DescriptionsItem: React.FunctionComponent<DescriptionsItemProps> = ({
@@ -37,18 +43,22 @@ const DescriptionsItem: React.FunctionComponent<DescriptionsItemProps> = ({
   children,
   colon,
   style,
+  prefix,
 }) => {
   return (
-    <DescriptionsItemSC layout={layout}>
-      <DescriptionLabelSC layout={layout}>
-        {/* eslint-disable-next-line react-native/no-raw-text */}
-        <DescriptionLabelTextSC>{`${label}${
-          colon ? ':' : ''
-        }`}</DescriptionLabelTextSC>
-      </DescriptionLabelSC>
-      <DescriptionContentSC style={style} layout={layout}>
-        {children}
-      </DescriptionContentSC>
+    <DescriptionsItemSC>
+      {prefix ? <PrefixSC>{prefix}</PrefixSC> : null}
+      <DescriptionsContentSC layout={layout}>
+        <DescriptionLabelSC layout={layout}>
+          {/* eslint-disable-next-line react-native/no-raw-text */}
+          <DescriptionLabelTextSC>{`${label}${
+            colon ? ':' : ''
+          }`}</DescriptionLabelTextSC>
+        </DescriptionLabelSC>
+        <DescriptionContentSC style={style} layout={layout}>
+          {children}
+        </DescriptionContentSC>
+      </DescriptionsContentSC>
     </DescriptionsItemSC>
   )
 }

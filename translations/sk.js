@@ -187,6 +187,17 @@ export default {
         cancelAction: 'Zrušiť',
       },
     },
+    sessionClose: {
+      title: 'Uzávierka',
+      subTitle: 'Uzávierka terminálu',
+      person: 'Zodpovedná osoba',
+      cash: 'Vyzbierané v hotovosti',
+      card: 'Vyzbierané platobnou kartou',
+      count: 'Počet transakcií celkom',
+      createdAt: 'Dátum a čas začatia',
+      id: 'Identifikátor relácie',
+      logout: 'Odhlásiť',
+    },
   },
   components: {
     dateTimePicker: {
@@ -200,6 +211,7 @@ export default {
     },
     logoutSettings: {
       logoutAction: 'Odhlásiť sa',
+      sessionAction: 'Uzávierka',
     },
     terminalSettings: {
       title: 'Nastavenia terminálu (jednorázové)',
@@ -218,6 +230,11 @@ export default {
       PAYMENT_SUCCESS: 'Zaplatené',
       TICKET_FAILED: 'Lístok zlyhal',
       SUCCESS: 'Zaplatené',
+    },
+    sessionProvider: {
+      title: 'Načítavam reláciu',
+      description: 'Počkajte prosím',
+      descriptionError: 'Nepodarilo sa vytvoriť reláciu, skúste neskôr',
     },
   },
 }
