@@ -29,11 +29,11 @@ export default {
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
-    config: {
-      googleMaps: {
-        apiKey: process.env.GOOGLE_MAPS_API_KEY,
-      },
-    },
+    // config: {
+    //   googleMaps: {
+    //     apiKey: process.env.GOOGLE_MAPS_API_KEY,
+    //   },
+    // },
   },
   web: {
     favicon: './assets/images/favicon.png',
@@ -46,7 +46,7 @@ export default {
     azureClientId: process.env.AZURE_AUTH_CLIENT_ID,
     azureTenantId: process.env.AZURE_AUTH_TENANT_ID,
     mockApiDelay: process.env.MOCK_API_DELAY,
-    googlePlacesApiKey: process.env.GOOGLE_PLACES_API_KEY,
+    // googlePlacesApiKey: process.env.GOOGLE_PLACES_API_KEY,
   },
   packagerOpts: {
     config: 'metro.config.js',
@@ -64,17 +64,17 @@ export default {
       'svg',
     ],
   },
-  plugins: ['sentry-expo'],
-  hooks: {
-    postPublish: [
-      {
-        file: 'sentry-expo/upload-sourcemaps',
-        config: {
-          organization: 'bratislava-city-hall', // Sentry Organization settings tab
-          project: 'parksys-terminal-react-native', //Sentry Settings > General Settings tab
-          authToken: process.env.SENTRY_AUTH_TOKEN,
-        },
-      },
-    ],
-  },
+  // plugins: ['sentry-expo'],
+  // hooks: {
+  //   postPublish: [
+  //     {
+  //       file: 'sentry-expo/upload-sourcemaps',
+  //       config: {
+  //         organization: 'bratislava-city-hall', // Sentry Organization settings tab
+  //         project: 'parksys-terminal-react-native', //Sentry Settings > General Settings tab
+  //         authToken: process.env.SENTRY_AUTH_TOKEN,
+  //       },
+  //     },
+  //   ],
+  // },
 }

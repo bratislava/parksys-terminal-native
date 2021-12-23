@@ -25,7 +25,7 @@ const queryClient = new QueryClient()
 import { focusManager } from 'react-query'
 // import useAppState from 'react-native-appstate-hook'
 import { AppStateStatus, Platform } from 'react-native'
-import useTerminalSetup from '@hooks/useTerminalSetup'
+import SetupTerminal from '@components/common/SetupTerminal'
 
 /**
  * Setup focus manager
@@ -41,12 +41,11 @@ Location.setGoogleApiKey(Constants.manifest?.extra?.googlePlacesApiKey)
 
 export default function App() {
   const isLoadingComplete = useCachedResources()
-  const setupRunning = useTerminalSetup()
   // useAppState({
   //   onChange: onAppStateChange,
   // })
 
-  if (!isLoadingComplete || setupRunning) {
+  if (!isLoadingComplete) {
     return null
   } else {
     return (
@@ -54,6 +53,7 @@ export default function App() {
         <StatusBar style="auto" />
         <ThemeProvider theme={defaultTheme}>
           <QueryClientProvider client={queryClient}>
+            <SetupTerminal />
             <SafeAreaProvider>
               <AzureProvider>
                 <SecurityLayout />
