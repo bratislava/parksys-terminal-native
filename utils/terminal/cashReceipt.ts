@@ -27,7 +27,7 @@ function getSpacing(spaces: number) {
  * @returns string for receipt
  */
 function getItem(label: string, sum: string | number) {
-  const formattedSum = typeof sum === 'number' ? sum.toFixed(2) : sum
+  const formattedSum = typeof sum === 'number' ? (sum / 100).toFixed(2) : sum
   let formattedLabel = label
 
   /** If label and su bigger then one line */
@@ -91,7 +91,10 @@ function generateItems(items: TReceiptItem[]) {
     itemsSting += getItem(i.name, i.price)
   })
 
-  return `${itemsSting}${SPACER}${getItem('Suma EUR', price)}`
+  return `${itemsSting}${SPACER}${getItem(
+    'Suma EUR',
+    (price / 100).toFixed(2)
+  )}`
 }
 
 /**

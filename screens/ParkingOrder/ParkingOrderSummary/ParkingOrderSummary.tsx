@@ -257,7 +257,7 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
             label={i18n.t('screens.parkingOrderSummary.parkingSummary.price')}
           >
             <Descriptions.Text style={styles.price}>
-              {presentPrice(pricingInfo.price * 100)}
+              {presentPrice(pricingInfo.price)}
             </Descriptions.Text>
           </Descriptions.Item>
         </Descriptions>

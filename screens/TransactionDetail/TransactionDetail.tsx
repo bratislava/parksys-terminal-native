@@ -143,9 +143,7 @@ const TransactionDetail: React.FunctionComponent = () => {
           <Descriptions.Item
             label={t('screens.transactionDetail.parkingSummary.price')}
           >
-            <Descriptions.Text>
-              {presentPrice(item.price * 100)}
-            </Descriptions.Text>
+            <Descriptions.Text>{presentPrice(item.price)}</Descriptions.Text>
           </Descriptions.Item>
         </Descriptions>
         {isPaidTicket ? (

@@ -26,7 +26,7 @@ const TransactionHistoryItem: React.FunctionComponent<TransactionHistoryItemProp
       <TransactionHistoryItemSC onPress={() => onPress(item)} odd={odd}>
         <TransactionStateIcon style={styles.icon} state={item.state} />
         <ECVText>{item.ecv}</ECVText>
-        <PriceText>{presentPrice(item.price * 100)}</PriceText>
+        <PriceText>{presentPrice(item.price)}</PriceText>
         <DateText>{date}</DateText>
         <MaterialIcons name="chevron-right" size={24} />
       </TransactionHistoryItemSC>
