@@ -122,7 +122,9 @@ const TransactionDetail: React.FunctionComponent = () => {
           >
             <Descriptions.Text>
               {t(
-                `screens.transactionDetail.parkingSummary.paymentType_${item.payment_type}`
+                `screens.transactionDetail.parkingSummary.paymentType_${
+                  item.payment_type || 'none'
+                }`
               )}
             </Descriptions.Text>
           </Descriptions.Item>

@@ -160,6 +160,7 @@ export default {
         paymentType: 'Spôsob platby',
         paymentType_card: 'Karta',
         paymentType_cash: 'Hotovosť',
+        paymentType_none: 'Nezaplatený',
       },
       printAction: 'Tlačiť kópiu',
       printError: 'Nastala chyba pri tlačení',

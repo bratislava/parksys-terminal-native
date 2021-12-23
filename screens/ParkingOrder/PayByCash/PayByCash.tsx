@@ -155,7 +155,7 @@ const PayByCash: React.FunctionComponent = () => {
         loading={payLoading}
         extra={
           <>
-            <AmountText>{presentPrice(finalPrice.price)}</AmountText>
+            <AmountText>{presentPrice(finalPrice.price * 100)}</AmountText>
           </>
         }
       />
