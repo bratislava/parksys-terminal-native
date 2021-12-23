@@ -62,7 +62,7 @@ const PayByCard: React.FunctionComponent = () => {
       externalId: finalPrice.payment_id,
       requestContents: {
         operation: 'CP',
-        amount: finalPrice.price.toFixed(2),
+        amount: (finalPrice.price / 100).toFixed(2),
         transactionId: finalPrice.payment_id,
       },
       printCustomerReceipt: false,
