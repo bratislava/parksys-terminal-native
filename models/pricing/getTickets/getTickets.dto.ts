@@ -32,6 +32,9 @@ export interface ITicketHistoryItem {
   payment_type: 'card' | 'cash'
 }
 
-export interface Meta {}
+export interface Meta {
+  ticketStart: string
+  ticketEnd: string
+}
 
 export type ITickets = PaginatedResult<ITicketHistoryItem>

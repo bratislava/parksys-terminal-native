@@ -24,4 +24,7 @@ export interface IParkinPriceResData {
   updated_at: string
 }
 
-export interface Meta {}
+export interface Meta {
+  ticketStart: string
+  ticketEnd: string
+}

@@ -4,7 +4,7 @@ import { ICreateTicketRes } from '@models/pricing/createTicket/createTicket.dto'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { printReceipt } from '@services/external/papaya.api'
 import { createTicket } from '@services/external/pricing.api'
-import generateReceipt from '@utils/terminal/cashReceipt'
+import { generateReceiptForTransaction } from '@utils/terminal/cashReceipt'
 import React from 'react'
 import { useMutation } from 'react-query'
 import { RootStackParamList } from 'types'
@@ -33,27 +33,18 @@ const PayByCash: React.FunctionComponent = () => {
     ICreateTicketRes | undefined
   >()
 
-  const { finalPrice, udr } = params
+  const { finalPrice } = params
 
-  const onPrintPress = React.useCallback(
-    async (type: 'customerReceipt' | 'merchantReceipt') => {
-      if (!paidTicket) {
-        return
-      }
+  const onPrintPress = React.useCallback(async () => {
+    if (!paidTicket) {
+      return
+    }
 
-      await printReceipt({
-        printData: generateReceipt({
-          date: new Date(),
-          items: [
-            { name: `Parkovanie v ${udr.udrid}`, price: paidTicket.price },
-          ],
-          type,
-        }),
-        printer: {},
-      })
-    },
-    [paidTicket, udr]
-  )
+    await printReceipt({
+      printData: generateReceiptForTransaction(paidTicket),
+      printer: {},
+    })
+  }, [paidTicket])
 
   /**
    * Begin payment for selected type
@@ -132,12 +123,12 @@ const PayByCash: React.FunctionComponent = () => {
             <Button.Group style={{ marginHorizontal: 32 }}>
               <Button
                 title={t('screens.payByCash.successStatus.merchantPrint')}
-                onPress={() => onPrintPress('merchantReceipt')}
+                onPress={() => onPrintPress()}
                 variant="secondary"
               />
               <Button
                 title={t('screens.payByCash.successStatus.clientPrint')}
-                onPress={() => onPrintPress('customerReceipt')}
+                onPress={() => onPrintPress()}
                 variant="primary-submit"
               />
             </Button.Group>

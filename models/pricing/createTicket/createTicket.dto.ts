@@ -26,4 +26,7 @@ export interface ICreateTicketRes {
   ticket_id_parksys: string
 }
 
-export interface Meta {}
+export interface Meta {
+  ticketStart: string
+  ticketEnd: string
+}

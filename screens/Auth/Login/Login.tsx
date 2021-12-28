@@ -66,6 +66,8 @@ const Login: React.FunctionComponent = () => {
               onSubmitEditing={handleUsernameSubmit}
               textContentType="emailAddress"
               keyboardType="email-address"
+              autoCorrect={false}
+              autoCapitalize="none"
             />
           </FormItem>
           <FormItem

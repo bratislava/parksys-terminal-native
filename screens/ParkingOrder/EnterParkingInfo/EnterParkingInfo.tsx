@@ -137,6 +137,9 @@ const EnterParkingInfo: React.FunctionComponent = () => {
             <Input
               value={values.ecv}
               onChangeText={(text) => setFieldValue('ecv', text)}
+              onEndEditing={() =>
+                setFieldValue('ecv', values.ecv.toUpperCase())
+              }
               autoFocus
               autoCapitalize="characters"
             />

@@ -12,6 +12,7 @@ import { useMutation } from 'react-query'
 import { Button, Status } from '@components/ui'
 import { StatusBar } from 'expo-status-bar'
 import { TouchableOpacity } from 'react-native'
+import { generateReceiptForTransaction } from '@utils/terminal/cashReceipt'
 
 const t = i18n.t
 
@@ -35,7 +36,7 @@ const PayByCard: React.FunctionComponent = () => {
       }
       if (type === 'customerReceipt') {
         await printReceipt({
-          printData: paidTicket.content.customerReceipt,
+          printData: generateReceiptForTransaction(finalPrice),
           printer: {},
         })
       } else {
@@ -45,7 +46,7 @@ const PayByCard: React.FunctionComponent = () => {
         })
       }
     },
-    [paidTicket]
+    [finalPrice, paidTicket]
   )
 
   /**

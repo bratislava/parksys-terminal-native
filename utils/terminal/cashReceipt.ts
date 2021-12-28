@@ -1,11 +1,14 @@
+import { ICreateTicketRes } from '@models/pricing/createTicket/createTicket.dto'
+import { ITicketHistoryItem } from '@models/pricing/getTickets/getTickets.dto'
+import { IParkinPriceResData } from '@models/pricing/parkingPrice/parkingPrice.dto'
 import { formatNativeDate } from '@utils/ui/dateUtils'
 const PAPER_WIDTH = 38
 const SPACER = '-'.repeat(PAPER_WIDTH)
 const EMPTY_SPACER = ' '.repeat(PAPER_WIDTH)
 const DEFAULT_FOOTER = [
-  'Ďakujeme Vám.',
-  'Potvrdenku si odložte',
-  'pre pripadnú kontrolu.',
+  'Prevádzkovateľ nie je platcom DPH podľa §4 Zákona č.222/2004 Z.z o dani z pridanej hodnoty.',
+  'Lístok je elektronický, nemusíte ho zakladať za predné sklo vozidla.',
+  'Pri kontrole systém automaticky overí, či na dané EČV bol vydaný parkovací lístok.',
 ]
 
 type TReceiptItem = { name: string; price: string | number }
@@ -27,7 +30,8 @@ function getSpacing(spaces: number) {
  * @returns string for receipt
  */
 function getItem(label: string, sum: string | number) {
-  const formattedSum = typeof sum === 'number' ? (sum / 100).toFixed(2) : sum
+  const formattedSum =
+    typeof sum === 'number' ? `${(sum / 100).toFixed(2)}€` : sum
   let formattedLabel = label
 
   /** If label and su bigger then one line */
@@ -176,6 +180,56 @@ function generateReceipt({
   footer.forEach((item) => {
     finalString += getTitle(item.trim())
   })
+
+  return finalString
+}
+
+function getTransactionHeader() {
+  let header = ''
+  header += getTitle('Bratislavský parkovací asistent')
+  header += EMPTY_SPACER
+  header += getTitle('Prevádzkovateľ:')
+  header += getTitle('Hlavné mesto SR Bratislava')
+  header += getTitle('Primaciálne námestie 1')
+  header += getTitle('814 99  Bratislava')
+  header += getTitle('IČO: 00 603 481  DIČ: 2020372596')
+
+  return header
+}
+
+export function generateReceiptForTransaction(
+  tx: ICreateTicketRes | IParkinPriceResData | ITicketHistoryItem
+) {
+  const startDateObj = tx.meta?.ticketStart
+    ? new Date(tx.meta?.ticketStart)
+    : new Date()
+  const endDateObj = new Date(tx.meta?.ticketEnd || tx.parking_end)
+  const startDate = formatNativeDate(startDateObj, 'dd/MM/yy')
+  const startTime = formatNativeDate(startDateObj, 'HH:mm')
+  const endDate = formatNativeDate(endDateObj, 'dd/MM/yy')
+  const endTime = formatNativeDate(endDateObj, 'HH:mm')
+
+  let finalString = ''
+
+  /** generate receipt from params */
+  finalString += getTransactionHeader()
+  finalString += SPACER
+  finalString += getItem(`EČV:`, tx.ecv)
+  finalString += getTitle('Platnosť')
+  finalString += EMPTY_SPACER
+  finalString += getItem(`Od ${startTime}`, startDate)
+  finalString += getItem(`Do ${endTime}`, endDate)
+  finalString += getItem('Kód úseku parkovania:', `${tx.udr}`)
+  finalString += EMPTY_SPACER
+  finalString += getItem('Číslo lístku:', '')
+  finalString += getItem(tx.ticket_id_parksys, '')
+  finalString += SPACER
+  finalString += getItem('Cena:', tx.price)
+  finalString += EMPTY_SPACER
+  finalString += DEFAULT_FOOTER.join(' ')
+  // DEFAULT_FOOTER.forEach((item) => {
+  //   finalString += getTitle(item.trim())
+  // })
 
   return finalString
 }

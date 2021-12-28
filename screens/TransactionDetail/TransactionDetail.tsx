@@ -16,7 +16,7 @@ import { ZonedDateTime, ChronoUnit } from '@js-joda/core'
 import { presentPrice } from '@utils/utils'
 import TransactionState from '../../components/common/TransactionState'
 import { printReceipt } from '@services/external/papaya.api'
-import generateReceipt from '@utils/terminal/cashReceipt'
+import { generateReceiptForTransaction } from '@utils/terminal/cashReceipt'
 import { useMutation } from 'react-query'
 import { ETicketState } from '@models/pricing/pricing.d'
 
@@ -39,10 +39,7 @@ const TransactionDetail: React.FunctionComponent = () => {
     try {
       await printReceipt({
         printer: {},
-        printData: generateReceipt({
-          items: [{ name: `Parkovanie v ${udr?.udrid}`, price: item.price }],
-          date: new Date(item.updated_at),
-        }),
+        printData: generateReceiptForTransaction(item),
       })
     } catch (error) {
       Alert.alert(t('screens.transactionDetail.printError'))
