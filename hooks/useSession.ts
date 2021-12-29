@@ -5,6 +5,10 @@ import {
   closeSession,
   getEmployeeSession,
 } from '@services/external/pricing.api'
+import {
+  captureException,
+  captureMessage,
+} from '@services/internal/sentry.service'
 
 function useSession() {
   const { profile, logout } = useAuthContext()
@@ -25,7 +29,8 @@ function useSession() {
 
         return sessionData
       } catch (error) {
-        console.log('Get session err', error)
+        captureMessage('Get session err')
+        captureException(error)
         logout()
       }
     },
@@ -39,7 +44,8 @@ function useSession() {
     try {
       await closeSession(data?.id)
     } catch (error) {
-      console.log('Close session error', error)
+      captureMessage('Close session error')
+      captureException(error)
     }
   })
 

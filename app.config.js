@@ -39,6 +39,7 @@ export default {
     favicon: './assets/images/favicon.png',
   },
   extra: {
+    dev: process.env.__DEV__ ? true : false,
     pricingApiUrl: process.env.PRICING_API_URL,
     papayaApiUrl: process.env.PAPAYA_API_URL,
     enableMockApi: process.env.ENABLE_MOCK_API,
@@ -64,17 +65,17 @@ export default {
       'svg',
     ],
   },
-  // plugins: ['sentry-expo'],
-  // hooks: {
-  //   postPublish: [
-  //     {
-  //       file: 'sentry-expo/upload-sourcemaps',
-  //       config: {
-  //         organization: 'bratislava-city-hall', // Sentry Organization settings tab
-  //         project: 'parksys-terminal-react-native', //Sentry Settings > General Settings tab
-  //         authToken: process.env.SENTRY_AUTH_TOKEN,
-  //       },
-  //     },
-  //   ],
-  // },
+  plugins: ['sentry-expo'],
+  hooks: {
+    postPublish: [
+      {
+        file: 'sentry-expo/upload-sourcemaps',
+        config: {
+          organization: 'bratislava-city-hall', // Sentry Organization settings tab
+          project: 'parksys-terminal-react-native', //Sentry Settings > General Settings tab
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+        },
+      },
+    ],
+  },
 }

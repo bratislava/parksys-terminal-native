@@ -19,6 +19,7 @@ import { printReceipt } from '@services/external/papaya.api'
 import { generateReceiptForTransaction } from '@utils/terminal/cashReceipt'
 import { useMutation } from 'react-query'
 import { ETicketState } from '@models/pricing/pricing.d'
+import { captureException } from '@services/internal/sentry.service'
 
 const t = i18n.t
 
@@ -42,6 +43,7 @@ const TransactionDetail: React.FunctionComponent = () => {
         printData: generateReceiptForTransaction(item),
       })
     } catch (error) {
+      captureException(error)
       Alert.alert(t('screens.transactionDetail.printError'))
     }
   }, [item, udr])

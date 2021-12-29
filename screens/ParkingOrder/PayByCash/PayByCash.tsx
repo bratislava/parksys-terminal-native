@@ -79,8 +79,6 @@ const PayByCash: React.FunctionComponent = () => {
         transactionState: 400,
         payment_type: 'cash',
       })
-    } catch (error) {
-      console.log('ERR')
     } finally {
       replace('Home')
     }

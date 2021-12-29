@@ -15,6 +15,7 @@ import {
 } from '@models/azure/authRequests/authRequests.schema'
 import createXWwwForm from '@utils/api/createXWwwForm'
 import axios, { AxiosResponse } from 'axios'
+import { captureException } from './sentry.service'
 
 /**------------------------------------------------------------------------------------------------
  **                                   Constants
@@ -99,7 +100,7 @@ class AuthService {
         await secureStorageService.setAccessToken(session.accessToken)
         await secureStorageService.setRefreshToken(session.refreshToken)
       } catch (error) {
-        console.log('[auth]: ', error)
+        captureException(error)
       }
     } else {
       this.session = null

@@ -1,4 +1,8 @@
 import authService from '@services/internal/auth.service'
+import {
+  captureException,
+  captureMessage,
+} from '@services/internal/sentry.service'
 import axios, {
   AxiosError,
   AxiosInstance,
@@ -82,8 +86,13 @@ abstract class BaseApi {
                   console.log('[BaseApi]: refresh success')
                   BaseApi.onRefreshed(tokens.accessToken)
                 })
-                .catch(() => {
-                  console.log('[BaseApi]: refresh failed')
+                .catch((reason) => {
+                  captureMessage('[BaseApi]: refresh failed', {
+                    extra: {
+                      originalResponse: response,
+                      refreshRejectedReason: reason,
+                    },
+                  })
                   authService.revokeTokens()
                 })
                 .finally(() => {
@@ -114,7 +123,13 @@ abstract class BaseApi {
      */
     this.axios.interceptors.response.use(
       (response) => response,
-      (error: AxiosError) => Promise.reject(error.response)
+      (error: AxiosError) => {
+        // record all non-401 API errors here
+        if (error.response?.status !== 401) {
+          captureException(error)
+        }
+        return Promise.reject(error.response)
+      }
     )
   }
 
