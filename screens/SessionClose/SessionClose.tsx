@@ -37,7 +37,7 @@ const SessionClose: React.FunctionComponent = () => {
       printer: {},
       printData: generateReceipt({
         title: 'Mesto Bratislava',
-        itemsTitle: ' ',
+        itemsTitle: profile?.displayName,
         items: [
           {
             name: 'Hotovosť',
@@ -51,7 +51,7 @@ const SessionClose: React.FunctionComponent = () => {
         type: 'sessionClose',
         transactionStatus: 'RELÁCIA UKONČENÁ',
         footer: [
-          `${session?.id}`,
+          `Id relácie ${session?.id}`,
           formatNativeDate(new Date(session?.created_at), 'dd.MM.yyyy HH:mm'),
           'Ďakujeme Vám.',
           'Uzávierku si uchovajte',
@@ -59,12 +59,26 @@ const SessionClose: React.FunctionComponent = () => {
         ],
       }),
     })
-  }, [session])
+  }, [profile?.displayName, session])
 
   const handleClose = React.useCallback(async () => {
     try {
       await closeSession()
       await printSessionReceipt()
+      Alert.alert(
+        t('screens.sessionClose.printCopyAlert.title'),
+        t('screens.sessionClose.printCopyAlert.message'),
+        [
+          {
+            text: t('screens.sessionClose.printCopyAlert.confirmAction'),
+            onPress: printSessionReceipt,
+          },
+          {
+            text: t('screens.sessionClose.printCopyAlert.cancelAction'),
+            style: 'cancel',
+          },
+        ]
+      )
       await logout()
     } catch (error) {
       console.log(error)

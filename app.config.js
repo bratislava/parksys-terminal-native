@@ -4,7 +4,7 @@ export default {
   name: 'Parksys terminal',
   owner: 'bratislava',
   slug: 'parksys-terminal',
-  version: '1.0.8',
+  version: '1.0.9',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
   scheme: 'myapp',
@@ -24,16 +24,11 @@ export default {
   android: {
     softwareKeyboardLayoutMode: 'pan',
     package: 'com.bratislava.parksysterminal',
-    versionCode: 8,
+    versionCode: 9,
     adaptiveIcon: {
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
-    // config: {
-    //   googleMaps: {
-    //     apiKey: process.env.GOOGLE_MAPS_API_KEY,
-    //   },
-    // },
   },
   web: {
     favicon: './assets/images/favicon.png',

@@ -231,10 +231,9 @@ export function generateReceiptForTransaction(
   finalString += SPACER
   finalString += getItem('Cena:', tx.price)
   finalString += EMPTY_SPACER
-  finalString += DEFAULT_FOOTER.join(' ')
-  // DEFAULT_FOOTER.forEach((item) => {
-  //   finalString += getTitle(item.trim())
-  // })
+  DEFAULT_FOOTER.forEach((item) => {
+    finalString += getCenteredText(item.trim())
+  })
 
   return finalString
 }

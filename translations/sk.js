@@ -197,6 +197,12 @@ export default {
       createdAt: 'Dátum a čas začatia',
       id: 'Identifikátor relácie',
       logout: 'Odhlásiť',
+      printCopyAlert: {
+        title: 'Tlačiť kópiu',
+        message: 'Prajete si vytlačiť kópiu?',
+        confirmAction: 'Áno',
+        cancelAction: 'Nie',
+      },
     },
     home: {
       payment: 'Platba',
