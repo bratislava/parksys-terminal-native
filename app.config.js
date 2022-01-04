@@ -15,7 +15,7 @@ export default {
     backgroundColor: '#ffffff',
   },
   updates: {
-    fallbackToCacheTimeout: 0,
+    fallbackToCacheTimeout: 15000,
   },
   assetBundlePatterns: ['**/*'],
   ios: {

@@ -10,7 +10,9 @@
     "check-eslint": "eslint --max-warnings 0 ./components ./hooks ./navigation ./screens ./translations ./utils ./App.tsx",
     "check-ts": "tsc --noEmit --skipLibCheck",
     "check-code": "yarn check-eslint && yarn check-ts",
-    "create-production-apk": "expo build:android --release-channel production -t apk"
+    "create-production-apk": "expo build:android --release-channel production -t apk --no-publish",
+    "create-production-apk-and-publish": "expo build:android --release-channel production -t apk",
+    "publish-production": "expo publish --release-channel production"
   },
   "jest": {
     "preset": "jest-expo"

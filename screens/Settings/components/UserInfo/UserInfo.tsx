@@ -4,6 +4,7 @@ import { useAuthContext } from '@lib/context/authContext'
 import * as React from 'react'
 import { SectionTitle, UserInfoSC } from './UserInfo.styled'
 import i18n from 'i18n-js'
+import * as Application from 'expo-application'
 
 const t = i18n.t
 
@@ -30,6 +31,16 @@ const UserInfo: React.FunctionComponent = () => {
         </Descriptions.Item>
         <Descriptions.Item label="Email">
           <Descriptions.Text selectable>{profile.mail}</Descriptions.Text>
+        </Descriptions.Item>
+        <Descriptions.Item label="Version">
+          <Descriptions.Text selectable>
+            {Application.nativeApplicationVersion}
+          </Descriptions.Text>
+        </Descriptions.Item>
+        <Descriptions.Item label="Build">
+          <Descriptions.Text selectable>
+            {Application.nativeBuildVersion}
+          </Descriptions.Text>
         </Descriptions.Item>
       </Descriptions>
     </UserInfoSC>
