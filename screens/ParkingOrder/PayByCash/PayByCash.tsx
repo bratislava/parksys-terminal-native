@@ -19,6 +19,7 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { presentPrice } from '@utils/utils'
 import { StatusBar } from 'expo-status-bar'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { captureMessage } from '@services/internal/sentry.service'
 
 const t = i18n.t
 
@@ -35,16 +36,27 @@ const PayByCash: React.FunctionComponent = () => {
 
   const { finalPrice } = params
 
-  const onPrintPress = React.useCallback(async () => {
-    if (!paidTicket) {
-      return
-    }
+  const onPrintPress = React.useCallback(
+    async (type: 'customerReceipt' | 'merchantReceipt') => {
+      if (!paidTicket) {
+        captureMessage('Missing paidTicket onPrintPress')
+        return
+      }
 
-    await printReceipt({
-      printData: generateReceiptForTransaction(paidTicket),
-      printer: {},
-    })
-  }, [paidTicket])
+      if (type === 'customerReceipt') {
+        await printReceipt({
+          printData: generateReceiptForTransaction(paidTicket),
+          printer: {},
+        })
+      } else {
+        await printReceipt({
+          printData: generateReceiptForTransaction(paidTicket, true),
+          printer: {},
+        })
+      }
+    },
+    [paidTicket]
+  )
 
   /**
    * Begin payment for selected type
@@ -121,12 +133,12 @@ const PayByCash: React.FunctionComponent = () => {
             <Button.Group style={{ marginHorizontal: 32 }}>
               <Button
                 title={t('screens.payByCash.successStatus.merchantPrint')}
-                onPress={() => onPrintPress()}
+                onPress={() => onPrintPress('merchantReceipt')}
                 variant="secondary"
               />
               <Button
                 title={t('screens.payByCash.successStatus.clientPrint')}
-                onPress={() => onPrintPress()}
+                onPress={() => onPrintPress('customerReceipt')}
                 variant="primary-submit"
               />
             </Button.Group>

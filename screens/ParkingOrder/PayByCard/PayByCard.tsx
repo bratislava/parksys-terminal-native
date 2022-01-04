@@ -13,6 +13,7 @@ import { Button, Status } from '@components/ui'
 import { StatusBar } from 'expo-status-bar'
 import { TouchableOpacity } from 'react-native'
 import { generateReceiptForTransaction } from '@utils/terminal/cashReceipt'
+import { captureMessage } from '@services/internal/sentry.service'
 
 const t = i18n.t
 
@@ -32,9 +33,15 @@ const PayByCard: React.FunctionComponent = () => {
   const onPrintPress = React.useCallback(
     async (type: 'customerReceipt' | 'merchantReceipt') => {
       if (!paidTicket) {
+        captureMessage('Missing paidTicket onPrintPress')
         return
       }
       if (type === 'customerReceipt') {
+        // print both our custom and the terminal receipt for customer
+        await printReceipt({
+          printData: paidTicket.content.customerReceipt,
+          printer: {},
+        })
         await printReceipt({
           printData: generateReceiptForTransaction(finalPrice),
           printer: {},

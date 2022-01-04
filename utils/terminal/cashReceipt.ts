@@ -198,7 +198,8 @@ function getTransactionHeader() {
 }
 
 export function generateReceiptForTransaction(
-  tx: ICreateTicketRes | IParkinPriceResData | ITicketHistoryItem
+  tx: ICreateTicketRes | IParkinPriceResData | ITicketHistoryItem,
+  isMerchant?: boolean
 ) {
   const startDateObj = tx.meta?.ticketStart
     ? new Date(tx.meta?.ticketStart)
@@ -214,6 +215,10 @@ export function generateReceiptForTransaction(
   /** generate receipt from params */
   finalString += getTransactionHeader()
   finalString += SPACER
+  if (isMerchant) {
+    finalString += getTitle('POTVRDENKA PRE OBCHODNÍKA')
+    finalString += SPACER
+  }
   finalString += getItem(`EČV:`, tx.ecv)
   finalString += getTitle('Platnosť')
   finalString += EMPTY_SPACER

@@ -1,8 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
-import {
-  captureException,
-  captureMessage,
-} from '@services/internal/sentry.service'
+import { captureException } from '@services/internal/sentry.service'
 import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import * as React from 'react'
@@ -21,12 +18,8 @@ export default function useCachedResources() {
           ...Ionicons.font,
           'space-mono': require('../assets/fonts/SpaceMono-Regular.ttf'),
         })
-        throw new Error('Updated error')
       } catch (e) {
-        // We might want to provide this error information to an error reporting service
-        captureMessage('[BaseApi]: refresh failed', {
-          extra: { response: e, obj: { hello: 47 } },
-        })
+        captureException(e)
       } finally {
         setLoadingComplete(true)
         SplashScreen.hideAsync()

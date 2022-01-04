@@ -90,11 +90,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
 
     /** check if we ate still in future */
     if (newDate.isBefore(LocalDateTime.now())) {
-      if (minutes < 0) {
-        newDate = LocalDateTime.now().minusMinutes(Math.abs(minutes))
-      } else {
-        newDate = LocalDateTime.now().plusMinutes(minutes)
-      }
+      newDate = LocalDateTime.now()
     }
 
     /** convert to js */
@@ -136,7 +132,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
           >
             <Input
               value={values.ecv}
-              onChangeText={(text) => setFieldValue('ecv', text)}
+              onChangeText={(text) => setFieldValue('ecv', text.toUpperCase())}
               onEndEditing={() =>
                 setFieldValue('ecv', values.ecv.toUpperCase())
               }
