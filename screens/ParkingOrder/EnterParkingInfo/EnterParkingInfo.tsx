@@ -78,24 +78,33 @@ const EnterParkingInfo: React.FunctionComponent = () => {
     [push]
   )
 
-  const addTime = React.useCallback((current: Date, minutes: number) => {
-    let newDate = LocalDateTime.ofInstant(Instant.from(nativeJs(current)))
+  const addTime = React.useCallback(
+    (current: Date, minutes: number, seconds = 0) => {
+      let newDate = LocalDateTime.ofInstant(Instant.from(nativeJs(current)))
 
-    /** check if plus or minus */
-    if (minutes < 0) {
-      newDate = newDate.minusMinutes(Math.abs(minutes))
-    } else {
-      newDate = newDate.plusMinutes(minutes)
-    }
+      /** check if plus or minus */
+      if (minutes < 0) {
+        newDate = newDate.minusMinutes(Math.abs(minutes))
+      } else {
+        newDate = newDate.plusMinutes(minutes)
+      }
 
-    /** check if we ate still in future */
-    if (newDate.isBefore(LocalDateTime.now())) {
-      newDate = LocalDateTime.now()
-    }
+      if (seconds < 0) {
+        newDate = newDate.minusSeconds(Math.abs(seconds))
+      } else {
+        newDate = newDate.plusSeconds(seconds)
+      }
 
-    /** convert to js */
-    return convert(newDate).toDate()
-  }, [])
+      /** check if we ate still in future */
+      if (newDate.isBefore(LocalDateTime.now())) {
+        newDate = LocalDateTime.now()
+      }
+
+      /** convert to js */
+      return convert(newDate).toDate()
+    },
+    []
+  )
   /**
    * Init form on mount
    */
@@ -117,6 +126,24 @@ const EnterParkingInfo: React.FunctionComponent = () => {
   )
 
   useFocusEffect(resetForm)
+
+  const [wasEndDateOrTimeInputTouched, setEndDateOrTimeInputTouched] =
+    React.useState<boolean>(false)
+
+  const onDateTimeChange = (d: Date | undefined) => {
+    setEndDateOrTimeInputTouched(true)
+    setFieldValue('parkingEnd', d)
+  }
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      if (!wasEndDateOrTimeInputTouched) {
+        setFieldValue('parkingEnd', addTime(values.parkingEnd, 0, 1))
+      }
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [values, addTime, setFieldValue, wasEndDateOrTimeInputTouched])
 
   return (
     <EnterParkingInfoSC edges={['bottom']}>
@@ -173,7 +200,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
               <DateTimePicker
                 value={values.parkingEnd}
                 mode="date"
-                onChange={(d) => setFieldValue('parkingEnd', d)}
+                onChange={(d) => onDateTimeChange(d)}
                 minimumDate={new Date()}
                 maximumDate={convert(
                   ZonedDateTime.now().plusHours(48)
@@ -194,7 +221,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
               <DateTimePicker
                 value={values.parkingEnd}
                 mode="time"
-                onChange={(d) => setFieldValue('parkingEnd', d)}
+                onChange={(d) => onDateTimeChange(d)}
                 minimumDate={new Date()}
                 maximumDate={convert(
                   ZonedDateTime.now().plusHours(48)
