@@ -178,7 +178,7 @@ function generateReceipt({
   finalString += getTitle(transactionStatus)
   finalString += SPACER
   footer.forEach((item) => {
-    finalString += getTitle(item.trim())
+    finalString += getCenteredText(item.trim())
   })
 
   return finalString
@@ -237,6 +237,41 @@ export function generateReceiptForTransaction(
   // })
 
   return finalString
+}
+
+export function getCenteredText(text: string) {
+  const words = text.split(' ')
+  const rows: string[] = []
+  let actualRow = ''
+
+  words.forEach((word, index) => {
+    //next line
+    if (actualRow.length + word.length + 1 >= PAPER_WIDTH) {
+      rows.push(actualRow)
+      actualRow = ''
+    }
+
+    //push word to row
+    if (actualRow.length) {
+      actualRow += ` ${word}`
+    } else {
+      actualRow = word
+    }
+
+    //last row
+    if (words.length - 1 === index) {
+      rows.push(actualRow)
+    }
+  })
+
+  //add spaces to fill the row
+  rows.forEach((row, index) => {
+    for (let i = 0; i < PAPER_WIDTH - row.length; i++) {
+      rows[index] = i % 2 ? ` ${rows[index]}` : `${rows[index]} `
+    }
+  })
+
+  return rows.join('')
 }
 
 export default generateReceipt
