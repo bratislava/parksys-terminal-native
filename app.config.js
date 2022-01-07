@@ -4,7 +4,7 @@ export default {
   name: 'Parksys terminal',
   owner: 'bratislava',
   slug: 'parksys-terminal',
-  version: '1.0.9',
+  version: '1.0.11',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
   scheme: 'myapp',
@@ -24,7 +24,7 @@ export default {
   android: {
     softwareKeyboardLayoutMode: 'pan',
     package: 'com.bratislava.parksysterminal',
-    versionCode: 9,
+    versionCode: 11,
     adaptiveIcon: {
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
@@ -35,7 +35,9 @@ export default {
   },
   extra: {
     dev: process.env.__DEV__ ? true : false,
-    pricingApiUrl: process.env.PRICING_API_URL,
+    pricingApiUrl: process.env.__DEV__
+      ? process.env.PRICING_API_URL
+      : 'https://nest-parking-backend.bratislava.sk',
     papayaApiUrl: process.env.PAPAYA_API_URL,
     enableMockApi: process.env.ENABLE_MOCK_API,
     apiTimeout: process.env.API_TIMEOUT,

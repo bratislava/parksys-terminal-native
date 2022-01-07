@@ -5,6 +5,7 @@ import i18n from 'i18n-js'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from 'types'
+import SetupTerminal from '@components/common/SetupTerminal'
 
 const t = i18n.t
 
@@ -13,6 +14,7 @@ const Home: React.FunctionComponent = () => {
   return (
     <>
       <StatusBar style="light" />
+      <SetupTerminal />
       <HomeSC>
         <TileSC onPress={() => push('EnterParkingInfo')}>
           <TileIcon source={require('@images/home/credit_card.png')} />

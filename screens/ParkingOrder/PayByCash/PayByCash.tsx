@@ -28,7 +28,8 @@ type TRouteProps = RouteProp<RootStackParamList, 'PayByCash'>
 const PayByCash: React.FunctionComponent = () => {
   const { params } = useRoute<TRouteProps>()
   const { profile } = useAuthContext()
-  const { replace } = useNavigation<StackNavigationProp<RootStackParamList>>()
+  const { navigate, setOptions } =
+    useNavigation<StackNavigationProp<RootStackParamList>>()
 
   const [paidTicket, setPaidTicket] = React.useState<
     ICreateTicketRes | undefined
@@ -74,8 +75,9 @@ const PayByCash: React.FunctionComponent = () => {
       transactionState: 200,
       payment_type: 'cash',
     })
+    setOptions({ headerLeft: () => null })
     setPaidTicket(finalTicket)
-  }, [finalPrice.id, finalPrice.payment_id, profile])
+  }, [finalPrice, profile, setOptions])
 
   const cancelTransaction = React.useCallback(async () => {
     if (!profile?.id) {
@@ -92,9 +94,9 @@ const PayByCash: React.FunctionComponent = () => {
         payment_type: 'cash',
       })
     } finally {
-      replace('Home')
+      navigate('Home')
     }
-  }, [finalPrice.id, finalPrice.payment_id, profile, replace])
+  }, [finalPrice, profile, navigate])
 
   const {
     mutate: pay,
@@ -114,7 +116,7 @@ const PayByCash: React.FunctionComponent = () => {
             <>
               <Button
                 title={t('screens.payByCash.errorStatus.action')}
-                onPress={() => replace('EnterParkingInfo')}
+                onPress={() => navigate('EnterParkingInfo')}
               />
             </>
           }
@@ -161,7 +163,7 @@ const PayByCash: React.FunctionComponent = () => {
         }
       />
     )
-  }, [error, finalPrice.price, onPrintPress, paidTicket, payLoading, replace])
+  }, [error, finalPrice.price, onPrintPress, paidTicket, payLoading, navigate])
 
   return (
     <PayByCashSC>
@@ -185,12 +187,12 @@ const PayByCash: React.FunctionComponent = () => {
       ) : null}
       {paidTicket ? (
         <ButtonWrapper>
-          <TouchableOpacity onPress={() => replace('Home')}>
+          <TouchableOpacity onPress={() => navigate('Home')}>
             <HomeSC source={require('@images/home.png')} />
           </TouchableOpacity>
           <Button
             title={t('screens.payByCash.successStatus.backAction')}
-            onPress={() => replace('EnterParkingInfo')}
+            onPress={() => navigate('EnterParkingInfo')}
             variant="primary-submit"
             style={{ flex: 1, marginLeft: 32 }}
           />

@@ -13,7 +13,10 @@ import { Button, Status } from '@components/ui'
 import { StatusBar } from 'expo-status-bar'
 import { TouchableOpacity } from 'react-native'
 import { generateReceiptForTransaction } from '@utils/terminal/cashReceipt'
-import { captureMessage } from '@services/internal/sentry.service'
+import {
+  captureException,
+  captureMessage,
+} from '@services/internal/sentry.service'
 
 const t = i18n.t
 
@@ -23,7 +26,8 @@ const PayByCard: React.FunctionComponent = () => {
   const { params } = useRoute<TRouteProps>()
   const { profile } = useAuthContext()
 
-  const { replace } = useNavigation<StackNavigationProp<RootStackParamList>>()
+  const { navigate, setOptions } =
+    useNavigation<StackNavigationProp<RootStackParamList>>()
   const { finalPrice } = params
 
   const [paidTicket, setPaidTicket] = React.useState<
@@ -90,8 +94,16 @@ const PayByCard: React.FunctionComponent = () => {
       payment_type: 'card',
     })
 
+    // automatically print our custom customerReceipt on successful payment
+    // don't await - if printing fails, we can reprint manually
+    printReceipt({
+      printData: cardRes.content.customerReceipt,
+      printer: {},
+    }).catch(captureException)
+
     setPaidTicket(cardRes)
-  }, [finalPrice, profile])
+    setOptions({ headerLeft: () => null })
+  }, [finalPrice, profile, setOptions])
 
   const {
     mutate: pay,
@@ -112,7 +124,7 @@ const PayByCard: React.FunctionComponent = () => {
             <>
               <Button
                 title={t('screens.payByCard.errorStatus.action')}
-                onPress={() => replace('Home')}
+                onPress={() => navigate('Home')}
               />
             </>
           }
@@ -153,7 +165,7 @@ const PayByCard: React.FunctionComponent = () => {
         loading={payLoading}
       />
     )
-  }, [error, onPrintPress, paidTicket, payLoading, replace])
+  }, [error, onPrintPress, paidTicket, payLoading, navigate])
 
   React.useEffect(() => {
     pay()
@@ -165,12 +177,12 @@ const PayByCard: React.FunctionComponent = () => {
       {currentStatus}
       {paidTicket ? (
         <ButtonWrapper>
-          <TouchableOpacity onPress={() => replace('Home')}>
+          <TouchableOpacity onPress={() => navigate('Home')}>
             <HomeSC source={require('@images/home.png')} />
           </TouchableOpacity>
           <Button
             title={t('screens.payByCash.successStatus.backAction')}
-            onPress={() => replace('EnterParkingInfo')}
+            onPress={() => navigate('EnterParkingInfo')}
             variant="primary-submit"
             style={{ flex: 1, marginLeft: 32 }}
           />

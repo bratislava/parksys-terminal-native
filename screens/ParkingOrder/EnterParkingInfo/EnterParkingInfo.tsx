@@ -4,12 +4,10 @@ import { StyleSheet } from 'react-native'
 import FormItem from '@components/form/FormItem'
 import Input from '@components/ui/Input'
 import {
-  ButtonGrid,
   ButtonWrapper,
   DateWrapper,
   EnterParkingInfoSC,
   FormWrapper,
-  GridButton,
   TimeText,
 } from './EnterParkingInfo.styled'
 import { AvoidKeyboard, Button, DateTimePicker, Picker } from '@components/ui'
@@ -109,6 +107,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
    * Init form on mount
    */
   React.useEffect(() => {
+    setEndDateOrTimeInputTouched(false)
     initForm()
   }, [initForm])
 
@@ -251,7 +250,14 @@ const EnterParkingInfo: React.FunctionComponent = () => {
 
           <Button
             title={i18n.t('screens.enterParkingInfo.form.resetAction')}
-            onPress={() => resetForm()}
+            onPress={() =>
+              resetForm({
+                values: {
+                  ...initialValues,
+                  parkingEnd: new Date(),
+                },
+              })
+            }
             variant="danger"
             style={styles.button}
           />
@@ -288,12 +294,6 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     flex: 1,
-  },
-  buttonContent: {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 })
 
