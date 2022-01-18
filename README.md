@@ -119,6 +119,10 @@ useQuery(['getStationById', id], () => getStationsById(id))
 
 We use [yup](https://github.com/jquense/yup). Useful not only as a sanity check but also to provide you with types and autocomplete. Validations reside in `validation.ts`.
 
+## Papaya Docs
+
+[Papaya docs](https://github.com/papayapos/ekasa)
+
 ## Release
 
 POS terminals have their own proprietary store, Papaya handles all communication with that:
