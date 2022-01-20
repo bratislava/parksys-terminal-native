@@ -29,4 +29,5 @@ export const refreshReqValidation = Yup.object({
   grant_type: Yup.string().oneOf(['refresh_token']).required(),
   refresh_token: Yup.string().required(),
   client_id: Yup.string().required(),
+  scope: Yup.string().required(),
 })
