@@ -14,7 +14,6 @@ module.exports = function (api) {
             '@hooks': './hooks',
             '@images': './assets/images',
             '@utils': './utils',
-            '@state': './state',
             '@fonts': './assets/fonts',
             '@lib': './lib',
             '@services': './services',
