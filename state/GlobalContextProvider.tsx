@@ -17,10 +17,6 @@ export default function GlobalProvider({ children }: Props) {
     useState(false)
 
   const hideConfirmationModal = () => setIsConfirmationModalShown(false)
-  console.log(
-    'GlobalProvider isConfirmationModalShown:',
-    isConfirmationModalShown
-  )
 
   return (
     <GlobalContext.Provider
