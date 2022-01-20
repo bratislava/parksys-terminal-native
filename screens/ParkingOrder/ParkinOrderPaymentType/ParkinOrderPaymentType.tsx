@@ -1,6 +1,6 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import React, { useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import { RootStackParamList } from 'types'
 import {
   ParkinOrderPaymentTypeSC,
@@ -11,7 +11,7 @@ import {
 } from './ParkinOrderPaymentType.styled'
 import i18n from 'i18n-js'
 import ConfirmationModal from '@components/ConfirmationModal'
-import { GlobalContext } from '@state/GlobalContextProvider'
+import { Button } from '@components/ui'
 
 const t = i18n.t
 
@@ -20,11 +20,22 @@ type TRoute = RouteProp<RootStackParamList, 'ParkinOrderPaymentType'>
 const ParkinOrderPaymentType: React.FunctionComponent = () => {
   const { push } = useNavigation<StackNavigationProp<RootStackParamList>>()
   const { params } = useRoute<TRoute>()
-  const { navigate } = useNavigation<StackNavigationProp<RootStackParamList>>()
+  const { navigate, setOptions } =
+    useNavigation<StackNavigationProp<RootStackParamList>>()
   const { ecv, finalPrice, parkingEnd, udr } = params
 
-  const { hideConfirmationModal, isConfirmationModalShown } =
-    useContext(GlobalContext)
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false)
+
+  useEffect(() => {
+    setOptions({
+      headerLeft: () => (
+        <Button
+          onPress={() => setShowConfirmationDialog(true)}
+          title={i18n.t('screens.parkinOrderPaymentType.close')}
+        />
+      ),
+    })
+  })
 
   return (
     <ParkinOrderPaymentTypeSC edges={['bottom']}>
@@ -32,10 +43,10 @@ const ParkinOrderPaymentType: React.FunctionComponent = () => {
         title={t('screens.parkinOrderPaymentType.confirmationDialogTitle')}
         confirmText={t('screens.parkinOrderPaymentType.confirm')}
         dismissText={t('screens.parkinOrderPaymentType.cancel')}
-        visible={isConfirmationModalShown}
-        onClose={hideConfirmationModal}
+        visible={showConfirmationDialog}
+        onClose={() => setShowConfirmationDialog(false)}
         onConfirm={() => {
-          hideConfirmationModal()
+          setShowConfirmationDialog(false)
           navigate('Home')
         }}
       />

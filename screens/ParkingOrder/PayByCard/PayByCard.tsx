@@ -17,6 +17,7 @@ import {
   captureException,
   captureMessage,
 } from '@services/internal/sentry.service'
+import _ from 'lodash'
 
 const t = i18n.t
 
@@ -25,7 +26,7 @@ type TRouteProps = RouteProp<RootStackParamList, 'PayByCard'>
 const PayByCard: React.FunctionComponent = () => {
   const { params } = useRoute<TRouteProps>()
   const { profile } = useAuthContext()
-  const [cardResMem, setCardResMem] = useState<any>(undefined)
+  const [showRetry, setShowRetry] = useState(false)
 
   const { navigate, setOptions } =
     useNavigation<StackNavigationProp<RootStackParamList>>()
@@ -71,7 +72,7 @@ const PayByCard: React.FunctionComponent = () => {
       throw new Error('No price check executed')
     }
 
-    const id = (100 + Math.random() * 899).toFixed(0)
+    const id = _.random(100, 999)
 
     const cardRes = await payByCard({
       externalId: `${finalPrice.payment_id}${id}`, // what it takes as suffix: '-', '1', '999', what it doesn't take as suffix: '1133', '-1',
@@ -83,7 +84,11 @@ const PayByCard: React.FunctionComponent = () => {
       printCustomerReceipt: false,
       printMerchantReceipt: false,
     })
-    setCardResMem(cardRes)
+
+    setShowRetry(
+      cardRes.content.result === EPaymentResult.CANCELED_BY_USER &&
+        cardRes.content.respMessage === 'Zrušené užívateľom'
+    )
 
     if (cardRes.content.result === EPaymentResult.CANCELED) {
       throw new Error('PAYMENT_CANCELED')
@@ -126,14 +131,12 @@ const PayByCard: React.FunctionComponent = () => {
           icon="money"
           extra={
             <>
-              {cardResMem?.content?.result ===
-                EPaymentResult.CANCELED_BY_USER &&
-                cardResMem?.content?.respMessage === 'Zrušené užívateľom' && (
-                  <Button
-                    title={t('screens.payByCard.errorStatus.tryAgain')}
-                    onPress={() => pay()}
-                  />
-                )}
+              {showRetry && (
+                <Button
+                  title={t('screens.payByCard.errorStatus.tryAgain')}
+                  onPress={() => pay()}
+                />
+              )}
               <Button
                 title={t('screens.payByCard.errorStatus.action')}
                 onPress={() => navigate('Home')}
