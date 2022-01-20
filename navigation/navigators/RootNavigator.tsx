@@ -1,5 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import * as React from 'react'
+import { useContext } from 'react'
 
 import NotFoundScreen from '../../screens/NotFoundScreen/NotFoundScreen'
 import { RootStackParamList } from 'types'
@@ -19,6 +20,9 @@ import Settings from '@screens/Settings'
 import Home from '@screens/Home'
 import ParkinOrderPaymentType from '@screens/ParkingOrder/ParkinOrderPaymentType'
 
+import { Button } from '../../components/ui'
+import { GlobalContext } from '@state/GlobalContextProvider'
+
 const t = i18n.t
 
 // A root stack navigator is often used for displaying modals on top of all other content
@@ -26,6 +30,8 @@ const t = i18n.t
 const Stack = createStackNavigator<RootStackParamList>()
 
 function RootNavigator() {
+  const { setIsConfirmationModalShown } = useContext(GlobalContext)
+
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['right', 'bottom', 'left']}>
       <Stack.Navigator
@@ -73,6 +79,12 @@ function RootNavigator() {
           options={{
             headerShown: true,
             headerTitle: i18n.t('screens.parkinOrderPaymentType.title'),
+            headerLeft: () => (
+              <Button
+                onPress={() => setIsConfirmationModalShown(true)}
+                title={i18n.t('screens.parkinOrderPaymentType.close')}
+              />
+            ),
           }}
           initialParams={{}}
         />

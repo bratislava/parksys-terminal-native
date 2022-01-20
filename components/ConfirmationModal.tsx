@@ -4,7 +4,7 @@ import { StyleSheet, Text } from 'react-native'
 import CheckBox from 'react-native-check-box'
 
 import Modal from './Modal'
-import Button from './Button'
+import { Button } from './ui'
 import Link from './Link'
 import { colors } from '../utils/theme'
 
@@ -39,7 +39,6 @@ export default function ConfirmationModal({
     <Modal visible={visible} onClose={onClose}>
       {title && <Text style={styles.modalTitle}>{title}</Text>}
       {bodyText && <Text style={styles.modalText}>{bodyText}</Text>}
-      <Text style={styles.modalText}>{i18n.t('doYouWantToContinue')}</Text>
       {requiredCheckboxText && (
         <CheckBox
           onClick={() => setChecked(!isChecked)}

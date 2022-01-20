@@ -41,7 +41,7 @@ export enum EPaymentResult {
   ERROR_6 = '6',
   ERROR_7 = '7',
   ERROR_8 = '8',
-  ERROR_9 = '9',
+  CANCELED_BY_USER = '9',
 }
 
 export type TPaymentResult = `${EPaymentResult}`
