@@ -172,8 +172,9 @@ export default {
       },
       errorStatus: {
         title: 'Niečo sa pokazilo :(',
+        tryAgain: 'Skúsiť znova',
         description: 'Začnite znova',
-        action: 'Začať znova',
+        action: 'Zrušiť transakciu',
       },
       successStatus: {
         title: 'Lístok aktivovaný',
@@ -214,6 +215,10 @@ export default {
       title: 'Spôsob platby',
       card: 'Kartou',
       cash: 'V hotovosti',
+      confirmationDialogTitle: 'Prajete si zrušiť transakciu?',
+      confirm: 'Potvrdiť',
+      cancel: 'Zrušiť',
+      close: 'Zavrieť',
     },
   },
   components: {

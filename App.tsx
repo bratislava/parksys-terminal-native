@@ -34,6 +34,7 @@ import { focusManager } from 'react-query'
 import { AppStateStatus, Platform } from 'react-native'
 import SetupTerminal from '@components/common/SetupTerminal'
 import { ENABLE_SENTRY_LOGGING } from '@services/internal/sentry.service'
+import GlobalProvider from '@state/GlobalContextProvider'
 
 /**
  * Setup focus manager
@@ -57,7 +58,7 @@ const App = () => {
     return null
   } else {
     return (
-      <>
+      <GlobalProvider>
         <StatusBar style="auto" />
         <ThemeProvider theme={defaultTheme}>
           <QueryClientProvider client={queryClient}>
@@ -69,7 +70,7 @@ const App = () => {
             </SafeAreaProvider>
           </QueryClientProvider>
         </ThemeProvider>
-      </>
+      </GlobalProvider>
     )
   }
 }

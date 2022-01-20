@@ -1,5 +1,5 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
-import React from 'react'
+import React, { useState } from 'react'
 import { RootStackParamList } from 'types'
 import { ButtonWrapper, HomeSC, PayByCardSC } from './PayByCard.styled'
 import i18n from 'i18n-js'
@@ -25,6 +25,7 @@ type TRouteProps = RouteProp<RootStackParamList, 'PayByCard'>
 const PayByCard: React.FunctionComponent = () => {
   const { params } = useRoute<TRouteProps>()
   const { profile } = useAuthContext()
+  const [cardResMem, setCardResMem] = useState<any>(undefined)
 
   const { navigate, setOptions } =
     useNavigation<StackNavigationProp<RootStackParamList>>()
@@ -70,16 +71,19 @@ const PayByCard: React.FunctionComponent = () => {
       throw new Error('No price check executed')
     }
 
+    const id = (100 + Math.random() * 899).toFixed(0)
+
     const cardRes = await payByCard({
-      externalId: finalPrice.payment_id,
+      externalId: `${finalPrice.payment_id}${id}`, // what it takes as suffix: '-', '1', '999', what it doesn't take as suffix: '1133', '-1',
       requestContents: {
         operation: 'CP',
         amount: (finalPrice.price / 100).toFixed(2),
-        transactionId: finalPrice.payment_id,
+        transactionId: `${finalPrice.payment_id}${id}`,
       },
       printCustomerReceipt: false,
       printMerchantReceipt: false,
     })
+    setCardResMem(cardRes)
 
     if (cardRes.content.result === EPaymentResult.CANCELED) {
       throw new Error('PAYMENT_CANCELED')
@@ -122,6 +126,14 @@ const PayByCard: React.FunctionComponent = () => {
           icon="money"
           extra={
             <>
+              {cardResMem?.content?.result ===
+                EPaymentResult.CANCELED_BY_USER &&
+                cardResMem?.content?.respMessage === 'Zrušené užívateľom' && (
+                  <Button
+                    title={t('screens.payByCard.errorStatus.tryAgain')}
+                    onPress={() => pay()}
+                  />
+                )}
               <Button
                 title={t('screens.payByCard.errorStatus.action')}
                 onPress={() => navigate('Home')}
@@ -165,7 +177,7 @@ const PayByCard: React.FunctionComponent = () => {
         loading={payLoading}
       />
     )
-  }, [error, onPrintPress, paidTicket, payLoading, navigate])
+  }, [error, onPrintPress, paidTicket, payLoading, navigate, pay])
 
   React.useEffect(() => {
     pay()
