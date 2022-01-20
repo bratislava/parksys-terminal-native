@@ -161,6 +161,7 @@ class AuthService {
       grant_type: 'refresh_token',
       refresh_token: tokens.refreshToken,
       client_id: Constants.manifest?.extra?.azureClientId,
+      scope: Array.from(REQUIRED_SCOPES.values()).join(' '),
     }
 
     const validated = refreshReqValidation.validateSync(params)
