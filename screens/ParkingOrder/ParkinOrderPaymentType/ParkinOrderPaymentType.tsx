@@ -11,7 +11,9 @@ import {
 } from './ParkinOrderPaymentType.styled'
 import i18n from 'i18n-js'
 import ConfirmationModal from '@components/ConfirmationModal'
-import { Button } from '@components/ui'
+import { useTheme } from 'styled-components'
+import { MaterialIcons } from '@expo/vector-icons'
+import { View, StyleSheet } from 'react-native'
 
 const t = i18n.t
 
@@ -20,6 +22,8 @@ type TRoute = RouteProp<RootStackParamList, 'ParkinOrderPaymentType'>
 const ParkinOrderPaymentType: React.FunctionComponent = () => {
   const { push } = useNavigation<StackNavigationProp<RootStackParamList>>()
   const { params } = useRoute<TRoute>()
+  const theme = useTheme()
+
   const { navigate, setOptions } =
     useNavigation<StackNavigationProp<RootStackParamList>>()
   const { ecv, finalPrice, parkingEnd, udr } = params
@@ -29,10 +33,14 @@ const ParkinOrderPaymentType: React.FunctionComponent = () => {
   useEffect(() => {
     setOptions({
       headerLeft: () => (
-        <Button
-          onPress={() => setShowConfirmationDialog(true)}
-          title={i18n.t('screens.parkinOrderPaymentType.close')}
-        />
+        <View style={styles.cancelButton}>
+          <MaterialIcons
+            name="cancel"
+            color={theme.colors.alert}
+            size={38}
+            onPress={() => setShowConfirmationDialog(true)}
+          />
+        </View>
       ),
     })
   })
@@ -85,5 +93,11 @@ const ParkinOrderPaymentType: React.FunctionComponent = () => {
     </ParkinOrderPaymentTypeSC>
   )
 }
+
+const styles = StyleSheet.create({
+  cancelButton: {
+    marginLeft: 10,
+  },
+})
 
 export default React.memo(ParkinOrderPaymentType)
