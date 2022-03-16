@@ -241,6 +241,23 @@ const UDRS: IUdrInfo[] = [
     shapeLength: '90433.58973',
     vyhradene: 'verejné',
   },
+  {
+    id: 15,
+    mestskaCast: 'Ružinov',
+    kodZony: 'RU1',
+    nazov: 'Starý Ružinov východ',
+    maxParkovanie: '0',
+    bezpPark: '0',
+    obmedzenePreApk: 'N/A',
+    vynimkaZoSpoplatnenia: '0-24',
+    vynimkaApk: 'N/A',
+    udrid: '2005',
+    // THESE ARE NOT VALID, BUT ARE NOT USED EITHER
+    globalIdString: '{BCA1C978-E344-4B66-8F53-B4ADA2D9605E}',
+    shapeArea: '2250.413473',
+    shapeLength: '17359.8348',
+    vyhradene: 'verejné',
+  },
 ]
 
 export default UDRS
