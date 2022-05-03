@@ -130,7 +130,8 @@ POS terminals have their own proprietary store, Papaya handles all communication
 To release new `.apk` to Play Store:
 
 1. Bump the `version` and `versionCode` in `app.config.js` - these are visible from app settings and help us determine which version is live for the users
-2. `yarn create-production-apk`
-3. wait for [Expo](https://expo.dev/accounts/bratislava/projects/parksys-terminal/builds) to build new `.apk` & download it once ready
-4. Send the `.apk` to the contact person in Papaya. At the time of writing, this is Tomas Debnar, who can be reached through our slack in shared channel `#01people-papaya-terminal`, or through email - `tomas.debnar@papayapos.sk`
-5. After 1-3 days, verify that the version is live on the production POS terminal
+2. In `.env` file erase enviroment variable `__DEV__` if it is present
+3. `yarn create-production-apk`
+4. wait for [Expo](https://expo.dev/accounts/bratislava/projects/parksys-terminal/builds) to build new `.apk` & download it once ready
+5. Send the `.apk` to the contact person in Papaya. At the time of writing, this is Tomas Debnar, who can be reached through our slack in shared channel `#01people-papaya-terminal`, or through email - `tomas.debnar@papayapos.sk`
+6. After 1-3 days, verify that the version is live on the production POS terminal
