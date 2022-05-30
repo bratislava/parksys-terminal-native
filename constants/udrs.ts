@@ -887,6 +887,40 @@ const UDRS: IUdrInfo[] = [
     shapeLength: '',
     vyhradene: 'verejné',
   },
+  {
+    id: 305,
+    mestskaCast: 'Staré Mesto',
+    kodZony: 'SM1',
+    nazov: 'Smrečianska',
+    maxParkovanie: '0',
+    bezpPark: '0',
+    obmedzenePreApk: 'N/A',
+    vynimkaZoSpoplatnenia: '0-24',
+    vynimkaApk: 'N/A',
+    udrid: '3102',
+    // THESE ARE NOT VALID, BUT ARE NOT USED EITHER
+    globalIdString: '{f9582b12-51ca-4baa-906a-7068760dd833}',
+    shapeArea: '',
+    shapeLength: '',
+    vyhradene: 'verejné',
+  },
+  {
+    id: 408,
+    mestskaCast: 'Staré Mesto',
+    kodZony: 'SM1',
+    nazov: 'Hlavná stanica',
+    maxParkovanie: '0',
+    bezpPark: '0',
+    obmedzenePreApk: 'N/A',
+    vynimkaZoSpoplatnenia: '0-24',
+    vynimkaApk: 'N/A',
+    udrid: '1201',
+    // THESE ARE NOT VALID, BUT ARE NOT USED EITHER
+    globalIdString: '{53a64998-5b31-4bb4-b503-afda3aa7740d}',
+    shapeArea: '',
+    shapeLength: '',
+    vyhradene: 'verejné',
+  },
 ]
 
 export default UDRS
