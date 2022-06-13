@@ -29,7 +29,7 @@ const udrMock = (mock: MockAdapter): Record<string, MockAdapter> => ({
         obmedzenePreApk: 'N/A',
         vynimkaZoSpoplatnenia: '0-24',
         vynimkaApk: 'N/A',
-        udrid: '3010',
+        udrid: '3101',
         globalIdString: '{7CDE9A70-0018-4074-B1AC-390F6E6767E0}',
         shapeArea: '720.5408717',
         shapeLength: '4775.60702',
