@@ -41,6 +41,8 @@ export default {
     },
     parkingOrderSummary: {
       title: 'Platba',
+      card: 'Kartou',
+      cash: 'V hotovosti',
 
       loading: {
         title: 'Zisťujem cenu parkovného',
@@ -210,15 +212,6 @@ export default {
       history: 'História',
       settings: 'Nastavenia',
       closeSession: 'Uzávierka',
-    },
-    parkinOrderPaymentType: {
-      title: 'Spôsob platby',
-      card: 'Kartou',
-      cash: 'V hotovosti',
-      confirmationDialogTitle: 'Prajete si zrušiť transakciu?',
-      confirm: 'Potvrdiť',
-      cancel: 'Zrušiť',
-      close: 'Zavrieť',
     },
   },
   components: {

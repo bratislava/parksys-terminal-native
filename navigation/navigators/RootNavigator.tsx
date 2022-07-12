@@ -17,7 +17,6 @@ import TransactionsHistory from '@screens/TransactionsHistory'
 import TransactionDetail from '@screens/TransactionDetail'
 import Settings from '@screens/Settings'
 import Home from '@screens/Home'
-import ParkinOrderPaymentType from '@screens/ParkingOrder/ParkinOrderPaymentType'
 
 const t = i18n.t
 
@@ -64,15 +63,6 @@ function RootNavigator() {
           options={{
             headerShown: true,
             headerTitle: i18n.t('screens.parkingOrderSummary.title'),
-          }}
-          initialParams={{}}
-        />
-        <Stack.Screen
-          name="ParkinOrderPaymentType"
-          component={ParkinOrderPaymentType}
-          options={{
-            headerShown: true,
-            headerTitle: i18n.t('screens.parkinOrderPaymentType.title'),
           }}
           initialParams={{}}
         />
