@@ -4,7 +4,7 @@ export default {
   name: 'Parksys terminal',
   owner: 'bratislava',
   slug: 'parksys-terminal',
-  version: '1.0.19',
+  version: '1.0.20',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
   scheme: 'myapp',
@@ -24,7 +24,7 @@ export default {
   android: {
     softwareKeyboardLayoutMode: 'pan',
     package: 'com.bratislava.parksysterminal',
-    versionCode: 19,
+    versionCode: 20,
     adaptiveIcon: {
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
