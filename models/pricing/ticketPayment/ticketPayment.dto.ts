@@ -19,4 +19,7 @@ export interface ITicketPayment {
   ticket_id_parksys: string
 }
 
-export interface Meta {}
+export interface Meta {
+  priceCard: number
+  priceCash: number
+}

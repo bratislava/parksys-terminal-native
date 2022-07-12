@@ -1,12 +1,17 @@
 /* eslint-disable react-native/no-raw-text */
 import { Button, Descriptions, Status } from '@components/ui'
-import * as React from 'react'
-import { StyleSheet, ScrollView, View } from 'react-native'
+import React, { useState, FunctionComponent, useCallback, memo } from 'react'
+import { StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
 import {
   ButtonWrapper,
   ParkingOrderSummarySC,
   ParkingSummarySC,
   StatusWrapper,
+  CardButton,
+  CashButton,
+  IconSC,
+  TextPriceSC,
+  TextSC,
 } from './ParkingOrderSummary.styled'
 import i18n from 'i18n-js'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
@@ -24,24 +29,33 @@ import { AxiosResponse } from 'axios'
 import { ITicketPayment } from '@models/pricing/ticketPayment/ticketPayment.dto'
 import { showErrorAlert, showPriceChangeAlert } from './utils'
 import { ETicketState } from '@models/pricing/pricing.d'
+import { useTheme } from 'styled-components'
+
+enum PaymentType {
+  cash = 'CASH',
+  card = 'CARD',
+}
 
 const t = i18n.t
 
 /**
  * Screen to show user summary about parking ticket before purchase
  */
-const ParkingOrderSummary: React.FunctionComponent = () => {
+const ParkingOrderSummary: FunctionComponent = () => {
   const {
     params: { ecv, parkingEnd, udr },
   } = useRoute<RouteProp<RootStackParamList, 'ParkingOrderSummary'>>()
   const { canGoBack, goBack, push } =
     useNavigation<StackNavigationProp<RootStackParamList>>()
   const { profile } = useAuthContext()
+  const theme = useTheme()
+
+  const [loading, setLoading] = useState(false)
 
   /**
    * Fetch price based on info from prev. step
    */
-  const fetchPrice = React.useCallback(() => {
+  const fetchPrice = useCallback(() => {
     if (!profile?.id) {
       throw new Error('No user logged')
     }
@@ -59,7 +73,7 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
   /**
    * After error, go back to prev screen if we can
    */
-  const afterErrorHandler = React.useCallback(() => {
+  const afterErrorHandler = useCallback(() => {
     if (canGoBack()) {
       goBack()
     }
@@ -77,64 +91,86 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
   /**
    * Begin payment for selected type
    */
-  const beginTransaction = React.useCallback(async () => {
-    if (!profile?.id) {
-      throw new Error('No user logged')
-    } else if (!pricingInfo?.id) {
-      throw new Error('No price check executed')
-    }
-
-    /** check price last time */
-    let finalPrice: ITicketPayment
-    try {
-      finalPrice = await ticketPayment(pricingInfo.id, {
-        ecv,
-        parkingEnd,
-        udr: udr.udrid,
-        // TODO: add terminal info
-        partnerId: '1',
-        terminalId: profile.id,
-      })
-    } catch (error) {
-      const err = error as AxiosResponse<ITicketPayment>
-      const response = err.data || {}
-
-      if (response.state === ETicketState.PRICE_WAS_CHANGED) {
-        refetchPrice()
-        showPriceChangeAlert(afterErrorHandler)
-      } else {
-        showErrorAlert(afterErrorHandler)
+  const beginTransaction = useCallback(
+    async (paymentType: PaymentType) => {
+      if (!profile?.id) {
+        throw new Error('No user logged')
+      } else if (!pricingInfo?.id) {
+        throw new Error('No price check executed')
       }
-      throw error
-    }
 
-    if (!finalPrice) {
-      throw new Error('No price calculation')
-    }
+      /** check price last time */
+      let finalPriceTmp: ITicketPayment
+      try {
+        finalPriceTmp = await ticketPayment(pricingInfo.id, {
+          ecv,
+          parkingEnd,
+          udr: udr.udrid,
+          // TODO: add terminal info
+          partnerId: '1',
+          terminalId: profile.id,
+        })
+      } catch (error) {
+        const err = error as AxiosResponse<ITicketPayment>
+        const response = err.data || {}
 
-    push('ParkinOrderPaymentType', {
+        if (response.state === ETicketState.PRICE_WAS_CHANGED) {
+          refetchPrice()
+          showPriceChangeAlert(afterErrorHandler)
+        } else {
+          showErrorAlert(afterErrorHandler)
+        }
+        throw error
+      }
+
+      if (!finalPriceTmp) {
+        throw new Error('No price calculation')
+      }
+      if (paymentType === PaymentType.cash) {
+        push('PayByCash', {
+          ecv,
+          finalPrice: {
+            ...finalPriceTmp,
+            price: finalPriceTmp.meta.priceCash,
+          },
+          parkingEnd,
+          udr,
+        })
+      } else {
+        push('PayByCard', {
+          ecv,
+          finalPrice: {
+            ...finalPriceTmp,
+            price: finalPriceTmp.meta.priceCard,
+          },
+          parkingEnd,
+          udr,
+        })
+      }
+    },
+    [
+      afterErrorHandler,
       ecv,
-      finalPrice,
       parkingEnd,
+      pricingInfo,
+      profile,
+      push,
+      refetchPrice,
       udr,
-    })
-  }, [
-    afterErrorHandler,
-    ecv,
-    parkingEnd,
-    pricingInfo,
-    profile,
-    push,
-    refetchPrice,
-    udr,
-  ])
-
-  const { mutate: pay, isLoading: payLoading } = useMutation(
-    ['pay-ticket'],
-    beginTransaction
+    ]
   )
 
-  if (payLoading) {
+  const { mutate: payCash, isLoading: payLoadingCash } = useMutation(
+    ['pay-ticket-cash'],
+    () => beginTransaction(PaymentType.cash)
+  )
+
+  const { mutate: payCard, isLoading: payLoadingCard } = useMutation(
+    ['pay-ticket-card'],
+    () => beginTransaction(PaymentType.card)
+  )
+
+  if (payLoadingCash || payLoadingCard) {
     return (
       <StatusWrapper>
         <Status
@@ -249,25 +285,30 @@ const ParkingOrderSummary: React.FunctionComponent = () => {
         </ParkingSummarySC>
       </ScrollView>
       <ButtonWrapper>
-        <Descriptions
-          layout="vertical"
-          style={{ width: '100%', marginBottom: 10 }}
-        >
-          <Descriptions.Item
-            label={i18n.t('screens.parkingOrderSummary.parkingSummary.price')}
-          >
-            <Descriptions.Text style={styles.price}>
-              {presentPrice(pricingInfo.price)}
-            </Descriptions.Text>
-          </Descriptions.Item>
-        </Descriptions>
-        <View>
-          <Button
-            title={i18n.t('screens.parkingOrderSummary.actions.payAction')}
-            variant="primary-submit"
-            onPress={() => pay()}
-          />
-        </View>
+        <CashButton onPress={() => payCash()}>
+          <>
+            <TextSC>{t('screens.parkingOrderSummary.cash')}</TextSC>
+            <IconSC
+              source={require('@images/paymentMethod/volunteer_activism.png')}
+              resizeMode="contain"
+            />
+            <TextPriceSC>
+              {presentPrice(pricingInfo.meta.priceCash)}
+            </TextPriceSC>
+          </>
+        </CashButton>
+        <CardButton onPress={() => payCard()}>
+          <>
+            <TextSC>{t('screens.parkingOrderSummary.card')}</TextSC>
+            <IconSC
+              source={require('@images/paymentMethod/Vector.png')}
+              resizeMode="contain"
+            />
+            <TextPriceSC>
+              {presentPrice(pricingInfo.meta.priceCard)}
+            </TextPriceSC>
+          </>
+        </CardButton>
       </ButtonWrapper>
     </ParkingOrderSummarySC>
   )
@@ -278,10 +319,6 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     paddingHorizontal: 16,
   },
-  price: {
-    fontSize: 32,
-    lineHeight: 32,
-  },
 })
 
-export default React.memo(ParkingOrderSummary)
+export default memo(ParkingOrderSummary)

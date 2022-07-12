@@ -30,12 +30,6 @@ export type RootStackParamList = {
     parkingEnd: string
     finalPrice: IParkinPriceResData
   }
-  ParkinOrderPaymentType: {
-    udr: IUdrInfo
-    ecv: string
-    parkingEnd: string
-    finalPrice: IParkinPriceResData
-  }
 
   TransactionsHistory: undefined
   TransactionDetail: {
