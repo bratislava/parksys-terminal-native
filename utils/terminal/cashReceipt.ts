@@ -6,7 +6,7 @@ const PAPER_WIDTH = 38
 const SPACER = '-'.repeat(PAPER_WIDTH)
 const EMPTY_SPACER = ' '.repeat(PAPER_WIDTH)
 const DEFAULT_FOOTER = [
-  'Prevádzkovateľ nie je platcom DPH podľa §4 Zákona č.222/2004 Z.z o dani z pridanej hodnoty.',
+  'Prevádzkovateľ nie je zdaniteľnou osobou pre daň z pridanej hodnoty podľa paragrafu 3 ods. 4 zákona č. 222/2004  Z. z.',
   'Lístok je elektronický, nemusíte ho zakladať za predné sklo vozidla.',
   'Pri kontrole systém automaticky overí, či na dané EČV bol vydaný parkovací lístok.',
 ]
