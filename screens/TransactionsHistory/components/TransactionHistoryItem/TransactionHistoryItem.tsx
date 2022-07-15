@@ -20,7 +20,7 @@ interface TransactionHistoryItemProps {
 
 const TransactionHistoryItem: React.FunctionComponent<TransactionHistoryItemProps> =
   ({ item, onPress, odd }) => {
-    const date = formatNativeDate(new Date(item.created_at), 'd.m.yyyy HH:mm')
+    const date = formatNativeDate(new Date(item.created_at), 'd.M.yyyy HH:mm')
 
     return (
       <TransactionHistoryItemSC onPress={() => onPress(item)} odd={odd}>
