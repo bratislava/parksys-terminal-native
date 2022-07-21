@@ -187,6 +187,7 @@ function generateReceipt({
 function getTransactionHeader() {
   let header = ''
   header += getTitle('Bratislavský parkovací asistent')
+  header += getTitle('Doklad o úhrade parkovného')
   header += EMPTY_SPACER
   header += getTitle('Prevádzkovateľ:')
   header += getTitle('Hlavné mesto SR Bratislava')
