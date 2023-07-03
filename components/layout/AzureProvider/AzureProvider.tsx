@@ -7,7 +7,11 @@ import * as React from 'react'
  * It provides user profile, if logged in
  * Wrap navigator with this
  */
-const AzureProvider: React.FunctionComponent = ({ children }) => {
+
+type AzureProviderProps = {
+  children: React.ReactNode
+}
+const AzureProvider = ({ children }: AzureProviderProps) => {
   const authContext = useAzureAuth()
 
   return (
