@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import * as Location from 'expo-location'
 import Constants, { AppOwnership } from 'expo-constants'
 import * as Sentry from 'sentry-expo'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import useCachedResources from '@hooks/useCachedResources'
 import { ThemeProvider } from 'styled-components'
@@ -58,17 +59,19 @@ const App = () => {
   } else {
     return (
       <>
-        <StatusBar style="auto" />
-        <ThemeProvider theme={defaultTheme}>
-          <QueryClientProvider client={queryClient}>
-            <SetupTerminal />
-            <SafeAreaProvider>
-              <AzureProvider>
-                <SecurityLayout />
-              </AzureProvider>
-            </SafeAreaProvider>
-          </QueryClientProvider>
-        </ThemeProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <StatusBar style="auto" />
+          <ThemeProvider theme={defaultTheme}>
+            <QueryClientProvider client={queryClient}>
+              <SetupTerminal />
+              <SafeAreaProvider>
+                <AzureProvider>
+                  <SecurityLayout />
+                </AzureProvider>
+              </SafeAreaProvider>
+            </QueryClientProvider>
+          </ThemeProvider>
+        </GestureHandlerRootView>
       </>
     )
   }
