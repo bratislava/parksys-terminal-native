@@ -5,7 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import './translations'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import * as Location from 'expo-location'
-import Constants, { AppOwnership } from 'expo-constants'
+import Constants, { ExecutionEnvironment } from 'expo-constants'
 import * as Sentry from 'sentry-expo'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
@@ -22,12 +22,12 @@ Sentry.init({
   debug: __DEV__,
   environment: __DEV__
     ? 'development'
-    : Constants.appOwnership === AppOwnership.Standalone // for now, consider 'production' apps running in Expo Go staging, update once we have more BE envs
+    : Constants.executionEnvironment === ExecutionEnvironment.Standalone // for now, consider 'production' apps running in Expo Go staging, update once we have more BE envs
     ? 'production'
     : 'staging',
 })
 
-Constants.manifest?.developmentClient
+Constants.expoConfig?.developmentClient
 
 const queryClient = new QueryClient()
 import { focusManager } from 'react-query'
@@ -46,7 +46,7 @@ function onAppStateChange(status: AppStateStatus) {
   }
 }
 
-Location.setGoogleApiKey(Constants.manifest?.extra?.googlePlacesApiKey)
+Location.setGoogleApiKey(Constants.expoConfig?.extra?.googlePlacesApiKey)
 
 const App = () => {
   const isLoadingComplete = useCachedResources()

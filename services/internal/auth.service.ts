@@ -22,11 +22,11 @@ import { captureException } from './sentry.service'
  *------------------------------------------------------------------------------------------------**/
 
 const REQUIRED_SCOPES = new Set([
-  `api://${Constants.manifest?.extra?.azureClientId}/user_auth`,
+  `api://${Constants.expoConfig?.extra?.azureClientId}/user_auth`,
   'offline_access',
 ])
 const BASE_URL = 'https://login.microsoftonline.com'
-const AUTH_BASE_URL = `${BASE_URL}/${Constants.manifest?.extra?.azureTenantId}`
+const AUTH_BASE_URL = `${BASE_URL}/${Constants.expoConfig?.extra?.azureTenantId}`
 
 /**================================================================================================
  * ?                                    ABOUT
@@ -160,7 +160,7 @@ class AuthService {
     const params: IRefreshReqParams = {
       grant_type: 'refresh_token',
       refresh_token: tokens.refreshToken,
-      client_id: Constants.manifest?.extra?.azureClientId,
+      client_id: Constants.expoConfig?.extra?.azureClientId,
       scope: Array.from(REQUIRED_SCOPES.values()).join(' '),
     }
 
@@ -234,12 +234,17 @@ class AuthService {
     }
 
     const reqParams: ILoginReqParams = {
-      client_id: Constants.manifest?.extra?.azureClientId,
+      client_id: Constants.expoConfig?.extra?.azureClientId,
       grant_type: 'password',
       username,
       password,
       scope: Array.from(finalScopes.values()).join(' '),
     }
+    console.log('expoConfig', Constants.expoConfig?.extra?.azureClientId)
+    console.log('manifest', Constants.manifest?.extra?.azureClientId)
+    console.log('process', process.env.AZURE_CLIENT_ID)
+    console.log('raw expoConfig', Constants.expoConfig)
+    console.log('raw manifest', Constants.manifest)
     const validated = loginReqValidation.validateSync(reqParams)
     const [reqBody, headers] = createXWwwForm(validated)
 

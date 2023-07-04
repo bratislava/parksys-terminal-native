@@ -5,7 +5,7 @@ import { registerPapayaMocks } from '@mock/papayaApi'
 
 class PapayaApi extends BaseApi {
   constructor() {
-    super(Constants.manifest?.extra?.papayaApiUrl, {
+    super(Constants.expoConfig?.extra?.papayaApiUrl, {
       includeAuthorization: false,
     })
 
@@ -13,13 +13,13 @@ class PapayaApi extends BaseApi {
      * Register mocks for api if in env
      */
     if (
-      Constants.manifest?.extra?.enableMockApi === 'true' ||
-      Constants.manifest?.extra?.enableMockApi === true
+      Constants.expoConfig?.extra?.enableMockApi === 'true' ||
+      Constants.expoConfig?.extra?.enableMockApi === true
     ) {
       this.mockInstance = new MockAdapter(this.axios, {
         onNoMatch: 'passthrough',
-        delayResponse: Constants.manifest?.extra?.mockApiDelay
-          ? Number(Constants.manifest?.extra?.mockApiDelay)
+        delayResponse: Constants.expoConfig?.extra?.mockApiDelay
+          ? Number(Constants.expoConfig?.extra?.mockApiDelay)
           : 0,
       })
       registerPapayaMocks(this.mockInstance)
