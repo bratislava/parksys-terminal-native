@@ -5,7 +5,7 @@ import MockAdapter from 'axios-mock-adapter'
 
 class PricingApi extends BaseApi {
   constructor() {
-    super(Constants.manifest?.extra?.pricingApiUrl, {
+    super(Constants.expoConfig?.extra?.pricingApiUrl, {
       includeAuthorization: true,
     })
 
@@ -13,13 +13,13 @@ class PricingApi extends BaseApi {
      * Register mocks for api if in env
      */
     if (
-      Constants.manifest?.extra?.enableMockApi === 'true' ||
-      Constants.manifest?.extra?.enableMockApi === true
+      Constants.expoConfig?.extra?.enableMockApi === 'true' ||
+      Constants.expoConfig?.extra?.enableMockApi === true
     ) {
       this.mockInstance = new MockAdapter(this.axios, {
         onNoMatch: 'passthrough',
-        delayResponse: Constants.manifest?.extra?.mockApiDelay
-          ? Number(Constants.manifest?.extra?.mockApiDelay)
+        delayResponse: Constants.expoConfig?.extra?.mockApiDelay
+          ? Number(Constants.expoConfig?.extra?.mockApiDelay)
           : 0,
       })
       registerPricingMocks(this.mockInstance)

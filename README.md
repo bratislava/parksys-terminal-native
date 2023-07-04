@@ -131,7 +131,9 @@ To release new `.apk` to Play Store:
 
 1. Bump the `version` and `versionCode` in `app.config.js` - these are visible from app settings and help us determine which version is live for the users
 2. In `.env` file erase enviroment variable `__DEV__` if it is present
-3. `yarn create-production-apk`
-4. wait for [Expo](https://expo.dev/accounts/bratislava/projects/parksys-terminal/builds) to build new `.apk` & download it once ready
-5. Send the `.apk` to the contact person in Papaya. At the time of writing, this is Tomas Debnar, who can be reached through our slack in shared channel `#01people-papaya-terminal`, or through email - `tomas.debnar@papayapos.sk`
-6. After 1-3 days, verify that the version is live on the production POS terminal
+3. In `.gitignore` erase `.env` because eas build respects `.gitignore` and it will cause missing enviroment variables in build. [Info](https://forums.expo.dev/t/eas-ignore-gitignore/70423)
+4. Run `eas build -p android` inside the project
+5. Return `.env` inside `.gitignore` file
+6. wait for [Expo](https://expo.dev/accounts/bratislava/projects/parksys-terminal/builds) to build new `.apk` & download it once ready
+7. Send the `.apk` to the contact person in Papaya. At the time of writing, this is Tomas Debnar, who can be reached through our slack in shared channel `#01people-papaya-terminal`, or through email - `tomas.debnar@papayapos.sk`
+8. After 1-3 days, verify that the version is live on the production POS terminal

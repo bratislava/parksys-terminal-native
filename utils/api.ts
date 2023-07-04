@@ -2,7 +2,8 @@ import Constants from 'expo-constants'
 import { apiMhdStops } from './validation'
 
 const host =
-  Constants.manifest?.extra?.apiHost || 'https://live-dev.planner.bratislava.sk'
+  Constants.expoConfig?.extra?.apiHost ||
+  'https://live-dev.planner.bratislava.sk'
 
 // we should throw throwables only, so it's useful to extend Error class to contain useful info
 export class ApiError extends Error {
