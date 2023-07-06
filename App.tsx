@@ -22,7 +22,7 @@ Sentry.init({
   debug: __DEV__,
   environment: __DEV__
     ? 'development'
-    : Constants.executionEnvironment === ExecutionEnvironment.Standalone // for now, consider 'production' apps running in Expo Go staging, update once we have more BE envs
+    : Constants.executionEnvironment === ExecutionEnvironment.Standalone // 'production' builds running in Expo Go are considered staging
     ? 'production'
     : 'staging',
 })
