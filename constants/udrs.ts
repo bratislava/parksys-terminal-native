@@ -1295,6 +1295,40 @@ const UDRS: IUdrInfo[] = [
     shapeLength: '6544,91136828095',
     vyhradene: 'verejné',
   },
+  {
+    id: 508,
+    mestskaCast: 'Ružinov',
+    kodZony: 'RU2',
+    nazov: 'Klingerka',
+    maxParkovanie: '0',
+    bezpPark: '0',
+    obmedzenePreApk: 'N/A',
+    vynimkaZoSpoplatnenia: '0-24',
+    vynimkaApk: 'N/A',
+    udrid: '2022',
+    // THESE ARE NOT VALID, BUT ARE NOT USED EITHER
+    globalIdString: '{6ec77d0d-c511-4e47-81d2-7828e74ed2d9}',
+    shapeArea: '15741,7108040702',
+    shapeLength: '2352,15330879847',
+    vyhradene: 'verejné',
+  },
+  {
+    id: 550,
+    mestskaCast: 'Nové Mesto',
+    kodZony: 'NM4',
+    nazov: 'Biely kríž',
+    maxParkovanie: '0',
+    bezpPark: '0',
+    obmedzenePreApk: 'N/A',
+    vynimkaZoSpoplatnenia: '0-24',
+    vynimkaApk: 'N/A',
+    udrid: '3201',
+    // THESE ARE NOT VALID, BUT ARE NOT USED EITHER
+    globalIdString: '{625a5e55-df84-42dd-8e0c-08c9fd8ce582}',
+    shapeArea: '37065,4215971483',
+    shapeLength: '3824,19491006816',
+    vyhradene: 'verejné',
+  },
 ]
 
 export default UDRS
