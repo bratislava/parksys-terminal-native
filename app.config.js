@@ -4,7 +4,7 @@ export default {
   expo: {
     name: 'Parksys terminal',
     slug: 'parksys-terminal',
-    version: '1.0.38',
+    version: '1.0.39',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
     scheme: 'myapp',
@@ -42,7 +42,7 @@ export default {
     android: {
       softwareKeyboardLayoutMode: 'pan',
       package: 'com.bratislava.parksysterminal',
-      versionCode: 38,
+      versionCode: 39,
       adaptiveIcon: {
         foregroundImage: './assets/images/adaptive-icon.png',
         backgroundColor: '#ffffff',
