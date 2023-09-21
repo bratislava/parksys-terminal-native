@@ -135,5 +135,5 @@ To release new `.apk` to Play Store:
 4. Run `eas build -p android` inside the project
 5. Return `.env` inside `.gitignore` file
 6. wait for [Expo](https://expo.dev/accounts/bratislava/projects/parksys-terminal/builds) to build new `.apk` & download it once ready
-7. Send the `.apk` to the contact person in Papaya. At the time of writing, this is Tomas Debnar, who can be reached through our slack in shared channel `#01people-papaya-terminal`, or through email - `tomas.debnar@papayapos.sk`
+7. Send the `.apk` to the contact persons `martin.slysko@bratislava.sk`, `podpora@papayapos.sk`, and also send copy to `martin.hrcka@bratislava.sk`, `tomas.debnar@papayapos.sk`. Contact person in Papaya is Tomas Debnar, who can be reached through our slack in shared channel `#01people-papaya-terminal`, or through email - `tomas.debnar@papayapos.sk`
 8. After 1-3 days, verify that the version is live on the production POS terminal
