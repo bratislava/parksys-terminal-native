@@ -1601,6 +1601,23 @@ const UDRS: IUdrInfo[] = [
     shapeLength: '148,7956573322',
     vyhradene: 'verejné',
   },
+  {
+    id: 807,
+    mestskaCast: 'Ružinov',
+    kodZony: 'RU1',
+    nazov: 'Priemyselná',
+    maxParkovanie: '0',
+    bezpPark: '0',
+    obmedzenePreApk: 'N/A',
+    vynimkaZoSpoplatnenia: 'workdays 12-24',
+    vynimkaApk: 'N/A',
+    udrid: '2021',
+    // THESE ARE NOT VALID, BUT ARE NOT USED EITHER
+    globalIdString: '{645aeb5a-a89d-482c-b13c-6d956cd9b9c3}',
+    shapeArea: '684,914045206256',
+    shapeLength: '148,7956573322',
+    vyhradene: 'verejné',
+  },
 ]
 
 export default UDRS
