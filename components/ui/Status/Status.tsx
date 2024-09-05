@@ -10,7 +10,7 @@ import {
 import { MaterialIcons } from '@expo/vector-icons'
 import { useTheme } from 'styled-components'
 
-type TIconsName = keyof typeof MaterialIcons['glyphMap']
+type TIconsName = keyof (typeof MaterialIcons)['glyphMap']
 
 const ICON_MAP = new Map<TStatusVariant, TIconsName>([
   ['info', 'info'],

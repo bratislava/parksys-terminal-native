@@ -46,8 +46,6 @@ function onAppStateChange(status: AppStateStatus) {
   }
 }
 
-Location.setGoogleApiKey(Constants.expoConfig?.extra?.googlePlacesApiKey)
-
 const App = () => {
   const isLoadingComplete = useCachedResources()
   // useAppState({

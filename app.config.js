@@ -67,7 +67,12 @@ export default {
         'svg',
       ],
     },
-    // plugins: ['sentry-expo'],
+    plugins: [
+      'expo-asset',
+      'expo-font',
+      'expo-localization',
+      'expo-secure-store',
+    ],
     hooks: {
       postPublish: [
         // {

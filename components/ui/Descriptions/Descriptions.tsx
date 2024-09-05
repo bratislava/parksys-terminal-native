@@ -32,8 +32,8 @@ interface DescriptionsProps extends ViewProps {
 const Descriptions: TDescriptions = ({
   children,
   style,
-  layout,
-  colon,
+  layout = 'vertical',
+  colon = true,
   ...rest
 }: DescriptionsProps) => {
   return (
@@ -47,11 +47,6 @@ const Descriptions: TDescriptions = ({
       )}
     </DescriptionsSC>
   )
-}
-
-Descriptions.defaultProps = {
-  layout: 'vertical',
-  colon: true,
 }
 
 Descriptions.Item = DescriptionsItem
