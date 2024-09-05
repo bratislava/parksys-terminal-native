@@ -44,7 +44,7 @@ const TransactionDetail: React.FunctionComponent = () => {
       dataState?.find(
         (udr) => udr.properties['UDR ID'].toString() === item.udr.toString()
       ),
-    [item]
+    [item, dataState]
   )
 
   const handlePrintReceipt = React.useCallback(async () => {
