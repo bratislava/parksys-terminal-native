@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-raw-text */
 import { Button, Descriptions } from '@components/ui'
 import { RouteProp, useRoute } from '@react-navigation/native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, Alert } from 'react-native'
 import { RootStackParamList } from 'types'
 import {
@@ -10,7 +10,6 @@ import {
   TransactionDetailSC,
 } from './TransactionDetail.styled'
 import i18n from 'i18n-js'
-import UDRS from 'constants/udrs'
 import { formatNativeDate } from '@utils/ui/dateUtils'
 import { ZonedDateTime, ChronoUnit } from '@js-joda/core'
 import { presentPrice } from '@utils/utils'
@@ -20,16 +19,31 @@ import { generateReceiptForTransaction } from '@utils/terminal/cashReceipt'
 import { useMutation } from 'react-query'
 import { ETicketState } from '@models/pricing/pricing.d'
 import { captureException } from '@services/internal/sentry.service'
+import { IUdrFeaturesInfo } from '@models/pricing/udr/udr'
+import asyncStorageService from '@services/internal/asyncStorage.service'
 
 const t = i18n.t
 
 type TRouteProp = RouteProp<RootStackParamList, 'TransactionDetail'>
 
 const TransactionDetail: React.FunctionComponent = () => {
+  const [dataState, setDataState] = useState<IUdrFeaturesInfo[] | null>(null)
   const { params } = useRoute<TRouteProp>()
   const { item } = params
+
+  useEffect(() => {
+    const rehydrate = async () => {
+      const storedState = await asyncStorageService.getUdrs()
+      setDataState(storedState)
+    }
+    rehydrate()
+  }, [setDataState])
+
   const udr = React.useMemo(
-    () => UDRS.find((udr) => udr.udrid === item.udr.toString()),
+    () =>
+      dataState?.find(
+        (udr) => udr.properties['UDR ID'].toString() === item.udr.toString()
+      ),
     [item]
   )
 
@@ -83,12 +97,12 @@ const TransactionDetail: React.FunctionComponent = () => {
           <Descriptions.Item
             label={t('screens.transactionDetail.parkingDescription.street')}
           >
-            <Descriptions.Text>{`${udr?.nazov} (${udr?.mestskaCast})`}</Descriptions.Text>
+            <Descriptions.Text>{`${udr?.properties['Názov']} (${udr?.properties['Mestská časť']})`}</Descriptions.Text>
           </Descriptions.Item>
           <Descriptions.Item
             label={t('screens.transactionDetail.parkingDescription.udr')}
           >
-            <Descriptions.Text>{`${udr?.udrid} (${udr?.kodZony})`}</Descriptions.Text>
+            <Descriptions.Text>{`${udr?.properties['UDR ID']} (${udr?.properties['Kód rezidentskej zóny']})`}</Descriptions.Text>
           </Descriptions.Item>
           <Descriptions.Item
             label={t('screens.transactionDetail.parkingDescription.parkingEnd')}

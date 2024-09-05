@@ -30,25 +30,6 @@ import {
   getTicketReqValidation,
   getTicketResValidation,
 } from '@models/pricing/ticketPayment/ticketPayment.schema'
-import { TudrResData } from '@models/pricing/udr/udr.d'
-import { getudrResValidation } from '@models/pricing/udr/udr.schema'
-
-/**
- * Get streets in BA for parking
- * http://parksys-test.azurewebsites.net/swagger/index.html
- * !do NOT use for now
- * @returns promise
- */
-export function getUdrsInfo() {
-  return pricingApi.requestValidate<TudrResData>(
-    '/UdrInfo/Udr',
-    {
-      method: 'GET',
-    },
-    undefined,
-    getudrResValidation
-  )
-}
 
 /**
  * Get price for parking

@@ -10,7 +10,9 @@ export interface EnterParkingForm {
 }
 
 export const validationSchema: Yup.SchemaOf<EnterParkingForm> = Yup.object({
-  udr: Yup.string().default('').required(),
+  udr: Yup.string()
+    .default('')
+    .required('screens.enterParkingInfo.formErrors.udrRequired'),
   parkingEnd: Yup.date()
     .test(
       'date-test-min',

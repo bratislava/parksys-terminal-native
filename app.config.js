@@ -17,6 +17,9 @@ export default {
       pricingApiUrl: process.env.__DEV__
         ? process.env.PRICING_API_URL
         : 'https://nest-parking-backend.bratislava.sk',
+      udrsApiUrl: process.env.__DEV__
+        ? process.env.UDRS_API_URL
+        : 'https://s3.bratislava.sk',
       papayaApiUrl: process.env.PAPAYA_API_URL,
       enableMockApi: process.env.ENABLE_MOCK_API,
       apiTimeout: process.env.API_TIMEOUT,

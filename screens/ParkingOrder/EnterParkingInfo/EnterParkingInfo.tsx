@@ -25,9 +25,13 @@ import {
   nativeJs,
 } from '@js-joda/core'
 import { RootStackParamList } from 'types'
-import UDRS from 'constants/udrs'
 import { calculateTimeDifference } from '@utils/ui/dateUtils'
 import HoursInput from '@components/common/HoursInput'
+import { useCallback, useEffect, useState } from 'react'
+import { getUdrsInfo } from '@services/external/udrs.api'
+import { useQuery } from 'react-query'
+import asyncStorageService from '@services/internal/asyncStorage.service'
+import { IUdrFeaturesInfo } from '@models/pricing/udr/udr'
 
 /**
  * Screen to enter customer data to purchase parking ticket
@@ -35,7 +39,7 @@ import HoursInput from '@components/common/HoursInput'
 const EnterParkingInfo: React.FunctionComponent = () => {
   const { push } = useNavigation<StackNavigationProp<RootStackParamList>>()
 
-  const [initialValues, setInitialValues] = React.useState(
+  const [initialValues, setInitialValues] = useState(
     () =>
       ({
         ...validationSchema.getDefault(),
@@ -43,19 +47,62 @@ const EnterParkingInfo: React.FunctionComponent = () => {
       } as EnterParkingForm)
   )
 
+  const [dataState, setDataState] = useState<IUdrFeaturesInfo[] | null>(null)
+
+  /**
+   * Fetch udrs
+   */
+  const fetchUdrs = useCallback(() => {
+    return getUdrsInfo().then((res) =>
+      res.features
+        .filter((udr) => udr.properties.Status === 'active')
+        .sort((a, b) => {
+          return a.properties['UDR ID'] - b.properties['UDR ID']
+        })
+    )
+  }, [])
+  const {
+    data: udrs,
+    // TODO this error should be properly handled, but for now it's left out until sentry is removed from project
+    error,
+    isLoading,
+    refetch: refetchPrice,
+  } = useQuery(['getUdrs'], fetchUdrs, {
+    cacheTime: 0,
+  })
+
+  useEffect(() => {
+    const setUdrsToStorage = async () => {
+      if (udrs) {
+        await asyncStorageService.setUdrs(udrs)
+      }
+    }
+    setUdrsToStorage()
+  }, [udrs])
+
+  useEffect(() => {
+    const rehydrate = async () => {
+      const storedState = await asyncStorageService.getUdrs()
+      setDataState(storedState)
+    }
+    rehydrate()
+  }, [setDataState])
+
   /**
    * Fetch udrs list and get last selected udr from storage
    */
   const initForm = React.useCallback(async () => {
     const initiallySelected = await secureStorageService.getSelectedUdr()
-    const data = UDRS
-    setInitialValues((o) => ({
-      ...o,
-      udr: initiallySelected ?? data[0]?.udrid ?? '',
-    }))
-
-    return data
-  }, [])
+    if (dataState) {
+      setInitialValues((o) => ({
+        ...o,
+        udr:
+          initiallySelected ??
+          dataState[0].properties['UDR ID'].toString() ??
+          '',
+      }))
+    }
+  }, [dataState])
 
   /**
    * After submit go to next screen
@@ -63,17 +110,24 @@ const EnterParkingInfo: React.FunctionComponent = () => {
   const onSubmit = React.useCallback(
     async (values: EnterParkingForm) => {
       await secureStorageService.setSelectedUdr(values.udr)
-      const selectedUdr = UDRS.find((udr) => values.udr === udr.udrid)
+      const selectedUdr = dataState?.find(
+        (udr) => values.udr === udr.properties['UDR ID'].toString()
+      )
 
       if (selectedUdr) {
         push('ParkingOrderSummary', {
-          udr: selectedUdr,
+          udr: {
+            udrid: selectedUdr.properties['UDR ID'].toString(),
+            nazov: selectedUdr.properties['Názov'],
+            mestskaCast: selectedUdr.properties['Mestská časť'],
+            kodZony: selectedUdr.properties['Kód rezidentskej zóny'],
+          },
           ecv: values.ecv,
           parkingEnd: values.parkingEnd.toISOString(),
         })
       }
     },
-    [push]
+    [push, dataState]
   )
 
   const addTime = React.useCallback(
@@ -134,6 +188,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
     setFieldValue('parkingEnd', d)
   }
 
+  // this is causing rerendering, is it ok?
   React.useEffect(() => {
     const interval = setInterval(() => {
       if (!wasEndDateOrTimeInputTouched) {
@@ -176,11 +231,11 @@ const EnterParkingInfo: React.FunctionComponent = () => {
               mode="dropdown"
               onValueChange={(itemValue) => setFieldValue('udr', itemValue)}
             >
-              {UDRS.map((udr) => (
+              {dataState?.map((udr) => (
                 <Picker.Item
-                  key={udr.udrid}
-                  value={udr.udrid}
-                  label={`(${udr.udrid}) ${udr.nazov}`}
+                  key={udr.properties['UDR ID']}
+                  value={udr.properties['UDR ID'].toString()}
+                  label={`(${udr.properties['UDR ID']}) ${udr.properties['Názov']}`}
                 />
               ))}
             </Picker>

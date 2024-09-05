@@ -35,6 +35,7 @@ export default {
       formErrors: {
         ecvFormat: 'Značka môže obsahovať iba písmená a čísla.',
         ecvRequired: 'Značka vozidla je povinný údaj.',
+        udrRequired: 'Ulica je povinný údaj.',
         minDate: 'Lístok sa dá zakúpiť iba do budúcnosti',
         maxDate: 'Lístok sa dá zakúpiť na maximálnu dobu 48 hodín.',
       },
