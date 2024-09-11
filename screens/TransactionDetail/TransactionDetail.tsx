@@ -27,24 +27,26 @@ const t = i18n.t
 type TRouteProp = RouteProp<RootStackParamList, 'TransactionDetail'>
 
 const TransactionDetail: React.FunctionComponent = () => {
-  const [dataState, setDataState] = useState<IUdrFeaturesInfo[] | null>(null)
+  const [udrsDataState, setUdrsDataState] = useState<IUdrFeaturesInfo[] | null>(
+    null
+  )
   const { params } = useRoute<TRouteProp>()
   const { item } = params
 
   useEffect(() => {
     const rehydrate = async () => {
       const storedState = await asyncStorageService.getUdrs()
-      setDataState(storedState)
+      setUdrsDataState(storedState)
     }
     rehydrate()
-  }, [setDataState])
+  }, [setUdrsDataState])
 
   const udr = React.useMemo(
     () =>
-      dataState?.find(
+      udrsDataState?.find(
         (udr) => udr.properties['UDR ID'].toString() === item.udr.toString()
       ),
-    [item, dataState]
+    [item, udrsDataState]
   )
 
   const handlePrintReceipt = React.useCallback(async () => {
