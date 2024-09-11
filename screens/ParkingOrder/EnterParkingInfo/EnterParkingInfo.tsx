@@ -47,7 +47,9 @@ const EnterParkingInfo: React.FunctionComponent = () => {
       } as EnterParkingForm)
   )
 
-  const [dataState, setDataState] = useState<IUdrFeaturesInfo[] | null>(null)
+  const [udrDataState, setUdrDataState] = useState<IUdrFeaturesInfo[] | null>(
+    null
+  )
 
   /**
    * Fetch udrs
@@ -82,26 +84,26 @@ const EnterParkingInfo: React.FunctionComponent = () => {
   useEffect(() => {
     const rehydrate = async () => {
       const storedState = await asyncStorageService.getUdrs()
-      setDataState(storedState)
+      setUdrDataState(storedState)
     }
     rehydrate()
-  }, [setDataState])
+  }, [setUdrDataState])
 
   /**
    * Fetch udrs list and get last selected udr from storage
    */
   const initForm = React.useCallback(async () => {
     const initiallySelected = await secureStorageService.getSelectedUdr()
-    if (dataState) {
+    if (udrDataState) {
       setInitialValues((o) => ({
         ...o,
         udr:
           initiallySelected ??
-          dataState[0].properties['UDR ID'].toString() ??
+          udrDataState[0].properties['UDR ID'].toString() ??
           '',
       }))
     }
-  }, [dataState])
+  }, [udrDataState])
 
   /**
    * After submit go to next screen
@@ -109,7 +111,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
   const onSubmit = React.useCallback(
     async (values: EnterParkingForm) => {
       await secureStorageService.setSelectedUdr(values.udr)
-      const selectedUdr = dataState?.find(
+      const selectedUdr = udrDataState?.find(
         (udr) => values.udr === udr.properties['UDR ID'].toString()
       )
 
@@ -126,7 +128,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
         })
       }
     },
-    [push, dataState]
+    [push, udrDataState]
   )
 
   const addTime = React.useCallback(
@@ -230,7 +232,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
               mode="dropdown"
               onValueChange={(itemValue) => setFieldValue('udr', itemValue)}
             >
-              {dataState?.map((udr) => (
+              {udrDataState?.map((udr) => (
                 <Picker.Item
                   key={udr.properties['UDR ID']}
                   value={udr.properties['UDR ID'].toString()}
