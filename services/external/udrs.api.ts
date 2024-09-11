@@ -1,11 +1,11 @@
 import udrsApi from '@lib/api/udrsApi'
 import { IUdrsOnlineInfo } from '@models/pricing/udr/udr.d'
-import { getUdrsOnlineResValidation } from '@models/pricing/udr/udr.schema'
+import { udrsOnlineValidation } from '@models/pricing/udr/udr.schema'
 
 /**
  * Get streets in BA for parking
  * https://s3.bratislava.sk/paas-mpa-prod/assets/gisdata/udr_p.geojson
- * @returns promise
+ * @returns Promise<IUdrsOnlineInfo>
  */
 export function getUdrsInfo() {
   return udrsApi.requestValidate<IUdrsOnlineInfo>(
@@ -14,6 +14,6 @@ export function getUdrsInfo() {
       method: 'GET',
     },
     undefined,
-    getUdrsOnlineResValidation
+    udrsOnlineValidation
   )
 }

@@ -40,5 +40,3 @@ export const udrsOnlineValidation = Yup.object({
     })
   ),
 })
-
-export const getUdrsOnlineResValidation = udrsOnlineValidation

@@ -66,7 +66,6 @@ const EnterParkingInfo: React.FunctionComponent = () => {
     // TODO this error should be properly handled, but for now it's left out until sentry is removed from project
     error,
     isLoading,
-    refetch: refetchPrice,
   } = useQuery(['getUdrs'], fetchUdrs, {
     cacheTime: 0,
   })

@@ -1,27 +1,29 @@
 import { IUdrFeaturesInfo } from '@models/pricing/udr/udr'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { EStorage } from '../../types/storage.d'
+import { AsyncStorageTypes } from '../../types/storage.d'
+import { captureException, captureMessage } from './sentry.service'
 
 /**
  * Save udrs of app
  * @param udrs udrs data to store
- * @returns promise
+ * @returns Promise<void>
  */
 async function setUdrs(udrs: IUdrFeaturesInfo[]) {
   try {
     const jsonValue = JSON.stringify(udrs)
-    await AsyncStorage.setItem(EStorage.udrs, jsonValue)
+    await AsyncStorage.setItem(AsyncStorageTypes.udrs, jsonValue)
   } catch (e) {
-    // saving error
+    captureMessage('setUdrs to async storage error')
+    captureException(e)
   }
 }
 
 /**
  * Get udrs data of app
- * @returns promise
+ * @returns Promise<IUdrFeaturesInfo[] | null>
  */
 async function getUdrs() {
-  const jsonValue = await AsyncStorage.getItem(EStorage.udrs)
+  const jsonValue = await AsyncStorage.getItem(AsyncStorageTypes.udrs)
   return jsonValue != null
     ? (JSON.parse(jsonValue) as IUdrFeaturesInfo[])
     : null
@@ -29,10 +31,10 @@ async function getUdrs() {
 
 /**
  * Clear udrs of app
- * @returns promise
+ * @returns Promise<void>
  */
 async function clearUdrs() {
-  await AsyncStorage.removeItem(EStorage.udrs)
+  await AsyncStorage.removeItem(AsyncStorageTypes.udrs)
 }
 
 const asyncStorageService = {

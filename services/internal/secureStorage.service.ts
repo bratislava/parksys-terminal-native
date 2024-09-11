@@ -5,7 +5,7 @@
  *================================================================================================**/
 
 import * as SecureStore from 'expo-secure-store'
-import { EStorage } from '../../types/storage.d'
+import { SecureStorageTypes } from '../../types/storage.d'
 
 /**
  * Store key value pair to secure storage
@@ -41,7 +41,7 @@ async function getValueFor(key: string) {
  * @returns promise
  */
 function setAccessToken(token: string) {
-  return save(EStorage.azureAccessToken, token)
+  return save(SecureStorageTypes.azureAccessToken, token)
 }
 
 /**
@@ -49,7 +49,7 @@ function setAccessToken(token: string) {
  * @returns promise
  */
 function getAccessToken() {
-  return getValueFor(EStorage.azureAccessToken)
+  return getValueFor(SecureStorageTypes.azureAccessToken)
 }
 
 /**
@@ -58,7 +58,7 @@ function getAccessToken() {
  * @returns promise
  */
 function setRefreshToken(token: string) {
-  return save(EStorage.azureRefreshToken, token)
+  return save(SecureStorageTypes.azureRefreshToken, token)
 }
 
 /**
@@ -66,15 +66,15 @@ function setRefreshToken(token: string) {
  * @returns promise
  */
 function getRefreshToken() {
-  return getValueFor(EStorage.azureRefreshToken)
+  return getValueFor(SecureStorageTypes.azureRefreshToken)
 }
 
 /**
  * Clear tokens from storage
  */
 async function clearAuthTokens() {
-  await clear(EStorage.azureAccessToken)
-  await clear(EStorage.azureRefreshToken)
+  await clear(SecureStorageTypes.azureAccessToken)
+  await clear(SecureStorageTypes.azureRefreshToken)
 }
 
 /**
@@ -83,7 +83,7 @@ async function clearAuthTokens() {
  * @returns promise
  */
 function setSelectedUdr(udrId: string) {
-  return save(EStorage.selectedUdr, udrId)
+  return save(SecureStorageTypes.selectedUdr, udrId)
 }
 
 /**
@@ -91,7 +91,7 @@ function setSelectedUdr(udrId: string) {
  * @returns promise
  */
 function getSelectedUdr() {
-  return getValueFor(EStorage.selectedUdr)
+  return getValueFor(SecureStorageTypes.selectedUdr)
 }
 
 /**
@@ -99,7 +99,7 @@ function getSelectedUdr() {
  * @returns promise
  */
 function clearSelectedUdr() {
-  return clear(EStorage.selectedUdr)
+  return clear(SecureStorageTypes.selectedUdr)
 }
 
 /**
@@ -108,7 +108,7 @@ function clearSelectedUdr() {
  * @returns promise
  */
 function setSessionId(sessionId: string) {
-  return save(EStorage.sessionId, sessionId)
+  return save(SecureStorageTypes.sessionId, sessionId)
 }
 
 /**
@@ -116,7 +116,7 @@ function setSessionId(sessionId: string) {
  * @returns promise
  */
 function getSessionId() {
-  return getValueFor(EStorage.sessionId)
+  return getValueFor(SecureStorageTypes.sessionId)
 }
 
 /**
@@ -124,7 +124,7 @@ function getSessionId() {
  * @returns promise
  */
 function clearSessionId() {
-  return clear(EStorage.sessionId)
+  return clear(SecureStorageTypes.sessionId)
 }
 
 /**
