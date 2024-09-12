@@ -16,7 +16,7 @@ import { presentPrice } from '@utils/utils'
 import TransactionState from '../../components/common/TransactionState'
 import { printReceipt } from '@services/external/papaya.api'
 import { generateReceiptForTransaction } from '@utils/terminal/cashReceipt'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import { ETicketState } from '@models/pricing/pricing.d'
 import { captureException } from '@services/internal/sentry.service'
 import { IUdrFeaturesInfo } from '@models/pricing/udr/udr'
@@ -64,10 +64,10 @@ const TransactionDetail: React.FunctionComponent = () => {
     }
   }, [item, udr])
 
-  const { mutate: onPrintPress, isLoading: isPrinting } = useMutation(
-    ['print-receipt-copy'],
-    handlePrintReceipt
-  )
+  const { mutate: onPrintPress, isPending: isPrinting } = useMutation({
+    mutationKey: ['print-receipt-copy'],
+    mutationFn: handlePrintReceipt,
+  })
 
   /**
    * Calculate durations of parking for given end timestamp

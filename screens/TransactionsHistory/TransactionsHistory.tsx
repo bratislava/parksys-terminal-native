@@ -8,7 +8,7 @@ import {
   RefreshControl,
   StyleSheet,
 } from 'react-native'
-import { useInfiniteQuery } from 'react-query'
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import TransactionHistoryItem from './components/TransactionHistoryItem'
 import { TransactionsHistorySC } from './TransactionsHistory.styled'
 import { Status } from '@components/ui'
@@ -23,10 +23,11 @@ const PER_PAGE = 20
 
 const TransactionsHistory: React.FunctionComponent = () => {
   const { profile } = useAuthContext()
+  const queryClient = useQueryClient()
   const { push } = useNavigation<StackNavigationProp<RootStackParamList>>()
 
   const getTicketsHandler = React.useCallback(
-    ({ pageParam = 1 }: any) => {
+    ({ pageParam }: any) => {
       if (!profile) {
         throw new Error('Not logged in')
       }
@@ -64,20 +65,22 @@ const TransactionsHistory: React.FunctionComponent = () => {
     [_onPress]
   )
 
-  const { data, isLoading, error, refetch, fetchNextPage, remove } =
-    useInfiniteQuery(['getTicketsHandler', profile], getTicketsHandler, {
-      cacheTime: 0,
-      getNextPageParam: (lastPage) => {
-        const pagination = lastPage.pagination
-        if (
-          (pagination.currentPage + 1) * pagination.pageSize <=
-          pagination.total
-        ) {
-          return pagination.currentPage + 1
-        }
-        return undefined
-      },
-    })
+  const { data, isLoading, error, refetch, fetchNextPage } = useInfiniteQuery({
+    queryKey: ['getTicketsHandler', profile],
+    queryFn: getTicketsHandler,
+    gcTime: 0,
+    getNextPageParam: (lastPage) => {
+      const pagination = lastPage.pagination
+      if (
+        (pagination.currentPage + 1) * pagination.pageSize <=
+        pagination.total
+      ) {
+        return pagination.currentPage + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
+  })
 
   const _onEndReached = React.useCallback(() => {
     if (!isLoading) {
@@ -86,9 +89,9 @@ const TransactionsHistory: React.FunctionComponent = () => {
   }, [fetchNextPage, isLoading])
 
   const onRefresh = React.useCallback(() => {
-    remove()
+    queryClient.removeQueries({ queryKey: ['getTicketsHandler'] })
     refetch()
-  }, [refetch, remove])
+  }, [refetch, queryClient])
 
   const errorHeader = React.useMemo(() => {
     return error ? (

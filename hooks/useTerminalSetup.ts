@@ -1,7 +1,7 @@
 import React from 'react'
 import { ISetupTerminalReqParams } from '@models/papaya/setupTerminal/setupTerminal.d'
 import { setupTerminal } from '@services/external/papaya.api'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 
 const TERMINAL_SETTINGS = {
   hideFrontActivity: true,
@@ -14,13 +14,13 @@ const mutation = (data: ISetupTerminalReqParams) => setupTerminal(data)
  * Hook to set correct terminal settings
  */
 function useTerminalSetup() {
-  const { mutate, isLoading } = useMutation(mutation)
+  const { mutate, isPending } = useMutation({ mutationFn: mutation })
 
   React.useEffect(() => {
     mutate(TERMINAL_SETTINGS)
   }, [mutate])
 
-  return isLoading
+  return isPending
 }
 
 export default useTerminalSetup

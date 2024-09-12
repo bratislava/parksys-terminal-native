@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import './translations'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Constants, { ExecutionEnvironment } from 'expo-constants'
 import * as Sentry from 'sentry-expo'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -28,8 +28,14 @@ Sentry.init({
 
 Constants.expoConfig?.developmentClient
 
-const queryClient = new QueryClient()
-import { focusManager } from 'react-query'
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+    },
+  },
+})
+import { focusManager } from '@tanstack/react-query'
 // import useAppState from 'react-native-appstate-hook'
 import { AppStateStatus, Platform } from 'react-native'
 import SetupTerminal from '@components/common/SetupTerminal'

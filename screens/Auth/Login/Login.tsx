@@ -4,7 +4,7 @@ import { useAuthContext } from '@lib/context/authContext'
 import { useFormik } from 'formik'
 import * as React from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import { ILoginForm, initialValues, loginValidation } from './login.schema'
 import { LoginError, LoginSC, StatusSC } from './Login.styled'
 import i18n from 'i18n-js'
@@ -19,9 +19,11 @@ const Login: React.FunctionComponent = () => {
   const {
     mutate: loginMutation,
     error,
-    isLoading,
-  } = useMutation(({ username, password }: ILoginForm) => {
-    return login(username, password)
+    isPending,
+  } = useMutation({
+    mutationFn: ({ username, password }: ILoginForm) => {
+      return login(username, password)
+    },
   })
 
   /**
@@ -88,7 +90,7 @@ const Login: React.FunctionComponent = () => {
             onPress={submitForm}
             variant={isValid ? 'primary-submit' : 'secondary'}
             style={styles.button}
-            loading={isLoading}
+            loading={isPending}
           />
           {error ? (
             <LoginError>{i18n.t('screens.login.errors.loginError')}</LoginError>

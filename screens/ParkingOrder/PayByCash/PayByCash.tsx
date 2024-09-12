@@ -6,7 +6,7 @@ import { printReceipt } from '@services/external/papaya.api'
 import { createTicket } from '@services/external/pricing.api'
 import { generateReceiptForTransaction } from '@utils/terminal/cashReceipt'
 import React from 'react'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import { RootStackParamList } from 'types'
 import {
   ButtonWrapper,
@@ -100,9 +100,12 @@ const PayByCash: React.FunctionComponent = () => {
 
   const {
     mutate: pay,
-    isLoading: payLoading,
+    isPending: payLoading,
     error,
-  } = useMutation(['pay-ticket-cash'], beginTransaction)
+  } = useMutation({
+    mutationKey: ['pay-ticket-cash'],
+    mutationFn: beginTransaction,
+  })
 
   const currentStatus = React.useMemo(() => {
     if (error) {

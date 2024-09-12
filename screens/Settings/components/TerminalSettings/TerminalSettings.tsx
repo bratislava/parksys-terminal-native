@@ -14,7 +14,7 @@ import {
   ITerminalForm,
   validationSchema,
 } from './TerminalSettings.schema'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import { setupTerminal } from '@services/external/papaya.api'
 import { Button } from '@components/ui'
 
@@ -23,7 +23,7 @@ const t = i18n.t
 const mutation = (data: ITerminalForm) => setupTerminal(data)
 
 const TerminalSettings: React.FunctionComponent = () => {
-  const { mutate, isLoading } = useMutation(mutation)
+  const { mutate, isPending } = useMutation({ mutationFn: mutation })
 
   const onSubmit = React.useCallback(
     (data: ITerminalForm) => {
@@ -66,7 +66,7 @@ const TerminalSettings: React.FunctionComponent = () => {
         title={t('components.terminalSettings.saveAction')}
         style={{ marginTop: 8 }}
         variant="tertiary"
-        loading={isLoading}
+        loading={isPending}
         onPress={() => submitForm()}
       />
     </TerminalSettingsSC>

@@ -8,7 +8,7 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { createTicket } from '@services/external/pricing.api'
 import { payByCard, printReceipt } from '@services/external/papaya.api'
 import { EPaymentResult, ICardPaymentRes } from '@models/papaya/card/card.dto'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import { Button, Status } from '@components/ui'
 import { StatusBar } from 'expo-status-bar'
 import { TouchableOpacity } from 'react-native'
@@ -116,9 +116,12 @@ const PayByCard: React.FunctionComponent = () => {
 
   const {
     mutate: pay,
-    isLoading: payLoading,
+    isPending: payLoading,
     error,
-  } = useMutation(['pay-ticket-card'], beginTransaction)
+  } = useMutation({
+    mutationKey: ['pay-ticket-card'],
+    mutationFn: beginTransaction,
+  })
 
   const currentStatus = React.useMemo(() => {
     if (error) {

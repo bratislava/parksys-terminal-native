@@ -16,7 +16,7 @@ import {
 import i18n from 'i18n-js'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { RootStackParamList } from 'types'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import {
   getPriceForParking,
   ticketPayment,
@@ -84,8 +84,10 @@ const ParkingOrderSummary: FunctionComponent = () => {
     error,
     isLoading,
     refetch: refetchPrice,
-  } = useQuery(['getPriceForParking'], fetchPrice, {
-    cacheTime: 0,
+  } = useQuery({
+    queryKey: ['getPriceForParking'],
+    queryFn: fetchPrice,
+    gcTime: 0,
   })
 
   /**
@@ -160,15 +162,15 @@ const ParkingOrderSummary: FunctionComponent = () => {
     ]
   )
 
-  const { mutate: payCash, isLoading: payLoadingCash } = useMutation(
-    ['pay-ticket-cash'],
-    () => beginTransaction(PaymentType.cash)
-  )
+  const { mutate: payCash, isPending: payLoadingCash } = useMutation({
+    mutationKey: ['pay-ticket-cash'],
+    mutationFn: () => beginTransaction(PaymentType.cash),
+  })
 
-  const { mutate: payCard, isLoading: payLoadingCard } = useMutation(
-    ['pay-ticket-card'],
-    () => beginTransaction(PaymentType.card)
-  )
+  const { mutate: payCard, isPending: payLoadingCard } = useMutation({
+    mutationKey: ['pay-ticket-card'],
+    mutationFn: () => beginTransaction(PaymentType.card),
+  })
 
   if (payLoadingCash || payLoadingCard) {
     return (

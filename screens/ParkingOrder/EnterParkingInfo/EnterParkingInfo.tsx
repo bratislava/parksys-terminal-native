@@ -29,7 +29,7 @@ import { calculateTimeDifference } from '@utils/ui/dateUtils'
 import HoursInput from '@components/common/HoursInput'
 import { useCallback, useEffect, useState } from 'react'
 import { getUdrsInfo } from '@services/external/udrs.api'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import asyncStorageService from '@services/internal/asyncStorage.service'
 import { IUdrFeaturesInfo } from '@models/pricing/udr/udr'
 
@@ -68,9 +68,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
     // TODO this error should be properly handled, but for now it's left out until sentry is removed from project
     error,
     isLoading,
-  } = useQuery(['getUdrs'], fetchUdrs, {
-    cacheTime: 0,
-  })
+  } = useQuery({ queryKey: ['getUdrs'], queryFn: fetchUdrs, gcTime: 0 })
 
   useEffect(() => {
     const setUdrsToStorage = async () => {
