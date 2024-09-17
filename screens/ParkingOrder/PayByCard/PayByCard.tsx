@@ -111,7 +111,10 @@ const PayByCard: React.FunctionComponent = () => {
     }).catch(captureException)
 
     setPaidTicket(cardRes)
-    setOptions({ headerLeft: () => null })
+    // TODO fix types
+    setOptions({
+      headerLeft: () => null,
+    })
   }, [finalPrice, profile, setOptions])
 
   const {

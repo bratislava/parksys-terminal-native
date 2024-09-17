@@ -75,6 +75,7 @@ const PayByCash: React.FunctionComponent = () => {
       transactionState: 200,
       payment_type: 'cash',
     })
+    // TODO fix types
     setOptions({ headerLeft: () => null })
     setPaidTicket(finalTicket)
   }, [finalPrice, profile, setOptions])
