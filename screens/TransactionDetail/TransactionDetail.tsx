@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-raw-text */
 import { Button, Descriptions } from '@components/ui'
 import { RouteProp, useRoute } from '@react-navigation/native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { ScrollView, StyleSheet, Alert } from 'react-native'
 import { RootStackParamList } from 'types'
 import {
@@ -16,37 +16,45 @@ import { presentPrice } from '@utils/utils'
 import TransactionState from '../../components/common/TransactionState'
 import { printReceipt } from '@services/external/papaya.api'
 import { generateReceiptForTransaction } from '@utils/terminal/cashReceipt'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { ETicketState } from '@models/pricing/pricing.d'
 import { captureException } from '@services/internal/sentry.service'
-import { IUdrFeaturesInfo } from '@models/pricing/udr/udr'
-import asyncStorageService from '@services/internal/asyncStorage.service'
+import { getUdrsInfo } from '@services/external/udrs.api'
+import { handleLoadingDataFromPersistedStorage } from '@utils/PersistQueryClientProviderHelper'
 
 const t = i18n.t
 
 type TRouteProp = RouteProp<RootStackParamList, 'TransactionDetail'>
 
 const TransactionDetail: React.FunctionComponent = () => {
-  const [udrsDataState, setUdrsDataState] = useState<IUdrFeaturesInfo[] | null>(
-    null
-  )
   const { params } = useRoute<TRouteProp>()
   const { item } = params
 
-  useEffect(() => {
-    const rehydrate = async () => {
-      const storedState = await asyncStorageService.getUdrs()
-      setUdrsDataState(storedState)
-    }
-    rehydrate()
-  }, [setUdrsDataState])
+  /**
+   * Fetch udrs
+   */
+  const fetchUdrs = useCallback(() => {
+    return getUdrsInfo().then((res) =>
+      res.features
+        .filter((udr) => udr.properties.Status === 'active')
+        .sort((a, b) => {
+          return a.properties['UDR ID'] - b.properties['UDR ID']
+        })
+    )
+  }, [])
+
+  const {
+    data: udrs,
+    error,
+    isLoading,
+  } = useQuery({ queryKey: ['getUdrs'], queryFn: fetchUdrs })
 
   const udr = React.useMemo(
     () =>
-      udrsDataState?.find(
+      udrs?.find(
         (udr) => udr.properties['UDR ID'].toString() === item.udr.toString()
       ),
-    [item, udrsDataState]
+    [item, udrs]
   )
 
   const handlePrintReceipt = React.useCallback(async () => {
@@ -83,6 +91,13 @@ const TransactionDetail: React.FunctionComponent = () => {
     item.state === ETicketState.SUCCESS ||
     item.state === ETicketState.PAYMENT_SUCCESS
 
+  const handleObtainingUdrsData = useCallback(
+    (text: string) => {
+      return handleLoadingDataFromPersistedStorage(udrs, isLoading, error, text)
+    },
+    [udrs, error, isLoading]
+  )
+
   return (
     <TransactionDetailSC>
       <ScrollView contentContainerStyle={styles.wrapper}>
@@ -99,12 +114,20 @@ const TransactionDetail: React.FunctionComponent = () => {
           <Descriptions.Item
             label={t('screens.transactionDetail.parkingDescription.street')}
           >
-            <Descriptions.Text>{`${udr?.properties['Názov']} (${udr?.properties['Mestská časť']})`}</Descriptions.Text>
+            <Descriptions.Text>
+              {handleObtainingUdrsData(
+                `${udr?.properties['Názov']} (${udr?.properties['Mestská časť']})`
+              )}
+            </Descriptions.Text>
           </Descriptions.Item>
           <Descriptions.Item
             label={t('screens.transactionDetail.parkingDescription.udr')}
           >
-            <Descriptions.Text>{`${udr?.properties['UDR ID']} (${udr?.properties['Kód rezidentskej zóny']})`}</Descriptions.Text>
+            <Descriptions.Text>
+              {handleObtainingUdrsData(
+                `${udr?.properties['UDR ID']} (${udr?.properties['Kód rezidentskej zóny']})`
+              )}
+            </Descriptions.Text>
           </Descriptions.Item>
           <Descriptions.Item
             label={t('screens.transactionDetail.parkingDescription.parkingEnd')}

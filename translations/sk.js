@@ -2,6 +2,8 @@ export default {
   one: 'Platba',
   two: 'Dva',
   presentPrice: '{{price}}€',
+  noDataAvailable: 'Údaje neboli načítané',
+  staleData: ' - Potenciálne staré dáta',
   screens: {
     notFound: {
       title: 'This screen does not exist',

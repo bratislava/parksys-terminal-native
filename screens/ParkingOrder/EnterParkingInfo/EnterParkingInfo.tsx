@@ -15,7 +15,6 @@ import { useFormik } from 'formik'
 import { validationSchema, EnterParkingForm } from './EnterParkingInfo.schema'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import secureStorageService from '@services/internal/secureStorage.service'
 import i18n from 'i18n-js'
 import {
   ZonedDateTime,
@@ -27,11 +26,10 @@ import {
 import { RootStackParamList } from 'types'
 import { calculateTimeDifference } from '@utils/ui/dateUtils'
 import HoursInput from '@components/common/HoursInput'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { getUdrsInfo } from '@services/external/udrs.api'
 import { useQuery } from '@tanstack/react-query'
-import asyncStorageService from '@services/internal/asyncStorage.service'
-import { IUdrFeaturesInfo } from '@models/pricing/udr/udr'
+import { handleLoadingDataFromPersistedStorage } from '@utils/PersistQueryClientProviderHelper'
 
 /**
  * Screen to enter customer data to purchase parking ticket
@@ -45,10 +43,6 @@ const EnterParkingInfo: React.FunctionComponent = () => {
         ...validationSchema.getDefault(),
         parkingEnd: new Date(),
       } as EnterParkingForm)
-  )
-
-  const [udrsDataState, setUdrsDataState] = useState<IUdrFeaturesInfo[] | null>(
-    null
   )
 
   /**
@@ -70,46 +64,24 @@ const EnterParkingInfo: React.FunctionComponent = () => {
     isLoading,
   } = useQuery({ queryKey: ['getUdrs'], queryFn: fetchUdrs, gcTime: 0 })
 
-  useEffect(() => {
-    const setUdrsToStorage = async () => {
-      if (udrs) {
-        await asyncStorageService.setUdrs(udrs)
-      }
-    }
-    setUdrsToStorage()
-  }, [udrs])
-
-  useEffect(() => {
-    const rehydrate = async () => {
-      const storedState = await asyncStorageService.getUdrs()
-      setUdrsDataState(storedState)
-    }
-    rehydrate()
-  }, [setUdrsDataState])
-
   /**
-   * Fetch udrs list and get last selected udr from storage
+   * Fetch udrs list and get last selected udr
    */
   const initForm = React.useCallback(async () => {
-    const initiallySelected = await secureStorageService.getSelectedUdr()
-    if (udrsDataState) {
+    if (udrs) {
       setInitialValues((o) => ({
         ...o,
-        udr:
-          initiallySelected ??
-          udrsDataState[0].properties['UDR ID'].toString() ??
-          '',
+        udr: udrs[0].properties['UDR ID'].toString() ?? '',
       }))
     }
-  }, [udrsDataState])
+  }, [udrs])
 
   /**
    * After submit go to next screen
    */
   const onSubmit = React.useCallback(
     async (values: EnterParkingForm) => {
-      await secureStorageService.setSelectedUdr(values.udr)
-      const selectedUdr = udrsDataState?.find(
+      const selectedUdr = udrs?.find(
         (udr) => values.udr === udr.properties['UDR ID'].toString()
       )
 
@@ -126,7 +98,14 @@ const EnterParkingInfo: React.FunctionComponent = () => {
         })
       }
     },
-    [push, udrsDataState]
+    [push, udrs]
+  )
+
+  const handleUdrsDataResponse = useCallback(
+    (text: React.ReactNode) => {
+      return handleLoadingDataFromPersistedStorage(udrs, isLoading, error, text)
+    },
+    [udrs, error, isLoading]
   )
 
   const addTime = React.useCallback(
@@ -225,19 +204,21 @@ const EnterParkingInfo: React.FunctionComponent = () => {
             required
             error={errors.udr ? i18n.t(errors.udr) : undefined}
           >
-            <Picker
-              selectedValue={values.udr}
-              mode="dropdown"
-              onValueChange={(itemValue) => setFieldValue('udr', itemValue)}
-            >
-              {udrsDataState?.map((udr) => (
-                <Picker.Item
-                  key={udr.properties['UDR ID']}
-                  value={udr.properties['UDR ID'].toString()}
-                  label={`(${udr.properties['UDR ID']}) ${udr.properties['Názov']}`}
-                />
-              ))}
-            </Picker>
+            {handleUdrsDataResponse(
+              <Picker
+                selectedValue={values.udr}
+                mode="dropdown"
+                onValueChange={(itemValue) => setFieldValue('udr', itemValue)}
+              >
+                {udrs?.map((udr) => (
+                  <Picker.Item
+                    key={udr.properties['UDR ID']}
+                    value={udr.properties['UDR ID'].toString()}
+                    label={`(${udr.properties['UDR ID']}) ${udr.properties['Názov']}`}
+                  />
+                ))}
+              </Picker>
+            )}
           </FormItem>
           <DateWrapper>
             <FormItem

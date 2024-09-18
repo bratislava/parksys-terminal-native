@@ -78,31 +78,6 @@ async function clearAuthTokens() {
 }
 
 /**
- * Save udr id of app
- * @param udrId udr id to store
- * @returns promise
- */
-function setSelectedUdr(udrId: string) {
-  return save(SecureStorageTypes.selectedUdr, udrId)
-}
-
-/**
- * Get udr id of app
- * @returns promise
- */
-function getSelectedUdr() {
-  return getValueFor(SecureStorageTypes.selectedUdr)
-}
-
-/**
- * Clear udr id of app
- * @returns promise
- */
-function clearSelectedUdr() {
-  return clear(SecureStorageTypes.selectedUdr)
-}
-
-/**
  * Set session
  * @param sessionId session id of employee
  * @returns promise
@@ -132,7 +107,7 @@ function clearSessionId() {
  * @returns promise
  */
 function clearStorage() {
-  return Promise.all([clearAuthTokens(), clearSelectedUdr(), clearSessionId()])
+  return Promise.all([clearAuthTokens(), clearSessionId()])
 }
 
 const secureStorageService = {
@@ -145,12 +120,6 @@ const secureStorageService = {
   getRefreshToken,
   setRefreshToken,
   clearAuthTokens,
-  /**
-   * udr
-   */
-  setSelectedUdr,
-  getSelectedUdr,
-  clearSelectedUdr,
   /**
    * session
    */
