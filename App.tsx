@@ -34,7 +34,7 @@ Constants.expoConfig?.developmentClient
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+      gcTime: 1000 * 60 * 60 * 24 * 24, // 24 days, https://tanstack.com/query/v5/docs/framework/react/plugins/persistQueryClient#how-it-works
     },
   },
 })
@@ -75,7 +75,10 @@ const App = () => {
           <ThemeProvider theme={defaultTheme}>
             <PersistQueryClientProvider
               client={queryClient}
-              persistOptions={{ persister }}
+              persistOptions={{
+                persister,
+                maxAge: 1000 * 60 * 60 * 24 * 24, // 24 days, must be at least as much as gcTime, https://tanstack.com/query/v5/docs/framework/react/plugins/persistQueryClient#how-it-works
+              }}
             >
               <SetupTerminal />
               <SafeAreaProvider>

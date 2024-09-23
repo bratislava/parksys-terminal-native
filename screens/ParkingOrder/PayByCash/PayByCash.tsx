@@ -20,6 +20,7 @@ import { presentPrice } from '@utils/utils'
 import { StatusBar } from 'expo-status-bar'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { captureMessage } from '@services/internal/sentry.service'
+import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types'
 
 const t = i18n.t
 
@@ -75,8 +76,7 @@ const PayByCash: React.FunctionComponent = () => {
       transactionState: 200,
       payment_type: 'cash',
     })
-    // TODO fix types
-    setOptions({ headerLeft: () => null })
+    setOptions({ headerLeft: () => null } as Partial<StackNavigationEventMap>)
     setPaidTicket(finalTicket)
   }, [finalPrice, profile, setOptions])
 

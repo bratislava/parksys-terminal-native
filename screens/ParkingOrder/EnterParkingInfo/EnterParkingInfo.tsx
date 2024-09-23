@@ -62,7 +62,7 @@ const EnterParkingInfo: React.FunctionComponent = () => {
     // TODO this error should be properly handled, but for now it's left out until sentry is removed from project
     error,
     isLoading,
-  } = useQuery({ queryKey: ['getUdrs'], queryFn: fetchUdrs, gcTime: 0 })
+  } = useQuery({ queryKey: ['getUdrs'], queryFn: fetchUdrs })
 
   /**
    * Fetch udrs list and get last selected udr
@@ -166,7 +166,6 @@ const EnterParkingInfo: React.FunctionComponent = () => {
     setFieldValue('parkingEnd', d)
   }
 
-  // this is causing rerendering, is it ok?
   React.useEffect(() => {
     const interval = setInterval(() => {
       if (!wasEndDateOrTimeInputTouched) {

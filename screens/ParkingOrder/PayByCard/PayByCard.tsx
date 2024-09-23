@@ -18,6 +18,7 @@ import {
   captureMessage,
 } from '@services/internal/sentry.service'
 import _ from 'lodash'
+import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types'
 
 const t = i18n.t
 
@@ -111,10 +112,9 @@ const PayByCard: React.FunctionComponent = () => {
     }).catch(captureException)
 
     setPaidTicket(cardRes)
-    // TODO fix types
     setOptions({
       headerLeft: () => null,
-    })
+    } as Partial<StackNavigationEventMap>)
   }, [finalPrice, profile, setOptions])
 
   const {
