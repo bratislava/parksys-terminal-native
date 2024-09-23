@@ -25,7 +25,7 @@ export interface IUdrFeaturesInfo {
     // GlobalID_A: string // "{1DFADE72-2D43-4B25-BCF8-D93C4A420151}"
     // Obvod: number // 663.67564614531
     // Plocha: number // 5041.11415570715
-    Status: string //'active'
+    Status: string //'active', 'planned'
     // 'ODP Platnosť RPK a APK': string //'NM1, SM1'
     // web: string // 'ano'
     // 'export partneri': string // 'ano'

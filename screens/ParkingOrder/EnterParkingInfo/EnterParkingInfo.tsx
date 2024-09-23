@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-raw-text */
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
+import Constants from 'expo-constants'
 import FormItem from '@components/form/FormItem'
 import Input from '@components/ui/Input'
 import {
@@ -51,7 +52,12 @@ const EnterParkingInfo: React.FunctionComponent = () => {
   const fetchUdrs = useCallback(() => {
     return getUdrsInfo().then((res) =>
       res.features
-        .filter((udr) => udr.properties.Status === 'active')
+        .filter((udr) =>
+          Constants.expoConfig?.extra?.dev
+            ? udr.properties.Status === 'active' ||
+              udr.properties.Status === 'planned'
+            : udr.properties.Status === 'active'
+        )
         .sort((a, b) => {
           return a.properties['UDR ID'] - b.properties['UDR ID']
         })

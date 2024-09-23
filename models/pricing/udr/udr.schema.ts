@@ -21,7 +21,7 @@ export const udrsOnlineValidation = Yup.object({
         //       //       // GlobalID_A: Yup.string().required(), // "{1DFADE72-2D43-4B25-BCF8-D93C4A420151}"
         //       //       // Obvod: Yup.number().required(), // 663.67564614531
         //       //       // Plocha: Yup.number().required(), // 5041.11415570715
-        Status: Yup.string().required(), //'active'
+        Status: Yup.string().required(), //'active' , 'planned'
         //       //       // 'ODP Platnosť RPK a APK': Yup.string().required(), //'NM1, SM1'
         //       //       // web: Yup.string().required(), // 'ano'
         //       //       // 'export partneri': Yup.string().required(), // 'ano'
