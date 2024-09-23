@@ -3,8 +3,10 @@ import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import './translations'
-import { QueryClient, QueryClientProvider } from 'react-query'
-import * as Location from 'expo-location'
+import { QueryClient } from '@tanstack/react-query'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
+
 import Constants, { ExecutionEnvironment } from 'expo-constants'
 import * as Sentry from 'sentry-expo'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -29,12 +31,19 @@ Sentry.init({
 
 Constants.expoConfig?.developmentClient
 
-const queryClient = new QueryClient()
-import { focusManager } from 'react-query'
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24 * 24, // 24 days, https://tanstack.com/query/v5/docs/framework/react/plugins/persistQueryClient#how-it-works
+    },
+  },
+})
+import { focusManager } from '@tanstack/react-query'
 // import useAppState from 'react-native-appstate-hook'
 import { AppStateStatus, Platform } from 'react-native'
 import SetupTerminal from '@components/common/SetupTerminal'
 import { ENABLE_SENTRY_LOGGING } from '@services/internal/sentry.service'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 /**
  * Setup focus manager
@@ -46,7 +55,9 @@ function onAppStateChange(status: AppStateStatus) {
   }
 }
 
-Location.setGoogleApiKey(Constants.expoConfig?.extra?.googlePlacesApiKey)
+const persister = createAsyncStoragePersister({
+  storage: AsyncStorage,
+})
 
 const App = () => {
   const isLoadingComplete = useCachedResources()
@@ -62,14 +73,20 @@ const App = () => {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <StatusBar style="auto" />
           <ThemeProvider theme={defaultTheme}>
-            <QueryClientProvider client={queryClient}>
+            <PersistQueryClientProvider
+              client={queryClient}
+              persistOptions={{
+                persister,
+                maxAge: 1000 * 60 * 60 * 24 * 24, // 24 days, must be at least as much as gcTime, https://tanstack.com/query/v5/docs/framework/react/plugins/persistQueryClient#how-it-works
+              }}
+            >
               <SetupTerminal />
               <SafeAreaProvider>
                 <AzureProvider>
                   <SecurityLayout />
                 </AzureProvider>
               </SafeAreaProvider>
-            </QueryClientProvider>
+            </PersistQueryClientProvider>
           </ThemeProvider>
         </GestureHandlerRootView>
       </>

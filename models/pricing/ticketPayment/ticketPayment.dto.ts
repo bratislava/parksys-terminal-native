@@ -20,6 +20,8 @@ export interface ITicketPayment {
 }
 
 export interface Meta {
+  ticketStart: string
+  ticketEnd: string
   priceCard: number
   priceCash: number
 }

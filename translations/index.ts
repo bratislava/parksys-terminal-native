@@ -10,7 +10,7 @@ const resources = {
 } as const
 
 i18n.translations = resources
-i18n.locale = Localization.locale
+i18n.locale = Localization.getLocales()[0].languageTag
 i18n.fallbacks = true
 i18n.defaultLocale = 'sk'
 

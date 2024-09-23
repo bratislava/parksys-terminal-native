@@ -10,7 +10,12 @@ const t = i18n.t
 /**
  * Wrapper around session
  */
-const SessionProvider: React.FunctionComponent = ({ children }) => {
+
+export type SessionProviderProps = {
+  children: React.ReactNode
+}
+
+const SessionProvider = ({ children }: SessionProviderProps) => {
   const value = useSession()
 
   return (

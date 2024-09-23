@@ -24,6 +24,10 @@ interface FormItemProps {
    * Style of container
    */
   style?: StyleProp<ViewStyle>
+  /**
+   * Children of form item
+   */
+  children?: React.ReactNode
 }
 
 /**

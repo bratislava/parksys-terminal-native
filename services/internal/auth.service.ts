@@ -240,11 +240,6 @@ class AuthService {
       password,
       scope: Array.from(finalScopes.values()).join(' '),
     }
-    console.log('expoConfig', Constants.expoConfig?.extra?.azureClientId)
-    console.log('manifest', Constants.manifest?.extra?.azureClientId)
-    console.log('process', process.env.AZURE_CLIENT_ID)
-    console.log('raw expoConfig', Constants.expoConfig)
-    console.log('raw manifest', Constants.manifest)
     const validated = loginReqValidation.validateSync(reqParams)
     const [reqBody, headers] = createXWwwForm(validated)
 

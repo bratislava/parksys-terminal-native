@@ -6,7 +6,7 @@ import { printReceipt } from '@services/external/papaya.api'
 import { createTicket } from '@services/external/pricing.api'
 import { generateReceiptForTransaction } from '@utils/terminal/cashReceipt'
 import React from 'react'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import { RootStackParamList } from 'types'
 import {
   ButtonWrapper,
@@ -20,6 +20,7 @@ import { presentPrice } from '@utils/utils'
 import { StatusBar } from 'expo-status-bar'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { captureMessage } from '@services/internal/sentry.service'
+import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types'
 
 const t = i18n.t
 
@@ -75,7 +76,7 @@ const PayByCash: React.FunctionComponent = () => {
       transactionState: 200,
       payment_type: 'cash',
     })
-    setOptions({ headerLeft: () => null })
+    setOptions({ headerLeft: () => null } as Partial<StackNavigationEventMap>)
     setPaidTicket(finalTicket)
   }, [finalPrice, profile, setOptions])
 
@@ -100,9 +101,12 @@ const PayByCash: React.FunctionComponent = () => {
 
   const {
     mutate: pay,
-    isLoading: payLoading,
+    isPending: payLoading,
     error,
-  } = useMutation(['pay-ticket-cash'], beginTransaction)
+  } = useMutation({
+    mutationKey: ['pay-ticket-cash'],
+    mutationFn: beginTransaction,
+  })
 
   const currentStatus = React.useMemo(() => {
     if (error) {

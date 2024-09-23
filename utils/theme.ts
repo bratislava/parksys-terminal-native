@@ -24,8 +24,6 @@ export const defaultTheme = {
   colors,
 } as const
 
-export type TDefaultTheme = typeof defaultTheme
-
 export const mhdDefaultColors = {
   grey: '#9E9E9E',
 }

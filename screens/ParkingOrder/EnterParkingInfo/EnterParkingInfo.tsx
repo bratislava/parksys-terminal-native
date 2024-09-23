@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-raw-text */
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
+import Constants from 'expo-constants'
 import FormItem from '@components/form/FormItem'
 import Input from '@components/ui/Input'
 import {
@@ -15,7 +16,6 @@ import { useFormik } from 'formik'
 import { validationSchema, EnterParkingForm } from './EnterParkingInfo.schema'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import secureStorageService from '@services/internal/secureStorage.service'
 import i18n from 'i18n-js'
 import {
   ZonedDateTime,
@@ -25,9 +25,12 @@ import {
   nativeJs,
 } from '@js-joda/core'
 import { RootStackParamList } from 'types'
-import UDRS from 'constants/udrs'
 import { calculateTimeDifference } from '@utils/ui/dateUtils'
 import HoursInput from '@components/common/HoursInput'
+import { useCallback, useState } from 'react'
+import { getUdrsInfo } from '@services/external/udrs.api'
+import { useQuery } from '@tanstack/react-query'
+import { handleLoadingDataFromPersistedStorage } from '@utils/PersistQueryClientProviderHelper'
 
 /**
  * Screen to enter customer data to purchase parking ticket
@@ -35,7 +38,7 @@ import HoursInput from '@components/common/HoursInput'
 const EnterParkingInfo: React.FunctionComponent = () => {
   const { push } = useNavigation<StackNavigationProp<RootStackParamList>>()
 
-  const [initialValues, setInitialValues] = React.useState(
+  const [initialValues, setInitialValues] = useState(
     () =>
       ({
         ...validationSchema.getDefault(),
@@ -44,36 +47,71 @@ const EnterParkingInfo: React.FunctionComponent = () => {
   )
 
   /**
-   * Fetch udrs list and get last selected udr from storage
+   * Fetch udrs
+   */
+  const fetchUdrs = useCallback(() => {
+    return getUdrsInfo().then((res) =>
+      res.features
+        .filter((udr) =>
+          Constants.expoConfig?.extra?.dev
+            ? udr.properties.Status === 'active' ||
+              udr.properties.Status === 'planned'
+            : udr.properties.Status === 'active'
+        )
+        .sort((a, b) => {
+          return a.properties['UDR ID'] - b.properties['UDR ID']
+        })
+    )
+  }, [])
+  const {
+    data: udrs,
+    // TODO this error should be properly handled, but for now it's left out until sentry is removed from project
+    error,
+    isLoading,
+  } = useQuery({ queryKey: ['getUdrs'], queryFn: fetchUdrs })
+
+  /**
+   * Fetch udrs list and get last selected udr
    */
   const initForm = React.useCallback(async () => {
-    const initiallySelected = await secureStorageService.getSelectedUdr()
-    const data = UDRS
-    setInitialValues((o) => ({
-      ...o,
-      udr: initiallySelected ?? data[0]?.udrid ?? '',
-    }))
-
-    return data
-  }, [])
+    if (udrs) {
+      setInitialValues((o) => ({
+        ...o,
+        udr: udrs[0].properties['UDR ID'].toString() ?? '',
+      }))
+    }
+  }, [udrs])
 
   /**
    * After submit go to next screen
    */
   const onSubmit = React.useCallback(
     async (values: EnterParkingForm) => {
-      await secureStorageService.setSelectedUdr(values.udr)
-      const selectedUdr = UDRS.find((udr) => values.udr === udr.udrid)
+      const selectedUdr = udrs?.find(
+        (udr) => values.udr === udr.properties['UDR ID'].toString()
+      )
 
       if (selectedUdr) {
         push('ParkingOrderSummary', {
-          udr: selectedUdr,
+          udr: {
+            udrid: selectedUdr.properties['UDR ID'].toString(),
+            nazov: selectedUdr.properties['Názov'],
+            mestskaCast: selectedUdr.properties['Mestská časť'],
+            kodZony: selectedUdr.properties['Kód rezidentskej zóny'],
+          },
           ecv: values.ecv,
           parkingEnd: values.parkingEnd.toISOString(),
         })
       }
     },
-    [push]
+    [push, udrs]
+  )
+
+  const handleUdrsDataResponse = useCallback(
+    (text: React.ReactNode) => {
+      return handleLoadingDataFromPersistedStorage(udrs, isLoading, error, text)
+    },
+    [udrs, error, isLoading]
   )
 
   const addTime = React.useCallback(
@@ -171,19 +209,21 @@ const EnterParkingInfo: React.FunctionComponent = () => {
             required
             error={errors.udr ? i18n.t(errors.udr) : undefined}
           >
-            <Picker
-              selectedValue={values.udr}
-              mode="dropdown"
-              onValueChange={(itemValue) => setFieldValue('udr', itemValue)}
-            >
-              {UDRS.map((udr) => (
-                <Picker.Item
-                  key={udr.udrid}
-                  value={udr.udrid}
-                  label={`(${udr.udrid}) ${udr.nazov}`}
-                />
-              ))}
-            </Picker>
+            {handleUdrsDataResponse(
+              <Picker
+                selectedValue={values.udr}
+                mode="dropdown"
+                onValueChange={(itemValue) => setFieldValue('udr', itemValue)}
+              >
+                {udrs?.map((udr) => (
+                  <Picker.Item
+                    key={udr.properties['UDR ID']}
+                    value={udr.properties['UDR ID'].toString()}
+                    label={`(${udr.properties['UDR ID']}) ${udr.properties['Názov']}`}
+                  />
+                ))}
+              </Picker>
+            )}
           </FormItem>
           <DateWrapper>
             <FormItem

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAuthContext } from '@lib/context/authContext'
 import {
   closeSession,
@@ -13,9 +13,9 @@ import {
 function useSession() {
   const { profile, logout } = useAuthContext()
 
-  const { data, refetch, isLoading, error } = useQuery(
-    ['getSession', profile],
-    async () => {
+  const { data, refetch, isLoading, error } = useQuery({
+    queryKey: ['getSession', profile],
+    queryFn: async () => {
       if (!profile?.id) {
         return null
       }
@@ -34,19 +34,22 @@ function useSession() {
         logout()
       }
     },
-    { initialData: undefined }
-  )
+    initialData: undefined,
+  })
 
-  const { mutate } = useMutation(['close-session', data?.id], async () => {
-    if (!data?.id) {
-      throw new Error('NO SESSION ID')
-    }
-    try {
-      await closeSession(data?.id)
-    } catch (error) {
-      captureMessage('Close session error')
-      captureException(error)
-    }
+  const { mutate } = useMutation({
+    mutationKey: ['close-session', data?.id],
+    mutationFn: async () => {
+      if (!data?.id) {
+        throw new Error('NO SESSION ID')
+      }
+      try {
+        await closeSession(data?.id)
+      } catch (error) {
+        captureMessage('Close session error')
+        captureException(error)
+      }
+    },
   })
 
   const getSession = React.useCallback(async () => {

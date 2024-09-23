@@ -7,23 +7,9 @@
 import * as Linking from 'expo-linking'
 
 export default {
-  prefixes: [Linking.makeUrl('/')],
+  prefixes: [Linking.createURL('/')],
   config: {
     screens: {
-      Root: {
-        screens: {
-          Map: {
-            screens: {
-              MapScreen: 'one',
-            },
-          },
-          TabTwo: {
-            screens: {
-              TabTwoScreen: 'two',
-            },
-          },
-        },
-      },
       NotFound: '*',
     },
   },
