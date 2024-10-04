@@ -23,7 +23,7 @@ If you want to develop on your device, from [Expo Go](https://expo.io/client) ap
 To get Env keys:
 
 - SENTRY_AUTH_TOKEN
-  1. Log in to [Sentry](https://sentry.io/settings/account/api/auth-tokens/) with inovacie.bratislava@gmail.com account
+  1. Log in to [Sentry](https://sentry.io/settings/account/api/auth-tokens/) with `inovacie.bratislava` gmail account
   2. Proceed to Settings -> Account -> API -> Auth Tokens
   3. Get Auth token with scope: org:read, project:releases, project:write
 
@@ -86,7 +86,7 @@ You need the [Expo Go](https://expo.io/client) application installed on your dev
 
 ### Running on POS terminals
 
-You can only test some functionality on POS terminals, like card payment or receipt printing. Some should always be available in the office, ask Martin Pinter or Martina Mihalkovicova. On staging, non-production terminals you can test card payments with (most of your) regular credit/debit cards, without them taking any money out of your account.
+You can only test some functionality on POS terminals, like card payment or receipt printing. Some should always be available in the office, ask Martin Pinter or Adam Grund. On staging, non-production terminals you can test card payments with (most of your) regular credit/debit cards, without them taking any money out of your account.
 
 On staging terminals, you can run the app using Expo Go just like on any other android - if you have trouble with the setup and need to access Settings / Turn on Developer mode or options, follow [instructions here](https://barclaycard.mpymnt.com/pax-a920-faq.html)
 
@@ -129,11 +129,11 @@ Empty `.easignore` file [info](https://forums.expo.dev/t/eas-ignore-gitignore/70
 
 POS terminals have their own proprietary store, Papaya handles all communication with that:
 
-To release new `.apk` to Play Store:
+To release new `.apk` to Papaya terminals:
 
 1. Bump the `version` and `versionCode` in `app.config.js` - these are visible from app settings and help us determine which version is live for the users
 2. In `.env` file erase enviroment variable `__DEV__` if it is present
 3. Run `eas build -p android` inside the project
 4. wait for [Expo](https://expo.dev/accounts/bratislava/projects/parksys-terminal/builds) to build new `.apk` & download it once ready
-5. Send the `.apk` to the contact persons `martin.slysko@bratislava.sk`, `podpora@papayapos.sk`, and also send copy to `martin.hrcka@bratislava.sk`, `tomas.debnar@papayapos.sk`, `tomas.hanes@bratislava.sk`. Contact person in Papaya is Tomas Debnar, who can be reached through our slack in shared channel `#01people-papaya-terminal`, or through email - `tomas.debnar@papayapos.sk`
+5. Send the `.apk` to the contact persons mentioned in [deploy email addresses](https://magistratba.sharepoint.com/:fl:/g/contentstorage/CSP_e7fd7f53-9abe-456a-b0e1-7cc0c63e3f1a/Ebp9TgttV3VHhmxgwlqD9YEBiLmHzFeLB2AcwhTsT0RHXA?e=3BRaKw&nav=cz0lMkZjb250ZW50c3RvcmFnZSUyRkNTUF9lN2ZkN2Y1My05YWJlLTQ1NmEtYjBlMS03Y2MwYzYzZTNmMWEmZD1iJTIxVTNfOTU3NmFha1d3NFh6QXhqNF9Hc3RnWmNMRlhXQkR2Z2F4bHUxdEdsNGZsSnk2d2ZCeFRvWi00aXZqZ0o4ayZmPTAxWVJNMktXRjJQVkhBVzNLWE9WRFlNM0RBWUpOSUg1TUImYz0lMkYmYT1Mb29wQXBwJnA9JTQwZmx1aWR4JTJGbG9vcC1wYWdlLWNvbnRhaW5lciZ4PSU3QiUyMnclMjIlM0ElMjJUMFJUVUh4dFlXZHBjM1J5WVhSaVlTNXphR0Z5WlhCdmFXNTBMbU52Ylh4aUlWVXpYemsxTnpaaFlXdFhkelJZZWtGNGFqUmZSM04wWjFwalRFWllWMEpFZG1kaGVHeDFNWFJIYkRSbWJFcDVObmRtUW5oVWIxb3ROR2wyYW1kS09HdDhNREZaVWsweVMxZERRMUUyTTB4Qk5VODBOMFpHVEVVMFIwNVFTbGRLUlVoYVVRJTNEJTNEJTIyJTJDJTIyaSUyMiUzQSUyMmU1Mjg3MTAzLWQ4MTEtNGJhYi05ODhlLTM5YmRhZDY4Y2NiYSUyMiU3RA%3D%3D).
 6. After 1-3 days, verify that the version is live on the production POS terminal
